@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -29,13 +30,19 @@
       display: grid;
       place-items: center;
       background:
-        radial-gradient(ellipse at 50% 0%, #392060 0%, transparent 50%),
+        radial-gradient(
+          ellipse at 50% 0%,
+          #392060 0%,
+          transparent 50%
+        ),
         var(--bg);
       color: var(--text);
       font-family: system-ui, sans-serif;
     }
 
-    .page { width: min(100%, 440px); }
+    .page {
+      width: min(100%, 440px);
+    }
 
     .brand {
       display: flex;
@@ -89,7 +96,7 @@
 
     .card {
       padding: 28px;
-      background: #151027;
+      background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 20px;
       box-shadow: 0 24px 75px #0005;
@@ -102,7 +109,10 @@
       letter-spacing: 2px;
     }
 
-    h1 { margin: 10px 0; font-size: 29px; }
+    h1 {
+      margin: 10px 0;
+      font-size: 29px;
+    }
 
     .intro {
       color: var(--muted);
@@ -193,6 +203,10 @@
       text-decoration: none;
     }
 
+    .login-note a:hover {
+      text-decoration: underline;
+    }
+
     .footer {
       margin-top: 22px;
       text-align: center;
@@ -222,12 +236,17 @@
         <span class="logo-x">X</span>
         <span class="logo-a">A</span>
       </div>
-      <div class="brand-caption">SMART SOCIAL PLATFORM</div>
+
+      <div class="brand-caption">
+        SMART SOCIAL PLATFORM
+      </div>
     </header>
 
     <section class="card">
       <div class="eyebrow">PENDAFTARAN ANGGOTA</div>
+
       <h1>Buat akun MEXA</h1>
+
       <p class="intro">
         Daftarkan akunmu untuk bergabung dengan MEXA SMART.
         Isi data dengan benar.
@@ -240,6 +259,7 @@
             id="displayName"
             name="displayName"
             type="text"
+            minlength="2"
             maxlength="80"
             autocomplete="name"
             placeholder="Masukkan nama lengkap"
@@ -260,7 +280,10 @@
             placeholder="Contoh: arip_rahman"
             required
           >
-          <p class="hint">3–30 karakter: huruf, angka, titik, atau garis bawah.</p>
+          <p class="hint">
+            3–30 karakter: huruf, angka, titik,
+            atau garis bawah.
+          </p>
         </div>
 
         <div class="field">
@@ -291,7 +314,9 @@
         </div>
 
         <div class="field">
-          <label for="confirmPassword">Konfirmasi kata sandi</label>
+          <label for="confirmPassword">
+            Konfirmasi kata sandi
+          </label>
           <input
             id="confirmPassword"
             name="confirmPassword"
@@ -304,7 +329,11 @@
           >
         </div>
 
-        <button class="submit" id="registerButton" type="submit">
+        <button
+          class="submit"
+          id="registerButton"
+          type="submit"
+        >
           Daftar Sekarang
         </button>
 
@@ -317,7 +346,11 @@
       </form>
 
       <p class="login-note">
-        Sudah memiliki akun? <a href="./login.html">Masuk</a>
+        Sudah memiliki akun?
+        <a
+          id="loginLink"
+          href="https://mexa-plafrom.github.io/mexa/"
+        >Masuk</a>
       </p>
     </section>
 
@@ -326,7 +359,7 @@
     </footer>
   </main>
 
-  <!-- KONTRAK REGISTRY → PENGHUBUNG 1 -->
+  <!-- REGISTRY PENDAFTARAN → PENGHUBUNG 1 -->
   <script>
     (function (window) {
       "use strict";
@@ -342,7 +375,8 @@
             typeof connector.registerUser !== "function"
           ) {
             throw new Error(
-              "Penghubung 1 belum tersedia. Pendaftaran belum dikirim."
+              "Penghubung 1 belum menyediakan registerUser(). " +
+              "Pendaftaran belum dikirim."
             );
           }
 
@@ -352,18 +386,32 @@
     })(window);
   </script>
 
-  <!-- MUAT PUSAT DULU, LALU PENGHUBUNG 1 -->
+  <!-- URUTAN PEMUATAN: PUSAT, LALU PENGHUBUNG 1 -->
   <script src="./js/core/mexa-system-center.js"></script>
   <script src="./js/core/mexa-connector-1.js"></script>
 
-  <!-- FORMULIR MENGGUNAKAN REGISTRY, BUKAN SUPABASE LANGSUNG -->
+  <!-- PROSES PENDAFTARAN -->
   <script>
     (function (window, document) {
       "use strict";
 
-      const form = document.getElementById("mexaRegisterForm");
-      const button = document.getElementById("registerButton");
-      const message = document.getElementById("registerMessage");
+      const MX_URL =
+        "https://mexa-plafrom.github.io/mexa/";
+
+      const form =
+        document.getElementById("mexaRegisterForm");
+
+      const button =
+        document.getElementById("registerButton");
+
+      const message =
+        document.getElementById("registerMessage");
+
+      const loginLink =
+        document.getElementById("loginLink");
+
+      // Satu alamat tujuan MX yang digunakan halaman ini.
+      loginLink.href = MX_URL;
 
       function showMessage(text, type) {
         message.textContent = text;
@@ -373,16 +421,21 @@
       form.addEventListener("submit", async function (event) {
         event.preventDefault();
 
-        if (!form.reportValidity()) return;
+        if (!form.reportValidity()) {
+          return;
+        }
 
         const displayName =
-          document.getElementById("displayName").value.trim();
+          document.getElementById("displayName")
+            .value.trim();
 
         const username =
-          document.getElementById("username").value.trim().toLowerCase();
+          document.getElementById("username")
+            .value.trim().toLowerCase();
 
         const email =
-          document.getElementById("email").value.trim().toLowerCase();
+          document.getElementById("email")
+            .value.trim().toLowerCase();
 
         const password =
           document.getElementById("password").value;
@@ -399,45 +452,82 @@
         }
 
         if (!/^[a-z0-9_.]{3,30}$/.test(username)) {
-          showMessage("Format username tidak valid.", "error");
+          showMessage(
+            "Username harus 3–30 karakter: huruf kecil, angka, titik, atau garis bawah.",
+            "error"
+          );
           return;
         }
 
         button.disabled = true;
         button.textContent = "Memproses...";
-        showMessage("Mengirim pendaftaran ke sistem MEXA...", "info");
+
+        showMessage(
+          "Mengirim pendaftaran ke sistem MEXA...",
+          "info"
+        );
 
         try {
           const registry = window.MEXA_HTML_REGISTRY;
 
-          if (!registry) {
-            throw new Error("HTML Registry belum dimuat.");
+          if (
+            !registry ||
+            typeof registry.registerUser !== "function"
+          ) {
+            throw new Error(
+              "HTML Registry belum siap."
+            );
           }
 
           const result = await registry.registerUser({
-            displayName,
-            username,
-            email,
-            password
+            displayName: displayName,
+            username: username,
+            email: email,
+            password: password
           });
 
-          if (!result || result.accepted !== true) {
+          if (
+            !result ||
+            result.accepted !== true ||
+            result.accountCreated !== true
+          ) {
             throw new Error(
-              "System Pusat belum mengonfirmasi pendaftaran."
+              "System Pusat belum mengonfirmasi pembuatan akun."
             );
           }
 
           form.reset();
 
+          if (result.emailConfirmationRequired === true) {
+            showMessage(
+              (result.message ||
+                "Akun berhasil dibuat.") +
+              " Periksa kotak masuk email dan folder spam. " +
+              "Setelah email dikonfirmasi, buka MX untuk masuk.",
+              "success"
+            );
+
+            return;
+          }
+
           showMessage(
-            result.message ||
-              "Akun berhasil didaftarkan melalui MEXA SYSTEM CENTER.",
+            "Akun berhasil dibuat. Mengarahkan ke MX...",
             "success"
           );
+
+          window.setTimeout(function () {
+            window.location.assign(MX_URL);
+          }, 900);
+
         } catch (error) {
           showMessage(
             String(error.message || error),
             "error"
+          );
+
+          console.error(
+            "[MEXA REGISTER] Pendaftaran gagal:",
+            error
           );
         } finally {
           button.disabled = false;
@@ -448,3 +538,4 @@
   </script>
 </body>
 </html>
+```
