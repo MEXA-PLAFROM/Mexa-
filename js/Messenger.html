@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0818">
+  <title>Messenger — MEXA</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0818;
+      --panel: #141027;
+      --panel2: #1b1531;
+      --border: #302748;
+      --text: #f7f3ff;
+      --muted: #a9a0c0;
+      --purple: #9b70ff;
+      --cyan: #00e5ff;
+      --green: #43e6a0;
+      --danger: #ff7892;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at top left, #24164b 0, transparent 40%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+
+    .topbar {
+      height: 68px;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: #0e0a1ced;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--cyan);
+      text-shadow: 0 0 14px #00e5ff66;
+    }
+
+    .brand-e {
+      display: inline-flex;
+      width: 17px;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .brand-e i {
+      display: block;
+      width: 17px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--cyan);
+    }
+
+    .brand-x { color: var(--purple); }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-btn, .icon-btn {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 13px;
+      text-decoration: none;
+    }
+
+    .top-btn:hover, .icon-btn:hover {
+      border-color: var(--purple);
+    }
+
+    .layout {
+      max-width: 1450px;
+      height: calc(100vh - 68px);
+      min-height: 500px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 330px minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .panel {
+      background: #141027eF;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .inbox {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inbox-head { padding: 20px 17px 13px; }
+
+    h1 {
+      margin: 0 0 5px;
+      font-size: 23px;
+    }
+
+    .subtext {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .search-wrap {
+      padding: 0 14px 13px;
+    }
+
+    .search {
+      width: 100%;
+      color: var(--text);
+      background: #0d0a1b;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      outline: none;
+    }
+
+    .search:focus, .composer-input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px #9b70ff1b;
+    }
+
+    .signal {
+      margin: 0 13px 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: linear-gradient(120deg, #281849, #102b37);
+      border: 1px solid #57417c;
+    }
+
+    .signal-title {
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+
+    .signal-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .signal-btn {
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: #100c20;
+      padding: 7px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .signal-btn.active {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: #00e5ff12;
+    }
+
+    .contact-list {
+      overflow: auto;
+      flex: 1;
+      padding: 0 9px 12px;
+    }
+
+    .contact {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      width: 100%;
+      text-align: left;
+      padding: 12px 9px;
+      border: 0;
+      border-radius: 13px;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .contact:hover { background: #ffffff08; }
+
+    .contact.active {
+      background: linear-gradient(100deg, #8b5cf626, #00e5ff0c);
+      outline: 1px solid #8b5cf64d;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      border: 1px solid #ffffff22;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .contact-info { min-width: 0; flex: 1; }
+
+    .contact-name {
+      font-weight: 750;
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .contact-preview {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .chat {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .chat-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 18px;
+      min-height: 77px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chat-person { flex: 1; min-width: 0; }
+    .chat-name { font-weight: 800; }
+    .chat-status {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .online-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 5px;
+    }
+
+    .messages {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      background:
+        radial-gradient(ellipse at center, #21173a40, transparent 70%);
+    }
+
+    .empty {
+      margin: auto;
+      max-width: 300px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    .empty-icon {
+      font-size: 35px;
+      margin-bottom: 10px;
+    }
+
+    .message-row {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      max-width: 78%;
+    }
+
+    .message-row.mine {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .bubble {
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px 16px 16px 4px;
+      background: var(--panel2);
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .mine .bubble {
+      background: linear-gradient(135deg, #7043d7, #4931a0);
+      border-color: #9b70ff70;
+      border-radius: 16px 16px 4px 16px;
+    }
+
+    .message-time {
+      color: var(--muted);
+      font-size: 10px;
+      margin: 5px 4px 0;
+    }
+
+    .composer {
+      padding: 13px;
+      border-top: 1px solid var(--border);
+      background: #100c20;
+    }
+
+    .composer-form {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .composer-input {
+      min-width: 0;
+      flex: 1;
+      padding: 13px 14px;
+      border-radius: 13px;
+      border: 1px solid var(--border);
+      background: #0b0818;
+      color: var(--text);
+      outline: none;
+    }
+
+    .send-btn {
+      padding: 13px 18px;
+      border: 0;
+      border-radius: 13px;
+      color: #090817;
+      font-weight: 850;
+      background: linear-gradient(120deg, var(--cyan), #a78bfa);
+    }
+
+    .send-btn:hover { filter: brightness(1.1); }
+
+    .notice {
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 11px;
+      min-height: 28px;
+    }
+
+    .notice.error { color: var(--danger); }
+    .notice.success { color: var(--green); }
+
+    .back-chat { display: none; }
+
+    @media (max-width: 760px) {
+      .topbar { padding: 0 13px; height: 60px; }
+      .brand { font-size: 22px; }
+      .top-btn { padding: 9px 10px; font-size: 12px; }
+      .layout {
+        height: calc(100dvh - 60px);
+        min-height: 0;
+        padding: 9px;
+        display: block;
+      }
+      .panel { border-radius: 15px; height: 100%; }
+      .chat { display: none; }
+      .inbox { display: flex; }
+      .layout.chat-open .inbox { display: none; }
+      .layout.chat-open .chat { display: flex; }
+      .back-chat { display: inline-block; }
+      .messages { padding: 15px 12px; }
+      .message-row { max-width: 88%; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="./mx-space.html" aria-label="Kembali ke Home MEXA">
+      <span class="brand-mark">
+        <span>M</span>
+        <span class="brand-e"><i></i><i></i><i></i></span>
+        <span class="brand-x">X</span>
+        <span>A</span>
+      </span>
+      <span>Messenger</span>
+    </a>
+    <div class="top-actions">
+      <a class="top-btn" href="./mx-space.html">← Home</a>
+    </div>
+  </header>
+
+  <main class="layout" id="layout">
+    <aside class="panel inbox">
+      <div class="inbox-head">
+        <h1>Pesan kamu</h1>
+        <div class="subtext">Ngobrol, berbagi, dan terhubung.</div>
+      </div>
+
+      <div class="search-wrap">
+        <input class="search" id="contactSearch"
+          type="search" placeholder="Cari teman MEXA..."
+          autocomplete="off">
+      </div>
+
+      <section class="signal">
+        <div class="signal-title">✦ MEXA Sinyal</div>
+        <div class="signal-options">
+          <button class="signal-btn active" data-signal="Bisa ngobrol">🟢 Ngobrol</button>
+          <button class="signal-btn" data-signal="Lagi fokus">🌙 Fokus</button>
+          <button class="signal-btn" data-signal="Mabar yuk">🎮 Mabar</button>
+        </div>
+      </section>
+
+      <div class="contact-list" id="contactList">
+        <div class="empty">Memuat teman MEXA...</div>
+      </div>
+    </aside>
+
+    <section class="panel chat" aria-label="Percakapan">
+      <div class="chat-head">
+        <button class="icon-btn back-chat" id="backToContacts"
+          type="button" aria-label="Kembali ke daftar teman">←</button>
+        <div class="avatar" id="chatAvatar">M</div>
+        <div class="chat-person">
+          <div class="chat-name" id="chatName">Messenger MEXA</div>
+          <div class="chat-status" id="chatStatus">
+            Pilih teman untuk memulai percakapan
+          </div>
+        </div>
+      </div>
+
+      <div class="messages" id="messages" aria-live="polite">
+        <div class="empty">
+          <div class="empty-icon">✦</div>
+          <strong>Selamat datang di Messenger</strong>
+          <div>Pilih teman di sebelah kiri untuk mulai mengobrol.</div>
+        </div>
+      </div>
+
+      <div class="notice" id="chatNotice" role="status">
+        Hubungkan akun untuk mulai mengirim pesan.
+      </div>
+
+      <div class="composer">
+        <form class="composer-form" id="messageForm">
+          <input class="composer-input" id="messageInput"
+            type="text" maxlength="5000"
+            placeholder="Tulis pesan..."
+            autocomplete="off" disabled>
+          <button class="send-btn" id="sendButton"
+            type="submit" disabled>Kirim ➤</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Urutan penting: SDK → client login → mesin Messenger -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./auth-client.js"></script>
+  <script src="./js/mexa-messenger.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+
+    const $ = id => document.getElementById(id);
+
+    const layout = $("layout");
+    const contactList = $("contactList");
+    const contactSearch = $("contactSearch");
+    const messagesBox = $("messages");
+    const messageForm = $("messageForm");
+    const messageInput = $("messageInput");
+    const sendButton = $("sendButton");
+    const chatName = $("chatName");
+    const chatAvatar = $("chatAvatar");
+    const chatStatus = $("chatStatus");
+    const chatNotice = $("chatNotice");
+
+    let currentUser = null;
+    let profiles = [];
+    let activeProfile = null;
+    let activeConversationId = null;
+    let unsubscribeMessages = null;
+    let sending = false;
+    const renderedMessageIds = new Set();
+
+    function notice(text, type) {
+      chatNotice.textContent = text || "";
+      chatNotice.className = "notice" + (type ? " " + type : "");
+    }
+
+    function makeAvatar(profile) {
+      const avatar = document.createElement("div");
+      avatar.className = "avatar";
+
+      if (profile && profile.avatar_url) {
+        const img = document.createElement("img");
+        img.src = profile.avatar_url;
+        img.alt = "";
+        img.loading = "lazy";
+        img.onerror = () => {
+          avatar.textContent = initials(profile.display_name || profile.username);
+        };
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = initials(
+          profile && (profile.display_name || profile.username)
+        );
+      }
+
+      return avatar;
+    }
+
+    function initials(value) {
+      return String(value || "MX")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(word => word[0] || "")
+        .join("")
+        .toUpperCase() || "MX";
+    }
+
+    function displayName(profile) {
+      return profile.display_name || profile.username || "Pengguna MEXA";
+    }
+
+    function formatTime(value) {
+      if (!value) return "";
+      return new Date(value).toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function addMessage(message) {
+      if (!message || renderedMessageIds.has(message.id)) return;
+      renderedMessageIds.add(message.id);
+
+      const empty = messagesBox.querySelector(".empty");
+      if (empty) empty.remove();
+
+      const row = document.createElement("div");
+      row.className = "message-row" +
+        (message.sender_id === currentUser.id ? " mine" : "");
+      row.dataset.messageId = message.id;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = message.content || "";
+
+      const time = document.createElement("div");
+      time.className = "message-time";
+      time.textContent = formatTime(message.created_at) +
+        (message.sender_id === currentUser.id ? " · Kamu" : "");
+
+      row.append(bubble, time);
+      messagesBox.appendChild(row);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    }
+
+    function showEmpty(text) {
+      messagesBox.replaceChildren();
+      const empty = document.createElement("div");
+      empty.className = "empty";
+
+      const icon = document.createElement("div");
+      icon.className = "empty-icon";
+      icon.textContent = "✦";
+
+      const label = document.createElement("div");
+      label.textContent = text;
+
+      empty.append(icon, label);
+      messagesBox.appendChild(empty);
+      renderedMessageIds.clear();
+    }
+
+    function renderContacts() {
+      const term = contactSearch.value.trim().toLowerCase();
+      contactList.replaceChildren();
+
+      const filtered = profiles.filter(profile => {
+        const name = displayName(profile).toLowerCase();
+        const username = String(profile.username || "").toLowerCase();
+        return name.includes(term) || username.includes(term);
+      });
+
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = term
+          ? "Teman tidak ditemukan."
+          : "Belum ada profil pengguna lain.";
+        contactList.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach(profile => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "contact" +
+          (activeProfile && activeProfile.id === profile.id ? " active" : "");
+
+        button.appendChild(makeAvatar(profile));
+
+        const info = document.createElement("div");
+        info.className = "contact-info";
+
+        const name = document.createElement("div");
+        name.className = "contact-name";
+        name.textContent = displayName(profile);
+
+        const preview = document.createElement("div");
+        preview.className = "contact-preview";
+        preview.textContent = profile.username
+          ? "@" + profile.username
+          : "Pengguna MEXA";
+
+        info.append(name, preview);
+        button.appendChild(info);
+        button.addEventListener("click", () => openChat(profile));
+        contactList.appendChild(button);
+      });
+    }
+
+    async function loadProfiles() {
+      const client = window.mexaSupabase;
+      const { data, error } = await client
+        .from("profiles")
+        .select("id, username, display_name, avatar_url")
+        .order("display_name", { ascending: true })
+        .limit(100);
+
+      if (error) throw error;
+
+      profiles = (data || []).filter(profile => profile.id !== currentUser.id);
+      renderContacts();
+    }
+
+    async function openChat(profile) {
+      try {
+        if (unsubscribeMessages) {
+          await unsubscribeMessages();
+          unsubscribeMessages = null;
+        }
+
+        activeProfile = profile;
+        activeConversationId = null;
+        sendButton.disabled = true;
+        messageInput.disabled = true;
+
+        chatName.textContent = displayName(profile);
+        chatStatus.textContent = "Membuka percakapan...";
+        chatAvatar.replaceWith(makeAvatar(profile));
+        chatAvatar = $("chatAvatar");
+
+        renderContacts();
+        showEmpty("Menyiapkan percakapan...");
+        layout.classList.add("chat-open");
+        notice("Menghubungkan percakapan...");
+
+        const api = window.MEXA_MESSENGER;
+        const conversationId = await api.openDirectChat(profile.id);
+        activeConversationId = conversationId;
+
+        const history = await api.getMessages(conversationId, 100);
+        if (activeConversationId !== conversationId) return;
+
+        showEmpty("Belum ada pesan. Mulai percakapanmu!");
+        history.forEach(addMessage);
+
+        chatStatus.textContent = "Percakapan pribadi MEXA";
+        messageInput.disabled = false;
+        sendButton.disabled = false;
+        messageInput.focus();
+        notice("Terhubung. Pesan akan disimpan di MEXA.", "success");
+
+        unsubscribeMessages = await api.subscribeMessages(
+          conversationId,
+          message => {
+            if (activeConversationId === conversationId) addMessage(message);
+          }
+        );
+      } catch (error) {
+        console.error("MEXA Messenger:", error);
+        showEmpty("Percakapan belum dapat dibuka.");
+        chatStatus.textContent = "Koneksi belum tersedia";
+        notice(error.message || "Gagal membuka percakapan.", "error");
+      }
+    }
+
+    messageForm.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const content = messageInput.value.trim();
+      if (!content || !activeConversationId || sending) return;
+
+      sending = true;
+      sendButton.disabled = true;
+      notice("Mengirim pesan...");
+
+      try {
+        const sent = await window.MEXA_MESSENGER.sendMessage(
+          activeConversationId,
+          content
+        );
+
+        addMessage(sent);
+        messageInput.value = "";
+        notice("Pesan tersimpan.", "success");
+      } catch (error) {
+        console.error("Gagal mengirim pesan:", error);
+        notice(error.message || "Pesan gagal dikirim.", "error");
+      } finally {
+        sending = false;
+        sendButton.disabled = !activeConversationId;
+        messageInput.focus();
+      }
+    });
+
+    contactSearch.addEventListener("input", renderContacts);
+
+    $("backToContacts").addEventListener("click", () => {
+      layout.classList.remove("chat-open");
+    });
+
+    document.querySelectorAll("[data-signal]").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-signal]").forEach(item => {
+          item.classList.toggle("active", item === button);
+        });
+
+        // Status ini masih lokal; belum disimpan ke profil.
+        notice("Sinyal lokal: " + button.dataset.signal);
+      });
+    });
+
+    async function start() {
+      try {
+        if (!window.mexaSupabase || !window.MEXA_MESSENGER) {
+          throw new Error("Mesin Supabase atau Messenger belum dimuat.");
+        }
+
+        currentUser = await window.MEXA_MESSENGER.getUser();
+        await loadProfiles();
+
+        if (!profiles.length) {
+          notice("Belum ada profil teman untuk diajak chat.");
+        } else {
+          notice("Pilih teman untuk memulai chat.");
+        }
+      } catch (error) {
+        console.error("MEXA Messenger gagal dimulai:", error);
+        notice(
+          error.message || "Gagal memuat Messenger. Periksa sesi login.",
+          "error"
+        );
+        contactList.replaceChildren();
+
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent =
+          "Messenger belum terhubung. Pastikan kamu sudah login dan konfigurasi Supabase benar.";
+        contactList.appendChild(empty);
+      }
+    }
+
+    start();
+  })();
+  </script>
+</body>
+</html>
