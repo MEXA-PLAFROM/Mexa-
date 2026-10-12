@@ -19,27 +19,21 @@
   --purple:#9b62ff;
   --pink:#ff4eaa;
 }
-
 * { box-sizing:border-box; }
-
+html { scroll-behavior:smooth; scroll-padding-top:85px; }
 body {
   margin:0;
   color:var(--text);
   background:radial-gradient(ellipse at top,#192653,var(--bg) 55%);
   font:14px Arial,sans-serif;
 }
-
 button,input,textarea { font:inherit; }
 button { cursor:pointer; }
-
 button:focus-visible,input:focus-visible,textarea:focus-visible {
   outline:2px solid var(--cyan);
 }
 
-/* ================================
-   LOGO MEXA — M + E TIGA GARIS + X + A
-   ================================ */
-
+/* HEADER + LOGO ASLI */
 .topbar {
   height:68px;
   position:sticky;
@@ -52,51 +46,25 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   background:#050b1bf5;
   border-bottom:1px solid var(--line);
 }
-
 .brand {
-  width:190px;
+  width:105px;
+  height:54px;
   flex-shrink:0;
-  display:inline-flex;
-  align-items:center;
-  gap:3px;
-  text-decoration:none;
-  font-size:30px;
-  font-weight:900;
-  letter-spacing:1px;
-  line-height:1;
-}
-
-.logo-m,.logo-a {
-  color:var(--cyan);
-}
-
-.logo-x {
-  color:var(--purple);
-}
-
-.logo-e {
-  width:21px;
-  height:24px;
   display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  flex-shrink:0;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  border-radius:9px;
+  background:#fff;
 }
-
-.logo-e span {
+.brand img {
   display:block;
   width:100%;
-  height:6px;
-  border-radius:2px;
-  background:#f4f7ff;
+  height:100%;
+  object-fit:cover;
+  object-position:center 50%;
 }
-
-/* ================================
-   HEADER DAN PENCARIAN
-   ================================ */
-
 .search { flex:1; max-width:620px; }
-
 .search input {
   width:100%;
   padding:12px 15px;
@@ -105,13 +73,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border:1px solid #3b3876;
   border-radius:13px;
 }
-
-.top-actions {
-  margin-left:auto;
-  display:flex;
-  gap:9px;
-}
-
+.top-actions { margin-left:auto; display:flex; gap:9px; }
 .primary {
   border:0;
   padding:12px 16px;
@@ -120,7 +82,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   font-weight:bold;
   background:linear-gradient(110deg,var(--cyan),var(--purple));
 }
-
 .icon-btn {
   border:1px solid var(--line);
   border-radius:12px;
@@ -129,25 +90,20 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   background:var(--panel);
 }
 
-/* ================================
-   LAYOUT UTAMA
-   ================================ */
-
+/* LAYOUT */
 .layout {
   max-width:1600px;
   margin:auto;
   padding:20px;
   display:grid;
-  grid-template-columns:220px minmax(0,1fr) 300px;
+  grid-template-columns:220px minmax(0,1fr) 270px;
   gap:20px;
 }
-
 .sidebar,.rightbar {
   position:sticky;
   top:85px;
   align-self:start;
 }
-
 .nav button {
   width:100%;
   padding:13px;
@@ -158,13 +114,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border:1px solid transparent;
   border-radius:12px;
 }
-
 .nav button:hover,.nav button.active {
   color:var(--cyan);
   background:#0c2540;
   border-color:#17506b;
 }
-
 .creator {
   margin-top:25px;
   padding:17px;
@@ -172,14 +126,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border-radius:16px;
   background:linear-gradient(140deg,#172450,#241442);
 }
-
 .creator h3 { margin:0 0 8px; }
-
-.creator p {
-  color:#bac8e4;
-  font-size:12px;
-  line-height:1.7;
-}
+.creator p { color:#bac8e4; font-size:12px; line-height:1.7; }
 
 .panel {
   min-width:0;
@@ -189,11 +137,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border-radius:16px;
   background:linear-gradient(145deg,var(--panel),#071126);
 }
-
 .welcome { margin:4px 0 20px; }
 .welcome h1 { font-size:27px; margin:0 0 6px; }
 .muted { color:var(--muted); font-size:12px; }
-
 .section-title {
   display:flex;
   justify-content:space-between;
@@ -201,21 +147,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   gap:10px;
   margin-bottom:13px;
 }
-
 .section-title h2 { font-size:15px; margin:0; }
+.link { border:0; background:none; color:var(--cyan); }
 
-.link {
-  border:0;
-  background:none;
-  color:var(--cyan);
-}
-
-.stories {
-  display:flex;
-  gap:13px;
-  overflow:auto;
-}
-
+/* CERITA */
+.stories { display:flex; gap:13px; overflow:auto; }
 .story {
   flex:0 0 67px;
   text-align:center;
@@ -223,7 +159,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   background:none;
   color:white;
 }
-
 .ring {
   width:61px;
   height:61px;
@@ -232,7 +167,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border-radius:50%;
   background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink));
 }
-
 .avatar {
   width:100%;
   height:100%;
@@ -244,15 +178,10 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   font-size:19px;
   font-weight:bold;
 }
-
 .story-name { font-size:11px; }
 
-.compose-row {
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
+/* BUAT POSTINGAN */
+.compose-row { display:flex; align-items:center; gap:12px; }
 .user-avatar {
   width:43px;
   height:43px;
@@ -264,7 +193,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   font-weight:bold;
   background:linear-gradient(135deg,var(--cyan),var(--purple));
 }
-
 .compose-trigger {
   flex:1;
   padding:13px;
@@ -274,14 +202,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border-radius:13px;
   background:#071126;
 }
-
-.tools {
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:13px;
-}
-
+.tools { display:flex; gap:8px; flex-wrap:wrap; margin-top:13px; }
 .tool {
   flex:1;
   min-width:80px;
@@ -291,29 +212,27 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border-radius:10px;
   background:transparent;
 }
-
 .tool:hover { background:var(--panel2); color:var(--cyan); }
 
+/* POSTINGAN */
 .post-head { display:flex; align-items:center; gap:10px; }
-.post-info { flex:1; }
+.post-info { flex:1; min-width:0; }
 .post-info strong { display:block; }
 .post-info small { color:var(--muted); font-size:11px; }
 .more { border:0; background:none; color:white; font-size:22px; }
-
 .post-text {
   line-height:1.7;
   white-space:pre-wrap;
   overflow-wrap:anywhere;
 }
-
 .post-media {
+  display:block;
   width:100%;
   max-height:420px;
   object-fit:contain;
   border-radius:12px;
   background:#030816;
 }
-
 .post-actions {
   display:flex;
   gap:5px;
@@ -321,7 +240,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   padding-top:9px;
   margin-top:10px;
 }
-
 .post-action {
   flex:1;
   padding:9px 4px;
@@ -330,22 +248,20 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   color:#a8bedf;
   background:transparent;
 }
-
 .post-action:hover,.post-action.liked {
   color:var(--cyan);
   background:#102743;
 }
 
-.friend,.game {
+/* REKOMENDASI TEMAN */
+.friend {
   display:flex;
   align-items:center;
   gap:10px;
   padding:12px 0;
   border-bottom:1px solid #172b49;
 }
-
-.friend:last-child,.game:last-child { border-bottom:0; }
-
+.friend:last-child { border-bottom:0; }
 .small-avatar,.game-cover {
   width:43px;
   height:43px;
@@ -357,18 +273,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   background:linear-gradient(135deg,#2ddadd,#8d55ed);
   color:#061326;
 }
-
 .friend-info,.game-info { flex:1; min-width:0; }
-
 .friend-info strong,.game-info strong { font-size:12px; }
-
 .friend-info small,.game-info small {
   display:block;
   margin-top:4px;
   color:var(--muted);
   font-size:10px;
 }
-
 .follow,.play {
   padding:7px 10px;
   border:1px solid var(--cyan);
@@ -376,8 +288,24 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   color:var(--cyan);
   background:#07182b;
   font-size:11px;
+  flex-shrink:0;
 }
 
+/* REKOMENDASI GAME */
+.game {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid #172b49;
+}
+.game:last-child { border-bottom:0; }
+.game-cover {
+  width:48px;
+  height:48px;
+  border-radius:13px;
+  font-size:22px;
+}
 .tag {
   display:inline-block;
   margin:4px 3px;
@@ -388,10 +316,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   font-size:11px;
 }
 
-/* ================================
-   MODAL DAN NOTIFIKASI
-   ================================ */
-
+/* MODAL */
 .modal {
   display:none;
   position:fixed;
@@ -402,9 +327,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   justify-content:center;
   background:#020611d9;
 }
-
 .modal.open { display:flex; }
-
 .modal-box {
   width:100%;
   max-width:550px;
@@ -415,15 +338,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border-radius:18px;
   background:#09162c;
 }
-
-.modal-head {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
+.modal-head { display:flex; justify-content:space-between; align-items:center; }
 .modal-head h2 { font-size:18px; }
-
 .field {
   display:block;
   width:100%;
@@ -434,28 +350,16 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   color:white;
   background:#050d1d;
 }
-
 textarea.field { min-height:130px; resize:vertical; }
-
-.preview {
-  max-width:100%;
-  max-height:250px;
-  margin:8px 0;
-}
-
-#feedStatus {
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.6;
-}
-
+.preview { max-width:100%; max-height:250px; margin:8px 0; }
+#feedStatus { font-size:12px; color:var(--muted); line-height:1.6; }
 .mobile-nav { display:none; }
-
 .toast {
   position:fixed;
   z-index:50;
   right:15px;
   bottom:15px;
+  max-width:calc(100% - 30px);
   padding:13px 16px;
   border:1px solid #276582;
   border-radius:12px;
@@ -463,43 +367,30 @@ textarea.field { min-height:130px; resize:vertical; }
   background:#102742;
 }
 
-/* ================================
-   RESPONSIVE
-   ================================ */
-
+/* RESPONSIVE */
 @media(max-width:1150px) {
   .layout {
-    grid-template-columns:65px minmax(0,1fr) 270px;
+    grid-template-columns:65px minmax(0,1fr) 245px;
     gap:12px;
     padding:13px;
   }
-
-  .nav button {
-    text-align:center;
-    padding:13px 3px;
-    font-size:18px;
-  }
-
+  .nav button { text-align:center; padding:13px 3px; font-size:18px; }
   .nav button .label,.creator { display:none; }
 }
-
 @media(max-width:850px) {
   .layout { grid-template-columns:60px minmax(0,1fr); }
   .rightbar { display:none; }
 }
-
 @media(max-width:600px) {
   .topbar { height:58px; padding:0 10px; gap:10px; }
-  .brand { width:auto; font-size:23px; gap:2px; }
-  .logo-e { width:16px; height:20px; }
-  .logo-e span { height:5px; }
+  .brand { width:78px; height:43px; }
   .search input { font-size:11px; padding:10px; }
   .top-actions .primary { display:none; }
-  .layout { display:block; padding:13px 10px 80px; }
+  .layout { display:block; padding:13px 10px 82px; }
   .sidebar { display:none; }
   .welcome h1 { font-size:23px; }
   .panel { padding:13px; }
-
+  .rightbar { display:block; position:static; }
   .mobile-nav {
     position:fixed;
     bottom:0;
@@ -512,20 +403,17 @@ textarea.field { min-height:130px; resize:vertical; }
     border-top:1px solid var(--line);
     background:#050b1bf5;
   }
-
   .mobile-nav button {
     color:#9cb2d2;
     background:none;
     border:0;
     font-size:10px;
   }
-
   .mobile-nav button span {
     display:block;
     font-size:19px;
     margin-bottom:3px;
   }
-
   .mobile-nav button.active { color:var(--cyan); }
 }
 </style>
@@ -535,14 +423,11 @@ textarea.field { min-height:130px; resize:vertical; }
 
 <header class="topbar">
   <a class="brand" href="./mx-space.html" aria-label="MEXA Home">
-    <span class="logo-m">M</span>
-    <span class="logo-e" aria-label="E">
-      <span></span>
-      <span></span>
-      <span></span>
-    </span>
-    <span class="logo-x">X</span>
-    <span class="logo-a">A</span>
+    <img
+      src="https://iili.io/nWHpQzx.md.jpg"
+      alt="Logo resmi MEXA"
+      onerror="this.onerror=null;this.src='https://freeimage.host/i/nWHpQzx';"
+    >
   </a>
 
   <div class="search">
@@ -552,8 +437,8 @@ textarea.field { min-height:130px; resize:vertical; }
 
   <div class="top-actions">
     <button class="primary" id="openComposer">＋ Buat Postingan</button>
-    <button class="icon-btn" id="notifications">♧</button>
-    <button class="icon-btn" id="account">◉</button>
+    <button class="icon-btn" id="notifications" aria-label="Notifikasi">♧</button>
+    <button class="icon-btn" id="account" aria-label="Profil">◉</button>
   </div>
 </header>
 
@@ -624,7 +509,6 @@ textarea.field { min-height:130px; resize:vertical; }
           Apa yang ingin kamu bagikan?
         </button>
       </div>
-
       <div class="tools">
         <button class="tool" id="photoButton">▧ Foto</button>
         <button class="tool" id="videoButton">▷ Video</button>
@@ -646,12 +530,10 @@ textarea.field { min-height:130px; resize:vertical; }
             <strong>Arip Rahman</strong>
             <small>Contoh postingan · Publik</small>
           </div>
-          <button class="more">⋯</button>
+          <button class="more" aria-label="Menu postingan">⋯</button>
         </div>
-
         <p class="post-text">Selamat datang di MEXA! ✨
 Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
-
         <div class="post-actions">
           <button class="post-action" data-like>♡ Suka</button>
           <button class="post-action" data-comment>▢ Komentar</button>
@@ -660,15 +542,15 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
       </article>
     </section>
 
-    <p id="feedStatus">Ini masih tampilan awal. Database belum disambungkan.</p>
-  </main>
+    <p id="feedStatus">Tampilan awal aktif. Database belum disambungkan pada halaman ini.</p>
 
-  <aside class="rightbar">
+    <!-- REKOMENDASI TEMAN DI TENGAH FEED -->
     <section class="panel" id="friends">
       <div class="section-title">
-        <h2>Rekomendasi Teman</h2>
-        <button class="link" data-nav="friends">Lihat Semua</button>
+        <h2>♧ Rekomendasi Teman</h2>
+        <button class="link" data-nav="friends">Lihat Semua →</button>
       </div>
+      <p class="muted">Temukan orang baru untuk terhubung di MEXA.</p>
 
       <div class="friend">
         <div class="small-avatar">R</div>
@@ -698,19 +580,21 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
       </div>
     </section>
 
+    <!-- REKOMENDASI GAME SETELAH REKOMENDASI TEMAN -->
     <section class="panel" id="games">
       <div class="section-title">
-        <h2>🎮 Game Pilihan</h2>
-        <button class="link" data-nav="games">Lihat Semua</button>
+        <h2>🎮 Rekomendasi Game</h2>
+        <button class="link" data-nav="games">Lihat Semua →</button>
       </div>
+      <p class="muted">Pilihan game untuk menemani waktu luangmu.</p>
 
       <div class="game">
         <div class="game-cover">⚔️</div>
         <div class="game-info">
           <strong>Mobile Legends</strong>
-          <small>MOBA · 5v5</small>
+          <small>MOBA · Pertarungan tim 5v5</small>
         </div>
-        <button class="play" data-game>Main</button>
+        <button class="play" data-game="Mobile Legends">Lihat</button>
       </div>
 
       <div class="game">
@@ -719,7 +603,7 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
           <strong>Free Fire</strong>
           <small>Battle Royale</small>
         </div>
-        <button class="play" data-game>Main</button>
+        <button class="play" data-game="Free Fire">Lihat</button>
       </div>
 
       <div class="game">
@@ -728,16 +612,24 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
           <strong>Genshin Impact</strong>
           <small>RPG · Open World</small>
         </div>
-        <button class="play" data-game>Main</button>
+        <button class="play" data-game="Genshin Impact">Lihat</button>
       </div>
     </section>
+  </main>
 
+  <aside class="rightbar">
     <section class="panel">
       <div class="section-title"><h2>🔥 Sedang Ramai</h2></div>
       <span class="tag">#MEXACommunity</span>
       <span class="tag">#Gaming</span>
       <span class="tag">#Kreativitas</span>
       <span class="tag">#CeritaHariIni</span>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2>✦ Jelajahi MEXA</h2></div>
+      <p class="muted">Bagikan cerita, temukan teman, dan jelajahi komunitas favoritmu.</p>
+      <button class="primary" id="rightCreate">＋ Buat Postingan</button>
     </section>
   </aside>
 </div>
@@ -796,8 +688,7 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
     el.className = "toast";
     el.textContent = message;
     document.body.append(el);
-
-    setTimeout(() => el.remove(), 2500);
+    setTimeout(() => el.remove(), 2600);
   }
 
   function openComposer(mode = "post") {
@@ -812,6 +703,7 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
   }
 
   $("#openComposer").onclick = () => openComposer();
+  $("#rightCreate").onclick = () => openComposer();
   $("#composerTrigger").onclick = () => openComposer();
   $("#mobileCreate").onclick = () => openComposer();
   $("#storyButton").onclick = () => openComposer("story");
@@ -929,7 +821,6 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
 
     if (file) {
       const url = URL.createObjectURL(file);
-
       const element = document.createElement(
         file.type.startsWith("video/") ? "video" : "img"
       );
@@ -965,8 +856,8 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
             ? "♥ Disukai" : "♡ Suka";
         } else {
           toast(action === "comment"
-            ? "Komentar belum tersambung."
-            : "Bagikan belum tersambung.");
+            ? "Komentar belum tersambung ke database."
+            : "Fitur bagikan belum tersambung ke database.");
         }
       };
 
@@ -981,7 +872,6 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
     $("#photoInput").value = "";
     $("#videoInput").value = "";
     preview.replaceChildren();
-
     selectedFile = null;
 
     if (selectedUrl) URL.revokeObjectURL(selectedUrl);
@@ -995,20 +885,22 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
     toast("Postingan ditambahkan ke tampilan lokal.");
   };
 
-  $$("[data-like]").forEach(button => {
+  function attachLike(button) {
     button.onclick = () => {
       button.classList.toggle("liked");
       button.textContent = button.classList.contains("liked")
         ? "♥ Disukai" : "♡ Suka";
     };
-  });
+  }
+
+  $$("[data-like]").forEach(attachLike);
 
   $$("[data-comment]").forEach(button => {
-    button.onclick = () => toast("Komentar akan disambungkan nanti.");
+    button.onclick = () => toast("Komentar belum tersambung ke database.");
   });
 
   $$("[data-share]").forEach(button => {
-    button.onclick = () => toast("Bagikan akan disambungkan nanti.");
+    button.onclick = () => toast("Bagikan belum tersambung ke database.");
   });
 
   $$(".follow").forEach(button => {
@@ -1022,7 +914,6 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
   $$(".story").forEach(button => {
     button.onclick = () => {
       const person = button.dataset.story;
-
       if (person === "mine") {
         openComposer("story");
       } else {
@@ -1032,23 +923,25 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
   });
 
   $$("[data-game]").forEach(button => {
-    button.onclick = () => toast("Tautan game belum ditambahkan.");
+    button.onclick = () => {
+      toast("Halaman game " + button.dataset.game + " belum ditautkan.");
+    };
   });
 
   $("#notifications").onclick =
     () => toast("Notifikasi belum tersambung ke backend.");
 
   $("#account").onclick =
-    () => toast("Profil akan disambungkan ke sistem identitas.");
+    () => toast("Halaman profil belum ditautkan.");
 
   $("#creatorInfo").onclick =
     () => toast("Modul kreator akan dibuat terpisah.");
 
   $("#allStories").onclick =
-    () => toast("Modul Cerita akan disambungkan nanti.");
+    () => toast("Modul Cerita belum tersambung.");
 
   $("#refreshFeed").onclick =
-    () => toast("Feed Supabase belum disambungkan.");
+    () => toast("Feed database belum disambungkan.");
 
   $("#globalSearch").addEventListener("input", e => {
     const query = e.target.value.trim().toLowerCase();
@@ -1059,25 +952,33 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
         post.textContent.toLowerCase().includes(query);
 
       post.style.display = match ? "" : "none";
-
       if (match) count++;
     });
 
+    $$("#friends .friend").forEach(friend => {
+      friend.style.display =
+        !query || friend.textContent.toLowerCase().includes(query)
+          ? "" : "none";
+    });
+
+    $$("#games .game").forEach(game => {
+      game.style.display =
+        !query || game.textContent.toLowerCase().includes(query)
+          ? "" : "none";
+    });
+
     $("#feedStatus").textContent = query
-      ? count + " postingan cocok di feed yang tampil."
-      : "Konten contoh ditampilkan. Pencarian global belum tersambung.";
+      ? count + " postingan cocok di feed. Rekomendasi teman dan game juga difilter."
+      : "Tampilan awal aktif. Database belum disambungkan pada halaman ini.";
   });
 
   function navigate(section) {
     const target = document.getElementById(section);
 
     if (target) {
-      target.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-      });
+      target.scrollIntoView({ behavior:"smooth", block:"start" });
     } else {
-      toast("Modul " + section + " akan dibuat pada jalur tersendiri.");
+      toast("Modul " + section + " belum ditautkan.");
     }
 
     $$("[data-section]").forEach(button => {
