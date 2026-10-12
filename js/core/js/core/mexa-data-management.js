@@ -1,507 +1,275 @@
 /* =====================================================
    MEXA SMART — SYSTEM PENGELOLAAN DATA
-   Version: 1.0.1
+   VERSION: 1.0.0
 
    PENERIMA:
    - receiveRegistryRecord(record)
    - receiveRegisteredUser(record)
+   - receiveProfileRecord(record)
 
-   TUJUAN:
-   System Pengelolaan Data -> MX
+   PEMINTA DATA:
+   - getCurrentProfile()
+   - getProfileById(id)
 
-   Catatan:
-   Tidak membuat koneksi Supabase sendiri.
-   Tidak menganggap data sudah sampai ke MX
-   sebelum ada konfirmasi penerimaan.
+   MX meminta data dari sini.
+   Modul ini tidak membuat koneksi Supabase.
    ===================================================== */
 
 (function (window, document) {
   "use strict";
 
-  const VERSION = "1.0.1";
-
   if (window.MEXA_DATA_MANAGEMENT) {
     console.warn(
-      "[MEXA DATA MANAGEMENT] Sistem sudah terdaftar."
+      "[MEXA DATA MANAGEMENT] Sudah aktif."
     );
     return;
   }
 
-  const registryRecords = new Map();
-  const registeredUsers = new Map();
-  const pendingToMX = new Map();
+  const VERSION = "1.0.0";
 
-  let mxReceiver = null;
-  let sequence = 0;
-  let receivedRegistry = 0;
-  let receivedUsers = 0;
-  let deliveredToMX = 0;
-  let failed = 0;
+  const registry = new Map();
+  const users = new Map();
+  const profiles = new Map();
+
+  let currentProfileId = null;
   let lastError = null;
 
-  // ---------------------------------------------------
-  // EVENT INTERNAL
-  // ---------------------------------------------------
+  function copy(data) {
+    return data ? { ...data } : null;
+  }
 
   function emit(name, detail) {
     document.dispatchEvent(
-      new window.CustomEvent(name, {
-        detail: detail
-      })
+      new window.CustomEvent(name, { detail })
     );
   }
 
-  function clone(record) {
-    return Object.assign({}, record);
-  }
+  // ================================================
+  // 1. MENERIMA DATA REGISTRY DARI PENGHUBUNG 2
+  // ================================================
 
-  // ---------------------------------------------------
-  // VALIDASI REGISTRY
-  // Format mengikuti Penghubung 2
-  // ---------------------------------------------------
-
-  function normalizeRegistryRecord(input) {
+  function receiveRegistryRecord(record) {
     if (
-      !input ||
-      typeof input !== "object" ||
-      Array.isArray(input)
+      !record ||
+      typeof record.name !== "string" ||
+      !record.name.trim() ||
+      typeof record.title !== "string" ||
+      !record.title.trim()
     ) {
-      throw new Error(
-        "Record Registry harus berupa objek."
-      );
+      return {
+        accepted: false,
+        error: "Data Registry tidak valid."
+      };
     }
 
-    const name =
-      typeof input.name === "string"
-        ? input.name.trim().toLowerCase()
-        : "";
+    const data = {
+      ...record,
+      name: record.name.trim().toLowerCase(),
+      title: record.title.trim()
+    };
 
-    const title =
-      typeof input.title === "string"
-        ? input.title.trim()
-        : "";
+    registry.set(data.name, data);
 
-    if (!name || !title) {
-      throw new Error(
-        "Nama dan judul sistem wajib tersedia."
-      );
-    }
+    emit("mexa:management:registry-received", {
+      name: data.name
+    });
 
     return {
-      name: name,
-      title: title,
-      version: input.version || VERSION,
-
-      system_type:
-        input.system_type ||
-        input.type ||
-        "module",
-
-      file_path:
-        input.file_path ||
-        input.file ||
-        null,
-
-      position:
-        Number.isInteger(input.position)
-          ? input.position
-          : null,
-
-      description:
-        typeof input.description === "string"
-          ? input.description
-          : "",
-
-      status:
-        input.status === "ready"
-          ? "ready"
-          : "registered",
-
-      created_at: input.created_at || null,
-      updated_at: input.updated_at || null
+      accepted: true,
+      destination: "MEXA_DATA_MANAGEMENT",
+      name: data.name
     };
   }
 
-  // ---------------------------------------------------
-  // VALIDASI PENGGUNA
-  // Hanya data aman yang diteruskan.
-  // Kata sandi dan token tidak ikut disimpan.
-  // ---------------------------------------------------
+  // ================================================
+  // 2. MENERIMA DATA DASAR PENGGUNA
+  // Bukan pengganti data lengkap public.profiles.
+  // ================================================
 
-  function normalizeUserRecord(input) {
+  function receiveRegisteredUser(record) {
     if (
-      !input ||
-      typeof input !== "object" ||
-      Array.isArray(input)
+      !record ||
+      typeof record.id !== "string" ||
+      !record.id.trim()
     ) {
-      throw new Error(
-        "Record pengguna harus berupa objek."
-      );
+      return {
+        accepted: false,
+        error: "ID pengguna tidak valid."
+      };
     }
 
-    const id =
-      typeof input.id === "string"
-        ? input.id.trim()
-        : "";
+    const data = {
+      id: record.id,
+      email: record.email || "",
+      displayName: record.displayName || "",
+      username: record.username || "",
+      createdAt: record.createdAt || null
+    };
 
-    const email =
-      typeof input.email === "string"
-        ? input.email.trim().toLowerCase()
-        : "";
+    users.set(data.id, data);
 
-    const displayName =
-      typeof input.displayName === "string"
-        ? input.displayName.trim()
-        : "";
-
-    const username =
-      typeof input.username === "string"
-        ? input.username.trim().toLowerCase()
-        : "";
-
-    if (!id) {
-      throw new Error("ID pengguna tidak tersedia.");
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      throw new Error("Email pengguna tidak valid.");
-    }
-
-    if (
-      displayName.length < 2 ||
-      displayName.length > 80
-    ) {
-      throw new Error("Nama pengguna tidak valid.");
-    }
-
-    if (!/^[a-z0-9_.]{3,30}$/.test(username)) {
-      throw new Error("Username tidak valid.");
-    }
+    emit("mexa:management:user-received", {
+      id: data.id
+    });
 
     return {
-      id: id,
-      email: email,
-      displayName: displayName,
-      username: username,
-      createdAt: input.createdAt || null
+      accepted: true,
+      destination: "MEXA_DATA_MANAGEMENT",
+      userId: data.id
     };
   }
 
-  // ---------------------------------------------------
-  // ANTREAN MENUJU MX
-  // ---------------------------------------------------
+  // ================================================
+  // 3. MENERIMA PROFIL LENGKAP DARI SYSTEM CENTER
+  // melalui Penghubung 2.
+  // Nama kolom mengikuti public.profiles.
+  // ================================================
 
-  function createMXPayload(type, record) {
-    sequence += 1;
+  function receiveProfileRecord(record) {
+    if (
+      !record ||
+      typeof record !== "object" ||
+      typeof record.id !== "string" ||
+      !record.id.trim()
+    ) {
+      return {
+        accepted: false,
+        error: "Data profil tidak valid."
+      };
+    }
+
+    const data = {
+      id: record.id,
+      email: record.email || "",
+      display_name: record.display_name || "",
+      username: record.username || "",
+      avatar_url: record.avatar_url || null,
+      cover_url: record.cover_url || null,
+      bio: record.bio || "",
+      location: record.location || "",
+      website: record.website || "",
+      created_at: record.created_at || null,
+      updated_at: record.updated_at || null
+    };
+
+    // Simpan di memori modul selama halaman aktif.
+    profiles.set(data.id, data);
+
+    // Profil ini menjadi konteks aktif jika System Center
+    // mengirim profil pengguna yang sedang login.
+    currentProfileId = data.id;
+    lastError = null;
+
+    emit("mexa:management:profile-received", {
+      userId: data.id
+    });
 
     return {
-      id: "mexa-data-" +
-        Date.now() + "-" + sequence,
+      accepted: true,
+      destination: "MEXA_DATA_MANAGEMENT",
+      userId: data.id
+    };
+  }
 
+  // ================================================
+  // 4. MX MEMINTA PROFIL DARI PENGELOLAAN DATA
+  // Tidak membaca Supabase secara langsung.
+  // ================================================
+
+  function getCurrentProfile() {
+    if (!currentProfileId) {
+      return {
+        accepted: false,
+        data: null,
+        error:
+          "Profil belum diterima dari System Center."
+      };
+    }
+
+    const profile = profiles.get(currentProfileId);
+
+    if (!profile) {
+      return {
+        accepted: false,
+        data: null,
+        error: "Data profil belum tersedia."
+      };
+    }
+
+    return {
+      accepted: true,
       source: "MEXA_DATA_MANAGEMENT",
-      type: type,
-      version: VERSION,
-      createdAt: new Date().toISOString(),
-      record: clone(record)
+      data: copy(profile)
     };
   }
 
-  async function sendToMX(payload) {
-    const receiver =
-      mxReceiver || window.MEXA_MX;
-
-    // Jalur langsung hanya digunakan bila MX
-    // benar-benar menyediakan API penerima.
-    if (
-      receiver &&
-      typeof receiver.receiveManagedData === "function"
-    ) {
-      try {
-        const result = await receiver.receiveManagedData(
-          clone(payload)
-        );
-
-        if (result && result.accepted === true) {
-          pendingToMX.delete(payload.id);
-          deliveredToMX += 1;
-          lastError = null;
-
-          emit("mexa:data-management:mx-confirmed", {
-            id: payload.id,
-            type: payload.type,
-            accepted: true
-          });
-
-          return {
-            confirmed: true,
-            destination: "MX"
-          };
-        }
-
-        return {
-          confirmed: false,
-          queued: true,
-          reason: "MX belum mengonfirmasi penerimaan."
-        };
-      } catch (error) {
-        lastError = String(error.message || error);
-        failed += 1;
-
-        return {
-          confirmed: false,
-          queued: true,
-          reason: lastError
-        };
-      }
-    }
-
-    // Belum ada API MX yang dapat dikonfirmasi.
-    // Simpan dalam antrean memori dan keluarkan event
-    // agar MX dapat mendengarkan jalur ini.
-    emit("mexa:mx:managed-data", clone(payload));
-
-    return {
-      confirmed: false,
-      queued: true,
-      reason: "Penerima MX belum terhubung."
-    };
-  }
-
-  async function queueForMX(type, record) {
-    const payload = createMXPayload(type, record);
-
-    pendingToMX.set(payload.id, payload);
-
-    return await sendToMX(payload);
-  }
-
-  // ---------------------------------------------------
-  // PENERIMA DARI PENGHUBUNG 2
-  // ---------------------------------------------------
-
-  async function receiveRegistryRecord(input) {
-    try {
-      const record = normalizeRegistryRecord(input);
-
-      registryRecords.set(record.name, record);
-      receivedRegistry += 1;
-      lastError = null;
-
-      emit("mexa:data-management:registry-received", {
-        name: record.name,
-        accepted: true
-      });
-
-      const mx = await queueForMX("registry", record);
-
-      return {
-        accepted: true,
-        managed: true,
-        destination: "MEXA_DATA_MANAGEMENT",
-        name: record.name,
-        mx: mx
-      };
-    } catch (error) {
-      failed += 1;
-      lastError = String(error.message || error);
-
+  // Untuk mengambil profil berdasarkan ID tertentu.
+  // Data harus sudah tersedia di memori pengelolaan.
+  function getProfileById(id) {
+    if (typeof id !== "string" || !id.trim()) {
       return {
         accepted: false,
-        error: lastError
+        data: null,
+        error: "ID profil tidak valid."
       };
     }
-  }
 
-  async function receiveRegisteredUser(input) {
-    try {
-      const record = normalizeUserRecord(input);
+    const profile = profiles.get(id);
 
-      registeredUsers.set(record.id, record);
-      receivedUsers += 1;
-      lastError = null;
-
-      emit("mexa:data-management:user-received", {
-        id: record.id,
-        username: record.username,
-        accepted: true
-      });
-
-      const mx = await queueForMX(
-        "registered-user",
-        record
-      );
-
-      return {
-        accepted: true,
-        managed: true,
-        destination: "MEXA_DATA_MANAGEMENT",
-        userId: record.id,
-        mx: mx
-      };
-    } catch (error) {
-      failed += 1;
-      lastError = String(error.message || error);
-
+    if (!profile) {
       return {
         accepted: false,
-        error: lastError
+        data: null,
+        error: "Profil belum tersedia di pengelolaan data."
       };
-    }
-  }
-
-  // ---------------------------------------------------
-  // KONEKSI MX
-  // ---------------------------------------------------
-
-  function connectMX(api) {
-    if (
-      !api ||
-      typeof api.receiveManagedData !== "function"
-    ) {
-      throw new Error(
-        "MX belum menyediakan receiveManagedData(payload)."
-      );
-    }
-
-    mxReceiver = api;
-
-    emit("mexa:data-management:mx-connected", {
-      connected: true
-    });
-
-    return getStatus();
-  }
-
-  async function flushMXQueue() {
-    if (
-      !mxReceiver ||
-      typeof mxReceiver.receiveManagedData !== "function"
-    ) {
-      return {
-        connected: false,
-        sent: 0,
-        pending: pendingToMX.size
-      };
-    }
-
-    let sent = 0;
-
-    for (const payload of Array.from(
-      pendingToMX.values()
-    )) {
-      const result = await sendToMX(payload);
-
-      if (result.confirmed) {
-        sent += 1;
-      }
     }
 
     return {
-      connected: true,
-      sent: sent,
-      pending: pendingToMX.size
+      accepted: true,
+      source: "MEXA_DATA_MANAGEMENT",
+      data: copy(profile)
     };
   }
 
-  // Dipakai MX bila menggunakan jalur event.
-  function acknowledgeMX(id, accepted) {
-    if (accepted !== true || !pendingToMX.has(id)) {
-      return false;
-    }
-
-    pendingToMX.delete(id);
-    deliveredToMX += 1;
-
-    emit("mexa:data-management:mx-confirmed", {
-      id: id,
-      accepted: true
-    });
-
-    return true;
-  }
-
-  // ---------------------------------------------------
-  // BACA DATA DAN STATUS
-  // ---------------------------------------------------
-
-  function getRegistryRecords() {
-    return Array.from(
-      registryRecords.values()
-    ).map(clone);
-  }
-
-  function getRegisteredUsers() {
-    return Array.from(
-      registeredUsers.values()
-    ).map(clone);
-  }
-
-  function getPendingForMX() {
-    return Array.from(
-      pendingToMX.values()
-    ).map(clone);
-  }
+  // ================================================
+  // 5. STATUS SISTEM
+  // ================================================
 
   function getStatus() {
-    const receiver =
-      mxReceiver || window.MEXA_MX;
-
     return {
       name: "MEXA DATA MANAGEMENT",
       version: VERSION,
       ready: true,
-
-      registryCount: registryRecords.size,
-      usersCount: registeredUsers.size,
-      pendingToMX: pendingToMX.size,
-
-      receivedRegistry: receivedRegistry,
-      receivedUsers: receivedUsers,
-      deliveredToMX: deliveredToMX,
-      failed: failed,
-
-      mxConnected: Boolean(
-        receiver &&
-        typeof receiver.receiveManagedData === "function"
-      ),
-
+      registryCount: registry.size,
+      userCount: users.size,
+      profileCount: profiles.size,
+      currentProfileLoaded: Boolean(currentProfileId),
       lastError: lastError
     };
   }
 
-  // ---------------------------------------------------
-  // DAFTARKAN API GLOBAL
-  // Kontrak harus cocok dengan Penghubung 2
-  // dan mx-space.html.
-  // ---------------------------------------------------
-
   const api = Object.freeze({
     version: VERSION,
 
-    receiveRegistryRecord: receiveRegistryRecord,
-    receiveRegisteredUser: receiveRegisteredUser,
+    receiveRegistryRecord,
+    receiveRegisteredUser,
+    receiveProfileRecord,
 
-    connectMX: connectMX,
-    flushMXQueue: flushMXQueue,
-    acknowledgeMX: acknowledgeMX,
+    getCurrentProfile,
+    getProfileById,
 
-    getRegistryRecords: getRegistryRecords,
-    getRegisteredUsers: getRegisteredUsers,
-    getPendingForMX: getPendingForMX,
-    getStatus: getStatus
+    getStatus
   });
 
   window.MEXA_DATA_MANAGEMENT = api;
 
-  // Beri tahu Penghubung 2 bahwa penerima siap.
   emit("mexa:data-management:ready", {
     version: VERSION,
     api: api
   });
 
   console.info(
-    "[MEXA DATA MANAGEMENT] API siap — versi " +
-    VERSION
+    "[MEXA DATA MANAGEMENT] API siap."
   );
 
 })(window, document);
