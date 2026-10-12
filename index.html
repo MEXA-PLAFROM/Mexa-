@@ -4,22 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0818">
-
-  <title>MEXA SMART — Global Registry</title>
+  <title>Daftar MEXA SMART</title>
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #0b0818;
       --panel: #151027;
-      --surface: #201832;
       --border: #302544;
       --text: #f6f3ff;
       --muted: #aaa4c2;
       --primary: #8b5cf6;
       --accent: #00e5ff;
-      --success: #34d399;
-      --warning: #fbbf24;
       --danger: #fb7185;
     }
 
@@ -28,613 +24,297 @@
     body {
       margin: 0;
       min-height: 100vh;
+      padding: 24px 14px;
+      display: grid;
+      place-items: center;
       background:
-        radial-gradient(ellipse at 10% 0%, #32175b55, transparent 38%),
-        radial-gradient(ellipse at 100% 15%, #064e5b33, transparent 35%),
+        radial-gradient(ellipse at top, #32175b66, transparent 55%),
         var(--bg);
       color: var(--text);
-      font-family: Inter, system-ui, -apple-system,
-        BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, sans-serif;
     }
 
-    button, input { font: inherit; }
-
-    button {
-      cursor: pointer;
-    }
-
-    button:focus-visible,
-    input:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
-
-    .app {
-      width: min(1120px, calc(100% - 32px));
-      margin: auto;
-      padding: 25px 0 45px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      padding-bottom: 22px;
-      border-bottom: 1px solid var(--border);
+    .register-page {
+      width: min(100%, 440px);
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      width: fit-content;
-      font-size: 30px;
-      font-weight: 950;
-      letter-spacing: 1px;
+      text-align: center;
+      margin-bottom: 25px;
     }
 
-    .brand-main { color: var(--primary); }
-    .brand-x { color: var(--accent); }
+    .logo {
+      font-size: 39px;
+      font-weight: 950;
+      letter-spacing: 3px;
+    }
 
-    .brand-e {
-      height: 24px;
-      width: 18px;
-      display: flex;
+    .m, .a { color: var(--primary); }
+    .x { color: var(--accent); }
+
+    .e {
+      display: inline-flex;
       flex-direction: column;
       justify-content: space-between;
+      vertical-align: -3px;
+      width: 20px;
+      height: 26px;
+      margin: 0 2px;
     }
 
-    .brand-e span {
+    .e i {
       height: 4px;
       width: 100%;
       background: var(--primary);
-      border-radius: 1px;
+      border-radius: 2px;
     }
 
-    .brand-caption {
-      margin-top: 4px;
+    .brand p {
       color: var(--muted);
-      font-size: 10px;
-      letter-spacing: 2.5px;
+      font-size: 11px;
+      letter-spacing: 3px;
+      margin-top: 3px;
     }
 
-    .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .card {
+      padding: 28px;
+      background: #151027ee;
       border: 1px solid var(--border);
-      border-radius: 30px;
-      padding: 9px 13px;
-      color: var(--muted);
-      background: #151027aa;
-      font-size: 12px;
-    }
-
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      flex: 0 0 auto;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 12px #34d39988;
-    }
-
-    .hero {
-      padding: 35px 0 24px;
+      border-radius: 20px;
+      box-shadow: 0 20px 70px #0005;
     }
 
     .eyebrow {
       color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 800;
       font-size: 11px;
-      font-weight: 850;
-      letter-spacing: 2.5px;
     }
 
     h1 {
-      margin: 10px 0;
-      font-size: clamp(30px, 5vw, 47px);
-      line-height: 1.12;
-      letter-spacing: -1.4px;
+      font-size: 28px;
+      margin: 9px 0;
     }
 
-    .hero p {
-      max-width: 720px;
+    .intro {
       color: var(--muted);
-      line-height: 1.8;
+      font-size: 13px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      min-height: 46px;
+      padding: 12px;
+      background: #0d0a17;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font: inherit;
       font-size: 14px;
     }
 
-    .accent-text { color: var(--accent); }
-
-    .connection-panel {
-      padding: 19px;
-      margin-bottom: 22px;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: linear-gradient(115deg, #19112b, #111424);
-      box-shadow: 0 15px 45px #00000018;
-    }
-
-    .connection-heading {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      margin-bottom: 9px;
-    }
-
-    .connection-icon {
-      display: grid;
-      place-items: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: #8b5cf622;
-      color: var(--accent);
-      font-size: 20px;
-    }
-
-    .connection-heading h2 {
-      margin: 0;
-      font-size: 16px;
-    }
-
-    .connection-heading p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    #connectionMessage {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
-      overflow-wrap: anywhere;
-    }
-
-    .connection-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .primary-button {
-      padding: 11px 16px;
-      color: #fff;
-      background: linear-gradient(110deg, #7c3aed, #8b5cf6);
-      border: 1px solid #a78bfa;
-      border-radius: 10px;
-      font-weight: 750;
-      font-size: 13px;
-    }
-
-    .primary-button:hover:not(:disabled) {
-      filter: brightness(1.13);
-    }
-
-    .primary-button:disabled {
-      opacity: .45;
-      cursor: not-allowed;
-    }
-
-    .secondary-button {
-      padding: 11px 15px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--surface);
-      color: var(--text);
-      font-size: 13px;
-    }
-
-    .secondary-button:hover {
+    input:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
       border-color: var(--primary);
     }
 
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 13px;
-      margin: 20px 0 30px;
-    }
+    input::placeholder { color: #766d89; }
 
-    .metric {
-      position: relative;
-      overflow: hidden;
-      min-width: 0;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--panel);
-    }
-
-    .metric::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 18px;
-      width: 45px;
-      height: 2px;
-      background: var(--primary);
-    }
-
-    .metric strong {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 28px;
-      line-height: 1.2;
-    }
-
-    .metric span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin: 28px 0 16px;
-    }
-
-    .section-header h2 {
-      margin: 0;
-      font-size: 21px;
-    }
-
-    .section-header p {
-      margin: 5px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .search {
-      width: min(100%, 310px);
-      padding: 11px 14px;
-      border: 1px solid var(--border);
+    .register-button {
+      width: 100%;
+      min-height: 47px;
+      margin-top: 6px;
+      border: 1px solid #a78bfa;
       border-radius: 10px;
-      outline: none;
-      background: var(--panel);
-      color: var(--text);
+      background: linear-gradient(110deg, #7c3aed, #8b5cf6);
+      color: white;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
-    .search::placeholder { color: #827996; }
-
-    .registry-grid {
-      display: grid;
-      grid-template-columns: repeat(
-        auto-fit, minmax(min(100%, 275px), 1fr)
-      );
-      gap: 14px;
+    .register-button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
     }
 
-    .registry-card {
-      min-width: 0;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: linear-gradient(145deg, #171129, #100d1d);
-      transition: border-color .18s, transform .18s;
-    }
-
-    .registry-card:hover {
-      border-color: #65518b;
-      transform: translateY(-2px);
-    }
-
-    .card-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .card-name {
-      margin: 0;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    .position {
-      flex: 0 0 auto;
-      color: var(--accent);
-      font-size: 10px;
-      font-weight: 850;
-      letter-spacing: .6px;
-    }
-
-    .card-description {
-      min-height: 40px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    .file-label {
-      display: block;
-      margin: 13px 0 6px;
-      color: #877da2;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .file-path {
-      display: block;
-      padding: 10px;
-      border: 1px solid #302544;
-      border-radius: 8px;
+    .message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
       background: #0d0a17;
-      color: #d3c4ff;
-      font: 11px/1.65 ui-monospace, monospace;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      line-height: 1.7;
       overflow-wrap: anywhere;
     }
 
-    .card-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 13px;
-      padding: 5px 8px;
-      border: 1px solid #5a4725;
-      border-radius: 30px;
-      color: var(--warning);
-      font-size: 10px;
-    }
+    .message.visible { display: block; }
+    .message.error { color: var(--danger); }
+    .message.info { color: var(--accent); }
 
-    .card-status.ready {
-      color: var(--success);
-      border-color: #215f4c;
-    }
-
-    .card-status::before {
-      content: "";
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
-    .empty-state {
-      grid-column: 1 / -1;
-      padding: 30px;
-      border: 1px dashed var(--border);
-      border-radius: 12px;
-      color: var(--muted);
+    .login-note {
       text-align: center;
-    }
-
-    .flow-section {
-      margin-top: 36px;
-      padding: 22px;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: #100d1d;
-    }
-
-    .flow-section h2 {
-      margin: 0 0 7px;
-      font-size: 20px;
-    }
-
-    .flow-section > p {
+      margin: 20px 0 0;
       color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    .flow {
-      display: grid;
-      gap: 8px;
-      max-width: 650px;
-      margin: 20px auto 0;
-    }
-
-    .flow-node {
-      padding: 14px;
-      text-align: center;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-    }
-
-    .flow-node strong {
-      display: block;
       font-size: 13px;
     }
 
-    .flow-node small {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 11px;
-      overflow-wrap: anywhere;
-    }
-
-    .flow-arrow {
+    .login-note a {
       color: var(--accent);
-      text-align: center;
-      font-size: 19px;
+      text-decoration: none;
     }
 
-    .footer {
-      padding-top: 22px;
-      margin-top: 32px;
-      border-top: 1px solid var(--border);
-      color: #827996;
+    .footnote {
+      text-align: center;
+      color: #766d89;
       font-size: 11px;
-      line-height: 1.8;
-      text-align: center;
+      margin-top: 22px;
+      line-height: 1.7;
     }
 
-    @media (max-width: 620px) {
-      .app { width: calc(100% - 24px); padding-top: 15px; }
-      .brand { font-size: 26px; }
-      .metrics { gap: 8px; }
-      .metric { padding: 13px 10px; }
-      .metric strong { font-size: 23px; }
-      .metric span { font-size: 10px; }
-      .connection-panel { padding: 15px; }
-      .flow-section { padding: 16px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-      }
+    @media (max-width: 400px) {
+      .card { padding: 22px 18px; }
+      h1 { font-size: 25px; }
     }
   </style>
 </head>
 
 <body>
-  <main class="app">
-    <header class="topbar">
-      <div>
-        <div class="brand" aria-label="MEXA">
-          <span class="brand-main">M</span>
-          <span class="brand-e" aria-label="E">
-            <span></span><span></span><span></span>
-          </span>
-          <span class="brand-x">X</span>
-          <span class="brand-main">A</span>
-        </div>
-        <div class="brand-caption">SMART SOCIAL PLATFORM</div>
+  <main class="register-page">
+    <header class="brand">
+      <div class="logo" aria-label="MEXA">
+        <span class="m">M</span>
+        <span class="e" aria-label="E">
+          <i></i><i></i><i></i>
+        </span>
+        <span class="x">X</span><span class="a">A</span>
       </div>
-
-      <div class="live-badge">
-        <span class="live-dot"></span>
-        HTML REGISTRY
-      </div>
+      <p>SMART SOCIAL PLATFORM</p>
     </header>
 
-    <section class="hero">
-      <div class="eyebrow">MEXA SMART SYSTEM</div>
-      <h1>Global <span class="accent-text">Registry</span></h1>
-      <p>
-        Pintu pendaftaran sistem MEXA SMART. Setiap sistem
-        memiliki identitas, lokasi file, posisi, dan jalur
-        pengiriman yang jelas agar seluruh arsitektur terhubung.
+    <section class="card">
+      <div class="eyebrow">Gabung MEXA</div>
+      <h1>Buat akun baru</h1>
+      <p class="intro">
+        Daftar untuk memulai akun MEXA SMART.
+        Informasi akun akan diteruskan melalui jalur
+        pendaftaran resmi MEXA.
+      </p>
+
+      <form id="mexaRegisterForm">
+        <div class="field">
+          <label for="displayName">Nama lengkap</label>
+          <input
+            id="displayName"
+            name="displayName"
+            type="text"
+            autocomplete="name"
+            maxlength="80"
+            placeholder="Masukkan nama lengkap"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="username">Username</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            autocomplete="username"
+            minlength="3"
+            maxlength="30"
+            pattern="[A-Za-z0-9_.]+"
+            placeholder="Contoh: arip_rahman"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="email">Alamat email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            maxlength="254"
+            placeholder="nama@email.com"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">Kata sandi</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            minlength="8"
+            maxlength="72"
+            placeholder="Minimal 8 karakter"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Ulangi kata sandi</label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            autocomplete="new-password"
+            minlength="8"
+            maxlength="72"
+            placeholder="Masukkan ulang kata sandi"
+            required
+          >
+        </div>
+
+        <button
+          class="register-button"
+          id="registerButton"
+          type="submit"
+        >
+          Daftar Sekarang
+        </button>
+
+        <div
+          class="message"
+          id="registerMessage"
+          role="status"
+          aria-live="polite"
+        ></div>
+      </form>
+
+      <p class="login-note">
+        Sudah punya akun?
+        <a href="./login.html">Masuk</a>
       </p>
     </section>
 
-    <section class="connection-panel">
-      <div class="connection-heading">
-        <div class="connection-icon" aria-hidden="true">↗</div>
-        <div>
-          <h2>Jalur Pengiriman Registry</h2>
-          <p>Tujuan: MEXA CONNECTOR 1</p>
-        </div>
-      </div>
-
-      <div id="connectionMessage" role="status" aria-live="polite">
-        Registry sedang disiapkan.
-      </div>
-
-      <div class="connection-actions">
-        <button
-          class="primary-button"
-          id="sendRegistryButton"
-          type="button"
-          disabled
-        >
-          Kirim Pendaftaran
-        </button>
-
-        <button
-          class="secondary-button"
-          id="refreshRegistryButton"
-          type="button"
-        >
-          Segarkan Daftar
-        </button>
-      </div>
-    </section>
-
-    <section class="metrics" aria-label="Ringkasan Registry">
-      <div class="metric">
-        <strong id="totalCount">0</strong>
-        <span>Sistem terdaftar</span>
-      </div>
-
-      <div class="metric">
-        <strong id="readyCount">0</strong>
-        <span>Halaman aktif</span>
-      </div>
-
-      <div class="metric">
-        <strong id="pendingCount">0</strong>
-        <span>Belum tersambung</span>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-header">
-        <div>
-          <h2>Daftar Pendaftaran</h2>
-          <p>Nama dan jalur file sistem yang terdaftar di Registry.</p>
-        </div>
-
-        <input
-          class="search"
-          id="registrySearch"
-          type="search"
-          placeholder="Cari nama sistem atau file..."
-          aria-label="Cari Registry"
-        >
-      </div>
-
-      <div
-        class="registry-grid"
-        id="registryList"
-        aria-live="polite"
-      ></div>
-    </section>
-
-    <section class="flow-section">
-      <h2>Arsitektur Jalur MEXA</h2>
-      <p>
-        Registry mengirim detail pendaftaran melalui Penghubung 1.
-        System Pusat kemudian meneruskan pendaftaran ke
-        System Pengelolaan Data melalui Penghubung 2.
-      </p>
-
-      <div class="flow">
-        <div class="flow-node">
-          <strong>1. HTML Registry</strong>
-          <small>Mencatat dan mengemas detail pendaftaran</small>
-        </div>
-        <div class="flow-arrow">↓</div>
-        <div class="flow-node">
-          <strong>2. MEXA CONNECTOR 1</strong>
-          <small>Menerima payload Registry</small>
-        </div>
-        <div class="flow-arrow">↓</div>
-        <div class="flow-node">
-          <strong>3. MEXA SYSTEM CENTER</strong>
-          <small>Menerima dan mengelola pendaftaran</small>
-        </div>
-        <div class="flow-arrow">↓</div>
-        <div class="flow-node">
-          <strong>4. MEXA CONNECTOR 2</strong>
-          <small>Menghubungkan pusat ke pengelolaan data</small>
-        </div>
-        <div class="flow-arrow">↓</div>
-        <div class="flow-node">
-          <strong>5. MEXA DATA MANAGEMENT</strong>
-          <small>Menyediakan data kepada modul yang membutuhkannya</small>
-        </div>
-      </div>
-    </section>
-
-    <footer class="footer">
-      MEXA SMART · Satu Registry · Satu jalur pendaftaran<br>
-      Sistem pusat dan penyimpanan permanen akan disambungkan
-      pada tahap berikutnya.
+    <footer class="footnote">
+      MEXA SMART · Registrasi akun<br>
+      Keamanan akun dan kata sandi ditangani melalui
+      sistem autentikasi resmi.
     </footer>
   </main>
 
@@ -642,541 +322,124 @@
   (function (window, document) {
     "use strict";
 
-    const VERSION = "1.0.0";
-    const CONNECTOR_FILE = "./js/core/mexa-connector-1.js";
-    const entries = new Map();
-    let connectorState = "loading";
-    let sending = false;
+    const form = document.getElementById("mexaRegisterForm");
+    const button = document.getElementById("registerButton");
+    const message = document.getElementById("registerMessage");
 
-    /*
-     * DATA REGISTRY:
-     * Ini adalah detail pendaftaran SISTEM/MODUL,
-     * bukan data pribadi akun pengguna.
-     *
-     * Jalur yang belum dipastikan ditulis null
-     * agar Registry tidak mengaku mengetahui lokasi file.
-     */
-    const INITIAL_REGISTRATIONS = [
-      {
-        name: "html-registry",
-        title: "HTML Registry",
-        version: VERSION,
-        type: "registry",
-        file: "./index.html",
-        position: 1,
-        dependencies: [],
-        description: "Pintu masuk dan sumber pendaftaran sistem.",
-        status: "ready"
-      },
-      {
-        name: "connector-1",
-        title: "System Penghubung 1",
-        version: VERSION,
-        type: "connector",
-        file: CONNECTOR_FILE,
-        position: 2,
-        dependencies: ["html-registry"],
-        description: "Menerima payload Registry dan meneruskannya ke pusat.",
-        status: "registered"
-      },
-      {
-        name: "system-center",
-        title: "System Pusat",
-        version: VERSION,
-        type: "center",
-        file: "./js/core/mexa-system-center.js",
-        position: 3,
-        dependencies: ["connector-1"],
-        description: "Pusat penerimaan dan pengelolaan pendaftaran.",
-        status: "registered"
-      },
-      {
-        name: "connector-2",
-        title: "System Penghubung 2",
-        version: VERSION,
-        type: "connector",
-        file: "./js/core/mexa-connector-2.js",
-        position: 4,
-        dependencies: ["system-center"],
-        description: "Jalur dari System Pusat menuju pengelolaan data.",
-        status: "registered"
-      },
-      {
-        name: "data-management",
-        title: "System Pengelolaan Data",
-        version: VERSION,
-        type: "data-service",
-        file: "./js/core/mexa-data-management.js",
-        position: 5,
-        dependencies: ["connector-2"],
-        description: "Layanan data bersama untuk modul MEXA.",
-        status: "registered"
-      },
-      {
-        name: "first-module",
-        title: "Modul Pertama",
-        version: VERSION,
-        type: "module",
-        file: null,
-        position: 6,
-        dependencies: ["data-management"],
-        description: "Akan ditentukan setelah jalur pusat siap.",
-        status: "registered"
-      },
-      {
-        name: "connector-3",
-        title: "System Penghubung 3",
-        version: VERSION,
-        type: "connector",
-        file: "./js/core/mexa-connector-3.js",
-        position: 7,
-        dependencies: ["data-management", "first-module"],
-        description: "Jalur akses data untuk modul yang membutuhkannya.",
-        status: "registered"
-      },
-      {
-        name: "login",
-        title: "Tampilan Login",
-        version: VERSION,
-        type: "module",
-        file: null,
-        position: 8,
-        dependencies: [],
-        description: "Jalur Login akan diisi setelah lokasi file aktual dipastikan.",
-        status: "registered"
-      },
-      {
-        name: "themes-css",
-        title: "Themes CSS",
-        version: VERSION,
-        type: "stylesheet",
-        file: "./themes.css",
-        position: 9,
-        dependencies: ["html-registry"],
-        description: "Satu sumber desain global untuk modul MEXA.",
-        status: "registered"
-      },
-      {
-        name: "themes-js",
-        title: "Themes JS",
-        version: VERSION,
-        type: "theme-system",
-        file: "./themes.js",
-        position: 10,
-        dependencies: ["themes-css", "connector-1"],
-        description: "Pengendali tema bersama bagi seluruh modul.",
-        status: "registered"
-      }
-    ];
-
-    function normalizeName(name) {
-      if (typeof name !== "string" || !name.trim()) {
-        throw new TypeError("Nama Registry wajib diisi.");
-      }
-
-      return name.trim().toLowerCase();
-    }
-
-    function clone(record) {
-      return {
-        ...record,
-        dependencies: [...record.dependencies]
-      };
-    }
-
-    function register(definition) {
-      if (
-        !definition ||
-        typeof definition !== "object" ||
-        Array.isArray(definition)
-      ) {
-        throw new TypeError("Data pendaftaran tidak valid.");
-      }
-
-      const name = normalizeName(definition.name);
-      const existing = entries.get(name);
-
-      if (existing) {
-        return clone(existing);
-      }
-
-      const record = {
-        name,
-        title: definition.title || name,
-        version: definition.version || VERSION,
-        type: definition.type || "module",
-        file: definition.file || null,
-        position: Number.isFinite(definition.position)
-          ? definition.position
-          : 100,
-        dependencies: Array.isArray(definition.dependencies)
-          ? definition.dependencies.map(normalizeName)
-          : [],
-        description: definition.description || "",
-        status: definition.status || "registered",
-        registeredAt: new Date().toISOString()
-      };
-
-      entries.set(name, record);
-      render();
-
-      return clone(record);
-    }
-
-    function get(name) {
-      const record = entries.get(normalizeName(name));
-      return record ? clone(record) : null;
-    }
-
-    function list() {
-      return Array.from(entries.values())
-        .sort((a, b) => a.position - b.position)
-        .map(clone);
-    }
-
-    function snapshot() {
-      const registrations = list();
-
-      return {
-        source: "MEXA_HTML_REGISTRY",
-        version: VERSION,
-        createdAt: new Date().toISOString(),
-        total: registrations.length,
-        registrations
-      };
-    }
-
-    function getStatus() {
-      const registrations = list();
-
-      return {
-        name: "MEXA_HTML_REGISTRY",
-        version: VERSION,
-        ready: true,
-        total: registrations.length,
-        connectorState,
-        sending
-      };
-    }
-
-    function setMessage(message, kind) {
-      const element = document.getElementById("connectionMessage");
-      if (!element) return;
-
-      element.textContent = message;
-      element.style.color =
-        kind === "success" ? "var(--success)" :
-        kind === "error" ? "var(--danger)" :
-        "var(--muted)";
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "message visible " + type;
     }
 
     /*
-     * SATU-SATUNYA KONTRAK KIRIM KE PENGHUBUNG 1
+     * KONTRAK RESMI UNTUK PENGHUBUNG 1:
+     * MEXA_CONNECTOR_1.registerUser(payload)
      *
-     * Connector 1 nantinya WAJIB menyediakan:
-     * MEXA_CONNECTOR_1.receiveRegistry(payload)
+     * Penghubung 1 meneruskan pendaftaran ke System Pusat.
+     * System Pusat menangani Supabase Auth.
      *
-     * Hasil sukses harus mengandung:
-     * { accepted: true, received: jumlah }
+     * Kata sandi tidak disimpan di Registry dan
+     * tidak dimasukkan ke profil/database biasa.
      */
-    async function sendToConnector() {
-      const connector = window.MEXA_CONNECTOR_1;
+    window.MEXA_HTML_REGISTRY = Object.freeze({
+      version: "1.0.0",
 
-      if (
-        !connector ||
-        typeof connector.receiveRegistry !== "function"
-      ) {
-        connectorState = "incompatible";
-        setMessage(
-          "Penghubung 1 belum menyediakan receiveRegistry(payload). " +
-          "Data belum dikirim. Kontrak ini akan dipakai saat kode " +
-          "Penghubung 1 disamakan.",
-          "error"
-        );
-        updateConnectionControls();
-        return {
-          accepted: false,
-          reason: "connector-contract-not-ready"
-        };
-      }
+      async registerUser(payload) {
+        const connector = window.MEXA_CONNECTOR_1;
 
-      if (sending) {
-        return {
-          accepted: false,
-          reason: "sending"
-        };
-      }
-
-      sending = true;
-      updateConnectionControls();
-
-      setMessage(
-        "Mengirim detail pendaftaran ke Penghubung 1...",
-        "normal"
-      );
-
-      try {
-        const payload = snapshot();
-        const result = await connector.receiveRegistry(payload);
-
-        if (!result || result.accepted !== true) {
+        if (
+          !connector ||
+          typeof connector.registerUser !== "function"
+        ) {
           throw new Error(
-            "Penghubung 1 belum mengonfirmasi penerimaan payload."
+            "Jalur pendaftaran belum tersambung. " +
+            "Penghubung 1 dan System Pusat harus disamakan " +
+            "dengan kontrak registerUser(payload) terlebih dahulu."
           );
         }
 
-        connectorState = "connected";
+        return connector.registerUser(payload);
+      }
+    });
 
-        const received = Number.isFinite(result.received)
-          ? result.received
-          : payload.total;
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
 
-        setMessage(
-          "Penghubung 1 mengonfirmasi penerimaan " +
-          received + " pendaftaran. System Pusat akan " +
-          "menangani tahap berikutnya.",
-          "success"
+      if (!form.reportValidity()) return;
+
+      const displayName =
+        document.getElementById("displayName").value.trim();
+
+      const username =
+        document.getElementById("username").value.trim().toLowerCase();
+
+      const email =
+        document.getElementById("email").value.trim().toLowerCase();
+
+      const password =
+        document.getElementById("password").value;
+
+      const confirmation =
+        document.getElementById("confirmPassword").value;
+
+      if (password !== confirmation) {
+        showMessage(
+          "Kata sandi dan konfirmasinya tidak sama.",
+          "error"
         );
+        return;
+      }
 
-        document.dispatchEvent(
-          new CustomEvent("mexa:registry:sent", {
-            detail: {
-              total: payload.total,
-              result
-            }
-          })
+      if (!/^[a-z0-9_.]{3,30}$/.test(username)) {
+        showMessage(
+          "Username harus 3–30 karakter: huruf, angka, titik, atau garis bawah.",
+          "error"
         );
+        return;
+      }
 
-        return result;
+      button.disabled = true;
+      button.textContent = "Mengirim pendaftaran...";
+      showMessage(
+        "Menghubungkan formulir dengan jalur pendaftaran MEXA...",
+        "info"
+      );
+
+      try {
+        const result = await window.MEXA_HTML_REGISTRY.registerUser({
+          displayName,
+          username,
+          email,
+          password
+        });
+
+        if (!result || result.accepted !== true) {
+          throw new Error(
+            "System Pusat belum mengonfirmasi pendaftaran."
+          );
+        }
+
+        /*
+         * Jangan mempertahankan kata sandi di form
+         * setelah pendaftaran berhasil.
+         */
+        form.reset();
+
+        showMessage(
+          result.message ||
+          "Pendaftaran diterima. Ikuti petunjuk konfirmasi akun dari sistem.",
+          "info"
+        );
       } catch (error) {
-        connectorState = "error";
-
-        setMessage(
-          "Pengiriman gagal: " +
+        showMessage(
           String(error.message || error),
           "error"
         );
-
-        console.error("[MEXA REGISTRY]", error);
-
-        return {
-          accepted: false,
-          error: String(error.message || error)
-        };
       } finally {
-        sending = false;
-        updateConnectionControls();
+        button.disabled = false;
+        button.textContent = "Daftar Sekarang";
       }
-    }
-
-    function updateConnectionControls() {
-      const button = document.getElementById("sendRegistryButton");
-      if (!button) return;
-
-      button.disabled =
-        sending ||
-        typeof window.MEXA_CONNECTOR_1?.receiveRegistry !== "function";
-
-      button.textContent = sending
-        ? "Sedang Mengirim..."
-        : "Kirim Pendaftaran";
-    }
-
-    function render() {
-      const container = document.getElementById("registryList");
-      if (!container) return;
-
-      const searchValue = (
-        document.getElementById("registrySearch")?.value || ""
-      ).trim().toLowerCase();
-
-      const filtered = list().filter(record => {
-        const text = [
-          record.name,
-          record.title,
-          record.file || "",
-          record.description,
-          record.type
-        ].join(" ").toLowerCase();
-
-        return text.includes(searchValue);
-      });
-
-      container.replaceChildren();
-
-      if (!filtered.length) {
-        const empty = document.createElement("div");
-        empty.className = "empty-state";
-        empty.textContent = "Tidak ada sistem yang cocok dengan pencarian.";
-        container.appendChild(empty);
-      }
-
-      filtered.forEach(record => {
-        const card = document.createElement("article");
-        card.className = "registry-card";
-
-        const head = document.createElement("div");
-        head.className = "card-head";
-
-        const title = document.createElement("h3");
-        title.className = "card-name";
-        title.textContent = record.title;
-
-        const pos = document.createElement("span");
-        pos.className = "position";
-        pos.textContent = "POSISI " + record.position;
-
-        head.append(title, pos);
-
-        const description = document.createElement("p");
-        description.className = "card-description";
-        description.textContent = record.description;
-
-        const fileLabel = document.createElement("span");
-        fileLabel.className = "file-label";
-        fileLabel.textContent = "Lokasi File";
-
-        const path = document.createElement("code");
-        path.className = "file-path";
-        path.textContent = record.file || "Belum ditentukan";
-
-        const status = document.createElement("span");
-        status.className =
-          "card-status" +
-          (record.status === "ready" ? " ready" : "");
-
-        status.textContent =
-          record.status === "ready"
-            ? "HALAMAN REGISTRY AKTIF"
-            : "TERDAFTAR · BELUM DISAMBUNGKAN";
-
-        card.append(head, description, fileLabel, path, status);
-        container.appendChild(card);
-      });
-
-      const records = list();
-
-      document.getElementById("totalCount").textContent =
-        records.length;
-
-      document.getElementById("readyCount").textContent =
-        records.filter(record => record.status === "ready").length;
-
-      document.getElementById("pendingCount").textContent =
-        records.filter(record => record.status !== "ready").length;
-    }
-
-    /*
-     * Siapkan Registry terlebih dahulu sebelum Connector 1 dimuat.
-     */
-    INITIAL_REGISTRATIONS.forEach(record => {
-      entries.set(record.name, {
-        ...clone(record),
-        registeredAt: new Date().toISOString()
-      });
     });
-
-    window.MEXA_HTML_REGISTRY = Object.freeze({
-      version: VERSION,
-      register,
-      get,
-      list,
-      snapshot,
-      getStatus,
-      sendToConnector
-    });
-
-    document.getElementById("registrySearch").addEventListener(
-      "input",
-      render
-    );
-
-    document.getElementById("refreshRegistryButton").addEventListener(
-      "click",
-      function () {
-        render();
-
-        setMessage(
-          "Daftar Registry diperbarui. Belum ada data yang dikirim.",
-          "normal"
-        );
-      }
-    );
-
-    document.getElementById("sendRegistryButton").addEventListener(
-      "click",
-      sendToConnector
-    );
-
-    render();
-
-    /*
-     * Beri tahu sistem lain bahwa Registry sudah siap.
-     * Connector 1 akan dimuat setelah API Registry tersedia.
-     */
-    document.dispatchEvent(
-      new CustomEvent("mexa:registry:ready", {
-        detail: snapshot()
-      })
-    );
-
-    setMessage(
-      "Registry siap. Menyiapkan Penghubung 1...",
-      "normal"
-    );
-
-    /*
-     * Satu file sambungan yang ditetapkan.
-     * Tidak ada koneksi Supabase di Registry.
-     */
-    const connectorScript = document.createElement("script");
-    connectorScript.src = "./js/core/mexa-connector-1.js";
-    connectorScript.async = true;
-
-    connectorScript.onload = function () {
-      const connector = window.MEXA_CONNECTOR_1;
-
-      if (
-        connector &&
-        typeof connector.receiveRegistry === "function"
-      ) {
-        connectorState = "ready";
-        updateConnectionControls();
-
-        setMessage(
-          "Penghubung 1 siap. Mengirim pendaftaran Registry...",
-          "normal"
-        );
-
-        sendToConnector();
-      } else {
-        connectorState = "incompatible";
-
-        setMessage(
-          "File Penghubung 1 terbaca, tetapi belum menyediakan " +
-          "receiveRegistry(payload). Kode berikutnya harus " +
-          "mengikuti kontrak Registry ini.",
-          "error"
-        );
-
-        updateConnectionControls();
-      }
-    };
-
-    connectorScript.onerror = function () {
-      connectorState = "missing";
-
-      setMessage(
-        "File Penghubung 1 belum dapat dimuat dari " +
-        "./js/core/mexa-connector-1.js. Registry tetap aktif; " +
-        "data belum dikirim.",
-        "error"
-      );
-
-      updateConnectionControls();
-    };
-
-    document.body.appendChild(connectorScript);
 
   })(window, document);
   </script>
