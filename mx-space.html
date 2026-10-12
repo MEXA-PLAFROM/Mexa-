@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0818">
+  <title>MEXA SMART — MX Space</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0818;
+      --panel: #151027;
+      --surface: #201832;
+      --border: #302544;
+      --text: #f6f3ff;
+      --muted: #aaa4c2;
+      --primary: #8b5cf6;
+      --accent: #00e5ff;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #fb7185;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 15% 0%, #39206055, transparent 42%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+    }
+
+    button, a { font: inherit; }
+
+    .app {
+      width: min(920px, calc(100% - 28px));
+      margin: auto;
+      padding: 22px 0 40px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 31px;
+      font-weight: 950;
+      letter-spacing: 1px;
+    }
+
+    .m, .a { color: var(--primary); }
+    .x { color: var(--accent); }
+
+    /* E memiliki tepat tiga strip horizontal */
+    .e {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      width: 20px;
+      height: 27px;
+      margin: 0 2px;
+    }
+
+    .e span {
+      height: 4px;
+      background: var(--primary);
+      border-radius: 1px;
+    }
+
+    .e span:nth-child(1) { width: 20px; }
+    .e span:nth-child(2) { width: 12px; }
+    .e span:nth-child(3) { width: 17px; }
+
+    .caption {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .badge {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      color: var(--accent);
+      font-size: 11px;
+    }
+
+    .hero { padding: 30px 0 18px; }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      margin: 8px 0;
+      font-size: clamp(29px, 5vw, 42px);
+    }
+
+    h2 { font-size: 17px; }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .panel {
+      margin-top: 15px;
+      padding: 19px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--panel);
+    }
+
+    .panel h2 { margin-top: 0; }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .status-row:last-child { border-bottom: 0; }
+
+    .label {
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .detail {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .value {
+      max-width: 53%;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 750;
+      overflow-wrap: anywhere;
+    }
+
+    .green { color: var(--green); }
+    .yellow { color: var(--yellow); }
+    .red { color: var(--red); }
+
+    .account {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .avatar {
+      display: grid;
+      flex: 0 0 48px;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .account-name {
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .account-email {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 43px;
+      padding: 11px 15px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .button.primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .button:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    .footer {
+      margin-top: 25px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    @media (max-width: 560px) {
+      .panel { padding: 15px; }
+      .status-row { gap: 8px; }
+      .value { max-width: 48%; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <header>
+      <div>
+        <div class="logo" role="img" aria-label="MEXA">
+          <span class="m">M</span>
+          <span class="e" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span class="x">X</span>
+          <span class="a">A</span>
+        </div>
+        <div class="caption">SMART SOCIAL PLATFORM</div>
+      </div>
+
+      <div class="badge">MX SPACE · SYSTEM CHECK</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">MEXA SMART</div>
+      <h1>MX Space</h1>
+      <p class="muted">
+        Halaman pemeriksaan jalur sistem, koneksi Supabase,
+        dan sesi autentikasi. Halaman ini tidak membuat akun
+        baru atau mengubah data pendaftaran.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>Status Jalur MEXA</h2>
+
+      <div class="status-row">
+        <div>
+          <div class="label">System Pusat</div>
+          <div class="detail">MEXA_SYSTEM_CENTER</div>
+        </div>
+        <div id="centerStatus" class="value yellow">Memeriksa file...</div>
+      </div>
+
+      <div class="status-row">
+        <div>
+          <div class="label">Penghubung 1</div>
+          <div class="detail">MEXA_CONNECTOR_1</div>
+        </div>
+        <div id="connector1Status" class="value yellow">Memeriksa file...</div>
+      </div>
+
+      <div class="status-row">
+        <div>
+          <div class="label">Penghubung 2</div>
+          <div class="detail">MEXA_CONNECTOR_2</div>
+        </div>
+        <div id="connector2Status" class="value yellow">Memeriksa file...</div>
+      </div>
+
+      <div class="status-row">
+        <div>
+          <div class="label">System Pengelolaan Data</div>
+          <div class="detail">MEXA_DATA_MANAGEMENT</div>
+        </div>
+        <div id="managementStatus" class="value yellow">Memeriksa file...</div>
+      </div>
+
+      <div class="status-row">
+        <div>
+          <div class="label">Supabase</div>
+          <div class="detail">Client yang dibuat System Pusat</div>
+        </div>
+        <div id="supabaseStatus" class="value yellow">Belum diperiksa</div>
+      </div>
+
+      <div class="status-row">
+        <div>
+          <div class="label">Tabel Registry</div>
+          <div class="detail">mexa_system_registry</div>
+        </div>
+        <div id="tableStatus" class="value yellow">Belum diperiksa</div>
+      </div>
+
+      <div class="status-row">
+        <div>
+          <div class="label">Sesi Login</div>
+          <div class="detail">Sesi pada browser ini</div>
+        </div>
+        <div id="sessionStatus" class="value yellow">Belum diperiksa</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Informasi Akun</h2>
+
+      <div class="account">
+        <div class="avatar" id="avatar">M</div>
+        <div>
+          <div class="account-name" id="accountName">
+            Belum diperiksa
+          </div>
+          <div class="account-email" id="accountEmail">
+            Informasi sesi belum tersedia.
+          </div>
+        </div>
+      </div>
+
+      <div class="message" id="testMessage" role="status" aria-live="polite">
+        Tekan tombol di bawah untuk memeriksa koneksi dan sesi.
+      </div>
+
+      <div class="actions">
+        <button class="button primary" id="checkButton" type="button">
+          Periksa Sistem
+        </button>
+
+        <a class="button" href="./index.html">
+          Kembali ke Pendaftaran
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      MEXA SMART · MX Space<br>
+      Nama samaran halaman tes. Status API, koneksi database,
+      dan sesi login diperiksa secara terpisah.
+    </footer>
+  </main>
+
+  <!-- Satu jalur client Supabase: System Pusat -->
+  <script src="./js/core/mexa-system-center.js"></script>
+  <script src="./js/core/mexa-connector-1.js"></script>
+  <script src="./js/core/mexa-connector-2.js"></script>
+  <script src="./js/core/mexa-data-management.js"></script>
+
+  <script>
+  (function (window, document) {
+    "use strict";
+
+    const button = document.getElementById("checkButton");
+
+    function setStatus(id, text, type) {
+      const element = document.getElementById(id);
+      element.textContent = text;
+      element.className = "value " + (type || "yellow");
+    }
+
+    function showMessage(text, type) {
+      const element = document.getElementById("testMessage");
+      element.textContent = text;
+      element.style.color =
+        type === "success" ? "var(--green)" :
+        type === "error" ? "var(--red)" :
+        "var(--muted)";
+    }
+
+    function inspectAPIs() {
+      const center = window.MEXA_SYSTEM_CENTER;
+      const connector1 = window.MEXA_CONNECTOR_1;
+      const connector2 = window.MEXA_CONNECTOR_2;
+      const manager = window.MEXA_DATA_MANAGEMENT;
+
+      setStatus(
+        "centerStatus",
+        center && typeof center.connectSupabase === "function"
+          ? "API tersedia"
+          : "Tidak ditemukan",
+        center && typeof center.connectSupabase === "function"
+          ? "green" : "red"
+      );
+
+      setStatus(
+        "connector1Status",
+        connector1 &&
+        typeof connector1.registerUser === "function"
+          ? "API pendaftaran tersedia"
+          : "API pendaftaran tidak cocok",
+        connector1 &&
+        typeof connector1.registerUser === "function"
+          ? "green" : "red"
+      );
+
+      setStatus(
+        "connector2Status",
+        connector2 &&
+        typeof connector2.forwardRegistryRecord === "function" &&
+        typeof connector2.forwardRegisteredUser === "function"
+          ? "API tersedia"
+          : "Tidak ditemukan / kontrak berbeda",
+        connector2 &&
+        typeof connector2.forwardRegistryRecord === "function" &&
+        typeof connector2.forwardRegisteredUser === "function"
+          ? "green" : "red"
+      );
+
+      setStatus(
+        "managementStatus",
+        manager &&
+        typeof manager.receiveRegistryRecord === "function" &&
+        typeof manager.receiveRegisteredUser === "function"
+          ? "API tersedia"
+          : "Tidak ditemukan / kontrak berbeda",
+        manager &&
+        typeof manager.receiveRegistryRecord === "function" &&
+        typeof manager.receiveRegisteredUser === "function"
+          ? "green" : "red"
+      );
+    }
+
+    async function runCheck() {
+      button.disabled = true;
+      button.textContent = "Memeriksa...";
+
+      inspectAPIs();
+
+      setStatus("supabaseStatus", "Menghubungkan...", "yellow");
+      setStatus("tableStatus", "Belum diperiksa", "yellow");
+      setStatus("sessionStatus", "Memeriksa...", "yellow");
+
+      showMessage(
+        "Memeriksa System Pusat dan Supabase...",
+        "normal"
+      );
+
+      try {
+        const center = window.MEXA_SYSTEM_CENTER;
+
+        if (
+          !center ||
+          typeof center.connectSupabase !== "function"
+        ) {
+          throw new Error(
+            "System Pusat tidak tersedia. Periksa nama dan lokasi filenya."
+          );
+        }
+
+        // Client dibuat hanya oleh System Pusat.
+        const supabase = await center.connectSupabase();
+
+        if (!supabase || !supabase.auth) {
+          throw new Error(
+            "System Pusat tidak mengembalikan client Auth."
+          );
+        }
+
+        setStatus(
+          "supabaseStatus",
+          "Client berhasil dibuat",
+          "green"
+        );
+
+        /*
+         * Tes baca aman. Tidak membuat atau mengubah baris.
+         * Gagalnya tabel tidak otomatis berarti Auth gagal.
+         */
+        try {
+          const { error } = await supabase
+            .from("mexa_system_registry")
+            .select("name")
+            .limit(1);
+
+          if (error) {
+            throw error;
+          }
+
+          setStatus(
+            "tableStatus",
+            "Bisa dibaca",
+            "green"
+          );
+        } catch (error) {
+          setStatus(
+            "tableStatus",
+            "Belum tersedia / izin ditolak",
+            "red"
+          );
+
+          console.warn(
+            "[MX SPACE] Pemeriksaan tabel:",
+            error.message
+          );
+        }
+
+        // Periksa sesi lokal pada browser ini.
+        const { data, error: sessionError } =
+          await supabase.auth.getSession();
+
+        if (sessionError) {
+          throw sessionError;
+        }
+
+        const session = data && data.session;
+
+        if (!session || !session.user) {
+          setStatus(
+            "sessionStatus",
+            "Belum login",
+            "yellow"
+          );
+
+          document.getElementById("avatar").textContent = "M";
+          document.getElementById("accountName").textContent =
+            "Tidak ada sesi aktif";
+          document.getElementById("accountEmail").textContent =
+            "Masuk melalui halaman Login untuk memeriksa akun.";
+
+          showMessage(
+            "Client Supabase berhasil dibuat, tetapi browser ini " +
+            "belum memiliki sesi login. Jika pendaftaran baru saja " +
+            "dilakukan dengan konfirmasi email aktif, verifikasi email " +
+            "terlebih dahulu lalu masuk melalui halaman Login.",
+            "success"
+          );
+
+          return;
+        }
+
+        // Verifikasi pengguna ke Auth server menggunakan sesi aktif.
+        const { data: userData, error: userError } =
+          await supabase.auth.getUser();
+
+        if (userError) {
+          throw userError;
+        }
+
+        const user = userData && userData.user;
+
+        if (!user) {
+          throw new Error(
+            "Auth tidak mengembalikan pengguna untuk sesi ini."
+          );
+        }
+
+        const metadata = user.user_metadata || {};
+        const displayName =
+          metadata.display_name ||
+          metadata.full_name ||
+          metadata.name ||
+          metadata.username ||
+          "Anggota MEXA";
+
+        setStatus(
+          "sessionStatus",
+          "Login aktif",
+          "green"
+        );
+
+        document.getElementById("avatar").textContent =
+          String(displayName).charAt(0).toUpperCase();
+
+        document.getElementById("accountName").textContent =
+          displayName;
+
+        document.getElementById("accountEmail").textContent =
+          user.email || "Email tidak tersedia";
+
+        showMessage(
+          "Sesi pengguna berhasil diverifikasi oleh Supabase Auth.",
+          "success"
+        );
+
+      } catch (error) {
+        setStatus(
+          "supabaseStatus",
+          "Gagal diperiksa",
+          "red"
+        );
+
+        setStatus(
+          "sessionStatus",
+          "Belum dapat diverifikasi",
+          "yellow"
+        );
+
+        showMessage(
+          String(error.message || error),
+          "error"
+        );
+
+        console.error("[MX SPACE]", error);
+
+      } finally {
+        button.disabled = false;
+        button.textContent = "Periksa Sistem";
+      }
+    }
+
+    inspectAPIs();
+
+    button.addEventListener("click", runCheck);
+
+  })(window, document);
+  </script>
+</body>
+</html>
