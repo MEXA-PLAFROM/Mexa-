@@ -33,7 +33,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   outline:2px solid var(--cyan);
 }
 
-/* HEADER + LOGO ASLI */
+/* HEADER + LOGO NEON MEXA */
 .topbar {
   height:68px;
   position:sticky;
@@ -45,24 +45,45 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   padding:0 22px;
   background:#050b1bf5;
   border-bottom:1px solid var(--line);
+  box-shadow:0 5px 25px #0003;
 }
 .brand {
-  width:105px;
-  height:54px;
+  width:110px;
   flex-shrink:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  overflow:hidden;
-  border-radius:9px;
-  background:#fff;
+  text-decoration:none;
 }
-.brand img {
+.brand-logo {
+  display:flex;
+  align-items:center;
+  gap:2px;
+  font-size:27px;
+  font-weight:900;
+  letter-spacing:1px;
+  color:#f4f7ff;
+  text-shadow:0 0 12px #27e4e566;
+}
+.brand-logo .x {
+  color:var(--cyan);
+  text-shadow:0 0 15px #27e4e5aa;
+}
+.logo-e {
+  width:17px;
+  height:23px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:1px 0;
+}
+.logo-e i {
   display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center 50%;
+  height:5px;
+  width:17px;
+  border-radius:2px;
+  background:#f4f7ff;
+  box-shadow:0 0 7px #27e4e544;
 }
 .search { flex:1; max-width:620px; }
 .search input {
@@ -73,6 +94,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border:1px solid #3b3876;
   border-radius:13px;
 }
+.search input:focus {
+  border-color:var(--cyan);
+  outline:none;
+  box-shadow:0 0 0 3px #27e4e51c;
+}
 .top-actions { margin-left:auto; display:flex; gap:9px; }
 .primary {
   border:0;
@@ -82,6 +108,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   font-weight:bold;
   background:linear-gradient(110deg,var(--cyan),var(--purple));
 }
+.primary:hover { filter:brightness(1.1); }
 .icon-btn {
   border:1px solid var(--line);
   border-radius:12px;
@@ -137,8 +164,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   border-radius:16px;
   background:linear-gradient(145deg,var(--panel),#071126);
 }
-.welcome { margin:4px 0 20px; }
-.welcome h1 { font-size:27px; margin:0 0 6px; }
 .muted { color:var(--muted); font-size:12px; }
 .section-title {
   display:flex;
@@ -150,7 +175,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
 .section-title h2 { font-size:15px; margin:0; }
 .link { border:0; background:none; color:var(--cyan); }
 
-/* CERITA */
+/* CERITA LANGSUNG DI ATAS HOME */
+#stories { scroll-margin-top:85px; }
 .stories { display:flex; gap:13px; overflow:auto; }
 .story {
   flex:0 0 67px;
@@ -316,7 +342,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   font-size:11px;
 }
 
-/* MODAL */
+/* MODAL POSTINGAN */
 .modal {
   display:none;
   position:fixed;
@@ -383,12 +409,14 @@ textarea.field { min-height:130px; resize:vertical; }
 }
 @media(max-width:600px) {
   .topbar { height:58px; padding:0 10px; gap:10px; }
-  .brand { width:78px; height:43px; }
+  .brand { width:76px; }
+  .brand-logo { font-size:23px; }
+  .logo-e { width:14px; height:20px; }
+  .logo-e i { width:14px; height:4px; }
   .search input { font-size:11px; padding:10px; }
   .top-actions .primary { display:none; }
   .layout { display:block; padding:13px 10px 82px; }
   .sidebar { display:none; }
-  .welcome h1 { font-size:23px; }
   .panel { padding:13px; }
   .rightbar { display:block; position:static; }
   .mobile-nav {
@@ -423,11 +451,14 @@ textarea.field { min-height:130px; resize:vertical; }
 
 <header class="topbar">
   <a class="brand" href="./mx-space.html" aria-label="MEXA Home">
-    <img
-      src="https://iili.io/nWHpQzx.md.jpg"
-      alt="Logo resmi MEXA"
-      onerror="this.onerror=null;this.src='https://freeimage.host/i/nWHpQzx';"
-    >
+    <span class="brand-logo" aria-label="MEXA">
+      <span>M</span>
+      <span class="logo-e" aria-label="E">
+        <i></i><i></i><i></i>
+      </span>
+      <span class="x">X</span>
+      <span>A</span>
+    </span>
   </a>
 
   <div class="search">
@@ -446,10 +477,9 @@ textarea.field { min-height:130px; resize:vertical; }
   <aside class="sidebar">
     <nav class="nav">
       <button class="active" data-section="home">⌂ <span class="label">Home</span></button>
-      <button data-section="stories">◉ <span class="label">Cerita</span></button>
+      <button data-section="messages">▱ <span class="label">Messenger</span></button>
       <button data-section="friends">♧ <span class="label">Teman</span></button>
       <button data-section="games">🎮 <span class="label">Game</span></button>
-      <button data-section="messages">▱ <span class="label">Pesan</span></button>
       <button data-section="notifications">♧ <span class="label">Notifikasi</span></button>
       <button data-section="profile">◉ <span class="label">Profil</span></button>
       <button data-section="settings">⚙ <span class="label">Pengaturan</span></button>
@@ -463,11 +493,8 @@ textarea.field { min-height:130px; resize:vertical; }
   </aside>
 
   <main id="home">
-    <div class="welcome">
-      <h1>Beranda MEXA ✦</h1>
-      <div class="muted">Terhubung dengan dunia yang kamu sukai.</div>
-    </div>
 
+    <!-- CERITA LANGSUNG MUNCUL DI ATAS -->
     <section class="panel" id="stories">
       <div class="section-title">
         <h2>◉ Cerita</h2>
@@ -502,6 +529,7 @@ textarea.field { min-height:130px; resize:vertical; }
       </div>
     </section>
 
+    <!-- BUAT POSTINGAN -->
     <section class="panel" id="composerSection">
       <div class="compose-row">
         <div class="user-avatar" id="myAvatar">M</div>
@@ -517,6 +545,7 @@ textarea.field { min-height:130px; resize:vertical; }
       </div>
     </section>
 
+    <!-- FEED -->
     <div class="section-title">
       <h2>Postingan untuk kamu</h2>
       <button class="link" id="refreshFeed">↻ Muat ulang</button>
@@ -544,7 +573,7 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
 
     <p id="feedStatus">Tampilan awal aktif. Database belum disambungkan pada halaman ini.</p>
 
-    <!-- REKOMENDASI TEMAN DI TENGAH FEED -->
+    <!-- REKOMENDASI TEMAN DI TENGAH FEED DAN GAME -->
     <section class="panel" id="friends">
       <div class="section-title">
         <h2>♧ Rekomendasi Teman</h2>
@@ -580,7 +609,7 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
       </div>
     </section>
 
-    <!-- REKOMENDASI GAME SETELAH REKOMENDASI TEMAN -->
+    <!-- REKOMENDASI GAME -->
     <section class="panel" id="games">
       <div class="section-title">
         <h2>🎮 Rekomendasi Game</h2>
@@ -634,14 +663,16 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
   </aside>
 </div>
 
+<!-- NAVIGASI MOBILE: CERITA DIGANTI MESSENGER -->
 <nav class="mobile-nav">
   <button class="active" data-section="home"><span>⌂</span>Home</button>
-  <button data-section="stories"><span>◉</span>Cerita</button>
+  <button data-section="messages"><span>▱</span>Messenger</button>
   <button id="mobileCreate"><span>＋</span>Buat</button>
   <button data-section="games"><span>🎮</span>Game</button>
   <button data-section="profile"><span>◉</span>Profil</button>
 </nav>
 
+<!-- MODAL POSTINGAN -->
 <div class="modal" id="composerModal">
   <div class="modal-box">
     <div class="modal-head">
@@ -688,7 +719,10 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
     el.className = "toast";
     el.textContent = message;
     document.body.append(el);
-    setTimeout(() => el.remove(), 2600);
+
+    setTimeout(() => {
+      if (el.isConnected) el.remove();
+    }, 2600);
   }
 
   function openComposer(mode = "post") {
@@ -776,6 +810,7 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
   $("#feelingButton").onclick = () => {
     openComposer();
     text.value += "😊 ";
+    text.focus();
   };
 
   $("#postForm").onsubmit = e => {
@@ -914,6 +949,7 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
   $$(".story").forEach(button => {
     button.onclick = () => {
       const person = button.dataset.story;
+
       if (person === "mine") {
         openComposer("story");
       } else {
@@ -932,7 +968,7 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
     () => toast("Notifikasi belum tersambung ke backend.");
 
   $("#account").onclick =
-    () => toast("Halaman profil belum ditautkan.");
+    () => navigate("profile");
 
   $("#creatorInfo").onclick =
     () => toast("Modul kreator akan dibuat terpisah.");
@@ -973,6 +1009,11 @@ Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
   });
 
   function navigate(section) {
+    if (section === "messages") {
+      window.location.href = "./Messenger.html";
+      return;
+    }
+
     const target = document.getElementById(section);
 
     if (target) {
