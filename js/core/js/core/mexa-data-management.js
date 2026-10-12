@@ -1,73 +1,64 @@
 /* =====================================================
    MEXA SMART — SYSTEM PENGELOLAAN DATA
-   File: js/core/mexa-data-management.js
-   Version: 1.0.0
+   Version: 1.0.1
 
-   ALUR:
-   SYSTEM CENTER
-        ↓
-   PENGHUBUNG 2
-        ↓
-   SYSTEM PENGELOLAAN DATA
-        ↓
-   MX
-
-   Kontrak Penghubung 2:
+   PENERIMA:
    - receiveRegistryRecord(record)
    - receiveRegisteredUser(record)
 
-   System ini tidak membuat koneksi Supabase sendiri.
+   TUJUAN:
+   System Pengelolaan Data -> MX
+
+   Catatan:
+   Tidak membuat koneksi Supabase sendiri.
+   Tidak menganggap data sudah sampai ke MX
+   sebelum ada konfirmasi penerimaan.
    ===================================================== */
 
 (function (window, document) {
   "use strict";
 
-  const VERSION = "1.0.0";
+  const VERSION = "1.0.1";
 
-  // Hindari inisialisasi ganda.
-  if (
-    window.MEXA_DATA_MANAGEMENT &&
-    window.MEXA_DATA_MANAGEMENT.version === VERSION
-  ) {
+  if (window.MEXA_DATA_MANAGEMENT) {
     console.warn(
-      "[MEXA DATA MANAGEMENT] Sudah aktif."
+      "[MEXA DATA MANAGEMENT] Sistem sudah terdaftar."
     );
     return;
   }
 
-  // ================================================
-  // PENYIMPANAN DATA SELAMA HALAMAN AKTIF
-  // ================================================
-
   const registryRecords = new Map();
   const registeredUsers = new Map();
+  const pendingToMX = new Map();
 
   let mxReceiver = null;
+  let sequence = 0;
   let receivedRegistry = 0;
   let receivedUsers = 0;
-  let forwardedToMX = 0;
+  let deliveredToMX = 0;
   let failed = 0;
   let lastError = null;
 
-  // ================================================
-  // EVENT SYSTEM
-  // ================================================
+  // ---------------------------------------------------
+  // EVENT INTERNAL
+  // ---------------------------------------------------
 
-  function emit(eventName, detail) {
+  function emit(name, detail) {
     document.dispatchEvent(
-      new window.CustomEvent(eventName, {
+      new window.CustomEvent(name, {
         detail: detail
       })
     );
   }
 
-  function copyRecord(record) {
+  function clone(record) {
     return Object.assign({}, record);
   }
 
-  // ================================================
-  // VALIDASI DATA REGISTRY
-  // ================================================
+  // ---------------------------------------------------
+  // VALIDASI REGISTRY
+  // Format mengikuti Penghubung 2
+  // ---------------------------------------------------
 
   function normalizeRegistryRecord(input) {
     if (
@@ -75,8 +66,8 @@
       typeof input !== "object" ||
       Array.isArray(input)
     ) {
-      throw new TypeError(
-        "Data Registry harus berupa objek."
+      throw new Error(
+        "Record Registry harus berupa objek."
       );
     }
 
@@ -90,15 +81,9 @@
         ? input.title.trim()
         : "";
 
-    if (!name) {
+    if (!name || !title) {
       throw new Error(
-        "Nama sistem Registry wajib diisi."
-      );
-    }
-
-    if (!title) {
-      throw new Error(
-        "Judul sistem Registry wajib diisi."
+        "Nama dan judul sistem wajib tersedia."
       );
     }
 
@@ -133,25 +118,24 @@
           : "registered",
 
       created_at: input.created_at || null,
-
-      updated_at:
-        input.updated_at ||
-        new Date().toISOString()
+      updated_at: input.updated_at || null
     };
   }
 
-  // ================================================
-  // VALIDASI DATA PENGGUNA
-  // ================================================
+  // ---------------------------------------------------
+  // VALIDASI PENGGUNA
+  // Hanya data aman yang diteruskan.
+  // Kata sandi dan token tidak ikut disimpan.
+  // ---------------------------------------------------
 
-  function normalizeRegisteredUser(input) {
+  function normalizeUserRecord(input) {
     if (
       !input ||
       typeof input !== "object" ||
       Array.isArray(input)
     ) {
-      throw new TypeError(
-        "Data pengguna harus berupa objek."
+      throw new Error(
+        "Record pengguna harus berupa objek."
       );
     }
 
@@ -176,35 +160,24 @@
         : "";
 
     if (!id) {
-      throw new Error(
-        "ID pengguna tidak tersedia."
-      );
+      throw new Error("ID pengguna tidak tersedia.");
     }
 
-    if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-    ) {
-      throw new Error(
-        "Format email pengguna tidak valid."
-      );
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      throw new Error("Email pengguna tidak valid.");
     }
 
     if (
       displayName.length < 2 ||
       displayName.length > 80
     ) {
-      throw new Error(
-        "Nama pengguna harus berisi 2–80 karakter."
-      );
+      throw new Error("Nama pengguna tidak valid.");
     }
 
     if (!/^[a-z0-9_.]{3,30}$/.test(username)) {
-      throw new Error(
-        "Format username tidak valid."
-      );
+      throw new Error("Username tidak valid.");
     }
 
-    // Kata sandi dan token tidak boleh diteruskan.
     return {
       id: id,
       email: email,
@@ -214,125 +187,123 @@
     };
   }
 
-  // ================================================
-  // JALUR DATA MENUJU MX
-  // ================================================
+  // ---------------------------------------------------
+  // ANTREAN MENUJU MX
+  // ---------------------------------------------------
 
-  async function forwardToMX(type, record) {
-    const payload = {
+  function createMXPayload(type, record) {
+    sequence += 1;
+
+    return {
+      id: "mexa-data-" +
+        Date.now() + "-" + sequence,
+
       source: "MEXA_DATA_MANAGEMENT",
       type: type,
       version: VERSION,
       createdAt: new Date().toISOString(),
-      record: copyRecord(record)
+      record: clone(record)
     };
+  }
 
+  async function sendToMX(payload) {
     const receiver =
       mxReceiver || window.MEXA_MX;
 
-    // Jalur langsung jika MX menyediakan API penerima.
+    // Jalur langsung hanya digunakan bila MX
+    // benar-benar menyediakan API penerima.
     if (
       receiver &&
       typeof receiver.receiveManagedData === "function"
     ) {
       try {
-        const result =
-          await receiver.receiveManagedData(payload);
+        const result = await receiver.receiveManagedData(
+          clone(payload)
+        );
 
         if (result && result.accepted === true) {
-          forwardedToMX += 1;
+          pendingToMX.delete(payload.id);
+          deliveredToMX += 1;
+          lastError = null;
 
-          emit("mexa:data-management:mx-forwarded", {
-            type: type,
+          emit("mexa:data-management:mx-confirmed", {
+            id: payload.id,
+            type: payload.type,
             accepted: true
           });
 
           return {
             confirmed: true,
-            channel: "MEXA_MX.receiveManagedData"
+            destination: "MX"
           };
         }
 
         return {
           confirmed: false,
-          reason:
-            "MX belum memberikan konfirmasi penerimaan."
+          queued: true,
+          reason: "MX belum mengonfirmasi penerimaan."
         };
       } catch (error) {
-        lastError = String(
-          error.message || error
-        );
-
+        lastError = String(error.message || error);
         failed += 1;
-
-        console.error(
-          "[MEXA DATA MANAGEMENT] Pengiriman ke MX gagal:",
-          error
-        );
 
         return {
           confirmed: false,
+          queued: true,
           reason: lastError
         };
       }
     }
 
-    // Jalur event jika MX belum menyediakan API langsung.
-    emit("mexa:mx:managed-data", payload);
+    // Belum ada API MX yang dapat dikonfirmasi.
+    // Simpan dalam antrean memori dan keluarkan event
+    // agar MX dapat mendengarkan jalur ini.
+    emit("mexa:mx:managed-data", clone(payload));
 
     return {
       confirmed: false,
-      channel: "mexa:mx:managed-data",
-      reason:
-        "Event dikirim; penerima MX belum terkonfirmasi."
+      queued: true,
+      reason: "Penerima MX belum terhubung."
     };
   }
 
-  // ================================================
-  // 1. MENERIMA RECORD REGISTRY DARI PENGHUBUNG 2
-  // ================================================
+  async function queueForMX(type, record) {
+    const payload = createMXPayload(type, record);
+
+    pendingToMX.set(payload.id, payload);
+
+    return await sendToMX(payload);
+  }
+
+  // ---------------------------------------------------
+  // PENERIMA DARI PENGHUBUNG 2
+  // ---------------------------------------------------
 
   async function receiveRegistryRecord(input) {
     try {
-      const record =
-        normalizeRegistryRecord(input);
+      const record = normalizeRegistryRecord(input);
 
-      // Update record berdasarkan nama sistem.
       registryRecords.set(record.name, record);
       receivedRegistry += 1;
       lastError = null;
 
-      emit(
-        "mexa:data-management:registry-received",
-        {
-          name: record.name,
-          accepted: true,
-          record: copyRecord(record)
-        }
-      );
+      emit("mexa:data-management:registry-received", {
+        name: record.name,
+        accepted: true
+      });
 
-      const mxResult = await forwardToMX(
-        "registry",
-        record
-      );
+      const mx = await queueForMX("registry", record);
 
       return {
         accepted: true,
-        stored: true,
+        managed: true,
         destination: "MEXA_DATA_MANAGEMENT",
         name: record.name,
-        mx: mxResult
+        mx: mx
       };
     } catch (error) {
       failed += 1;
-      lastError = String(
-        error.message || error
-      );
-
-      console.error(
-        "[MEXA DATA MANAGEMENT] Registry ditolak:",
-        error
-      );
+      lastError = String(error.message || error);
 
       return {
         accepted: false,
@@ -341,51 +312,35 @@
     }
   }
 
-  // ================================================
-  // 2. MENERIMA PENGGUNA DARI PENGHUBUNG 2
-  // ================================================
-
   async function receiveRegisteredUser(input) {
     try {
-      const record =
-        normalizeRegisteredUser(input);
+      const record = normalizeUserRecord(input);
 
-      // Simpan berdasarkan ID Auth pengguna.
       registeredUsers.set(record.id, record);
       receivedUsers += 1;
       lastError = null;
 
-      emit(
-        "mexa:data-management:user-received",
-        {
-          id: record.id,
-          username: record.username,
-          accepted: true
-        }
-      );
+      emit("mexa:data-management:user-received", {
+        id: record.id,
+        username: record.username,
+        accepted: true
+      });
 
-      const mxResult = await forwardToMX(
+      const mx = await queueForMX(
         "registered-user",
         record
       );
 
       return {
         accepted: true,
-        stored: true,
+        managed: true,
         destination: "MEXA_DATA_MANAGEMENT",
         userId: record.id,
-        mx: mxResult
+        mx: mx
       };
     } catch (error) {
       failed += 1;
-      lastError = String(
-        error.message || error
-      );
-
-      console.error(
-        "[MEXA DATA MANAGEMENT] Pengguna ditolak:",
-        error
-      );
+      lastError = String(error.message || error);
 
       return {
         accepted: false,
@@ -394,19 +349,17 @@
     }
   }
 
-  // ================================================
-  // 3. KONEKSI DENGAN MX
-  // MX HARUS MENYEDIAKAN receiveManagedData(payload)
-  // ================================================
+  // ---------------------------------------------------
+  // KONEKSI MX
+  // ---------------------------------------------------
 
   function connectMX(api) {
     if (
       !api ||
       typeof api.receiveManagedData !== "function"
     ) {
-      throw new TypeError(
-        "MX harus menyediakan " +
-        "receiveManagedData(payload)."
+      throw new Error(
+        "MX belum menyediakan receiveManagedData(payload)."
       );
     }
 
@@ -419,74 +372,80 @@
     return getStatus();
   }
 
-  // MX dapat mengumumkan bahwa penerimanya siap.
-  document.addEventListener(
-    "mexa:mx:ready",
-    function (event) {
-      const api =
-        event.detail && event.detail.api
-          ? event.detail.api
-          : window.MEXA_MX;
+  async function flushMXQueue() {
+    if (
+      !mxReceiver ||
+      typeof mxReceiver.receiveManagedData !== "function"
+    ) {
+      return {
+        connected: false,
+        sent: 0,
+        pending: pendingToMX.size
+      };
+    }
 
-      if (!api) return;
+    let sent = 0;
 
-      try {
-        connectMX(api);
-      } catch (error) {
-        lastError = String(
-          error.message || error
-        );
+    for (const payload of Array.from(
+      pendingToMX.values()
+    )) {
+      const result = await sendToMX(payload);
 
-        console.error(
-          "[MEXA DATA MANAGEMENT] Koneksi MX:",
-          error
-        );
+      if (result.confirmed) {
+        sent += 1;
       }
     }
-  );
 
-  // ================================================
-  // 4. API BACA UNTUK MX DAN PEMERIKSAAN SISTEM
-  // ================================================
-
-  function getRegistryRecord(name) {
-    const record = registryRecords.get(
-      String(name || "").trim().toLowerCase()
-    );
-
-    return record ? copyRecord(record) : null;
+    return {
+      connected: true,
+      sent: sent,
+      pending: pendingToMX.size
+    };
   }
+
+  // Dipakai MX bila menggunakan jalur event.
+  function acknowledgeMX(id, accepted) {
+    if (accepted !== true || !pendingToMX.has(id)) {
+      return false;
+    }
+
+    pendingToMX.delete(id);
+    deliveredToMX += 1;
+
+    emit("mexa:data-management:mx-confirmed", {
+      id: id,
+      accepted: true
+    });
+
+    return true;
+  }
+
+  // ---------------------------------------------------
+  // BACA DATA DAN STATUS
+  // ---------------------------------------------------
 
   function getRegistryRecords() {
     return Array.from(
       registryRecords.values()
-    ).map(copyRecord);
-  }
-
-  function getRegisteredUser(id) {
-    const record = registeredUsers.get(
-      String(id || "").trim()
-    );
-
-    return record ? copyRecord(record) : null;
+    ).map(clone);
   }
 
   function getRegisteredUsers() {
     return Array.from(
       registeredUsers.values()
-    ).map(copyRecord);
+    ).map(clone);
   }
 
-  function getSnapshot() {
-    return {
-      version: VERSION,
-      registry: getRegistryRecords(),
-      users: getRegisteredUsers(),
-      createdAt: new Date().toISOString()
-    };
+  function getPendingForMX() {
+    return Array.from(
+      pendingToMX.values()
+    ).map(clone);
   }
 
   function getStatus() {
+    const receiver =
+      mxReceiver || window.MEXA_MX;
+
     return {
       name: "MEXA DATA MANAGEMENT",
       version: VERSION,
@@ -494,69 +453,54 @@
 
       registryCount: registryRecords.size,
       usersCount: registeredUsers.size,
+      pendingToMX: pendingToMX.size,
 
       receivedRegistry: receivedRegistry,
       receivedUsers: receivedUsers,
-      forwardedToMX: forwardedToMX,
+      deliveredToMX: deliveredToMX,
       failed: failed,
 
       mxConnected: Boolean(
-        (mxReceiver || window.MEXA_MX) &&
-        typeof (
-          (mxReceiver || window.MEXA_MX)
-            .receiveManagedData
-        ) === "function"
+        receiver &&
+        typeof receiver.receiveManagedData === "function"
       ),
 
       lastError: lastError
     };
   }
 
-  // ================================================
+  // ---------------------------------------------------
   // DAFTARKAN API GLOBAL
-  // ================================================
+  // Kontrak harus cocok dengan Penghubung 2
+  // dan mx-space.html.
+  // ---------------------------------------------------
 
   const api = Object.freeze({
     version: VERSION,
 
-    receiveRegistryRecord,
-    receiveRegisteredUser,
+    receiveRegistryRecord: receiveRegistryRecord,
+    receiveRegisteredUser: receiveRegisteredUser,
 
-    connectMX,
+    connectMX: connectMX,
+    flushMXQueue: flushMXQueue,
+    acknowledgeMX: acknowledgeMX,
 
-    getRegistryRecord,
-    getRegistryRecords,
-    getRegisteredUser,
-    getRegisteredUsers,
-
-    getSnapshot,
-    getStatus
+    getRegistryRecords: getRegistryRecords,
+    getRegisteredUsers: getRegisteredUsers,
+    getPendingForMX: getPendingForMX,
+    getStatus: getStatus
   });
 
   window.MEXA_DATA_MANAGEMENT = api;
 
-  // Sambungkan otomatis jika MX sudah dimuat.
-  if (
-    window.MEXA_MX &&
-    typeof window.MEXA_MX.receiveManagedData === "function"
-  ) {
-    try {
-      connectMX(window.MEXA_MX);
-    } catch (error) {
-      lastError = String(
-        error.message || error
-      );
-    }
-  }
-
-  // Beri tahu Penghubung 2 bahwa API siap.
+  // Beri tahu Penghubung 2 bahwa penerima siap.
   emit("mexa:data-management:ready", {
     version: VERSION,
     api: api
   });
 
   console.info(
-    "[MEXA DATA MANAGEMENT] Aktif — versi " +
+    "[MEXA DATA MANAGEMENT] API siap — versi " +
     VERSION
   );
 
