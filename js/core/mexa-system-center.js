@@ -1,93 +1,43 @@
 /* =====================================================
    MEXA SMART — SYSTEM CENTER
-   File: js/core/mexa-system-center.js
-   Version: 1.0.0
-
-   JALUR RESMI:
-   MEXA_HTML_REGISTRY
-          ↓
-   MEXA_CONNECTOR_1.receiveRegistry(payload)
-          ↓
-   MEXA_SYSTEM_CENTER.receiveRegistration(record)
-          ↓
-   SUPABASE: mexa_system_registry
-          ↓
-   HASIL PENYIMPANAN KEMBALI KE SYSTEM CENTER
-          ↓
-   MEXA_DATA_MANAGEMENT.receiveRegistryRecord(record)
-
-   Hanya System Center yang memiliki koneksi Supabase.
+   Connector 1 → System Center → Supabase Auth
+   Supabase Auth result → Center → Data Management
    ===================================================== */
 
 (function (window, document) {
   "use strict";
 
   if (window.MEXA_SYSTEM_CENTER) {
-    console.warn("[MEXA CENTER] Sudah aktif.");
+    console.warn("[MEXA SYSTEM CENTER] Sudah aktif.");
     return;
   }
 
   const VERSION = "1.0.0";
-  const TABLE = "mexa_system_registry";
 
   /*
-   * Isi dengan URL proyek dan Publishable/anon public key
-   * Supabase milik proyek MEXA yang benar.
+   * GANTI DENGAN URL DAN PUBLISHABLE/ANON PUBLIC KEY
+   * DARI PROYEK SUPABASE MEXA YANG BENAR.
    *
-   * Jangan pernah menggunakan service_role/secret key
-   * di JavaScript yang diterbitkan ke GitHub Pages.
+   * Jangan pernah memasukkan service_role atau secret key
+   * ke JavaScript publik.
    */
-  const CONFIG = {
-    SUPABASE_URL: "https://ISI_PROJECT_REF.supabase.co",
-    SUPABASE_ANON_KEY: "ISI_PUBLISHABLE_ATAU_ANON_KEY"
-  };
+  const CONFIG = Object.freeze({
+    SUPABASE_URL: "https://GANTI_PROJECT_REF.supabase.co",
+    SUPABASE_PUBLIC_KEY: "GANTI_DENGAN_PUBLISHABLE_ATAU_ANON_KEY"
+  });
 
   let client = null;
-  let clientPromise = null;
-  let connecting = false;
+  let connectionPromise = null;
+  let sdkPromise = null;
+  let registrationBusy = false;
   let lastError = null;
-  let successfulWrites = 0;
-
-  // Catatan yang sudah disimpan tetapi belum diterima
-  // oleh System Pengelolaan Data.
-  const pendingManagement = new Map();
-
-  /* ===================================================
-     UTILITAS
-     =================================================== */
+  let registrationsCompleted = 0;
 
   function emit(eventName, detail) {
     document.dispatchEvent(
       new window.CustomEvent(eventName, { detail })
     );
   }
-
-  function normalizeName(name) {
-    if (typeof name !== "string" || !name.trim()) {
-      throw new TypeError("Nama pendaftaran tidak valid.");
-    }
-
-    return name.trim().toLowerCase();
-  }
-
-  function getManagement() {
-    const manager = window.MEXA_DATA_MANAGEMENT;
-
-    if (
-      !manager ||
-      typeof manager.receiveRegistryRecord !== "function"
-    ) {
-      return null;
-    }
-
-    return manager;
-  }
-
-  /* ===================================================
-     MEMUAT SUPABASE SDK
-     =================================================== */
-
-  let sdkPromise = null;
 
   function loadSupabaseSDK() {
     if (
@@ -104,7 +54,6 @@
 
       script.src =
         "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-
       script.async = true;
 
       script.onload = function () {
@@ -131,27 +80,24 @@
     return sdkPromise;
   }
 
-  /* ===================================================
-     KONEKSI DATABASE
-     Koneksi hanya dibuat di System Center.
-     =================================================== */
-
-  async function connect() {
+  /*
+   * SATU-SATUNYA FUNGSI PEMBUAT KONEKSI SUPABASE
+   */
+  async function connectSupabase() {
     if (client) return client;
-    if (clientPromise) return clientPromise;
+    if (connectionPromise) return connectionPromise;
 
-    clientPromise = (async function () {
+    connectionPromise = (async function () {
       const url = CONFIG.SUPABASE_URL.trim();
-      const key = CONFIG.SUPABASE_ANON_KEY.trim();
+      const key = CONFIG.SUPABASE_PUBLIC_KEY.trim();
 
       if (
-        !url ||
-        !key ||
-        url.includes("ISI_PROJECT_REF") ||
-        key.includes("ISI_PUBLISHABLE")
+        url.includes("GANTI_PROJECT_REF") ||
+        key.includes("GANTI_DENGAN")
       ) {
         throw new Error(
-          "Konfigurasi Supabase di System Center belum diisi."
+          "Isi URL dan Publishable/anon public key Supabase " +
+          "di file mexa-system-center.js."
         );
       }
 
@@ -159,136 +105,103 @@
         throw new Error("URL Supabase tidak valid.");
       }
 
-      connecting = true;
+      await loadSupabaseSDK();
 
-      try {
-        await loadSupabaseSDK();
+      client = window.supabase.createClient(
+        url.replace(/\/$/, ""),
+        key
+      );
 
-        const candidate = window.supabase.createClient(
-          url.replace(/\/$/, ""),
-          key,
-          {
-            auth: {
-              persistSession: false,
-              autoRefreshToken: false,
-              detectSessionInUrl: false
-            }
-          }
-        );
+      lastError = null;
 
-        // Pastikan tabel bisa diakses sebelum menggunakannya.
-        const check = await candidate
-          .from(TABLE)
-          .select("name")
-          .limit(1);
+      console.info("[MEXA SYSTEM CENTER] Supabase client siap.");
 
-        if (check.error) {
-          throw new Error(
-            "Tabel " + TABLE +
-            " belum dapat diakses: " + check.error.message
-          );
-        }
+      emit("mexa:center:supabase-connected", {
+        connected: true
+      });
 
-        client = candidate;
-        lastError = null;
-
-        console.info("[MEXA CENTER] Supabase terhubung.");
-
-        emit("mexa:center:connected", {
-          table: TABLE
-        });
-
-        return client;
-      } finally {
-        connecting = false;
-      }
+      return client;
     })().catch(error => {
       client = null;
       lastError = String(error.message || error);
       throw error;
     }).finally(() => {
-      clientPromise = null;
+      connectionPromise = null;
     });
 
-    return clientPromise;
+    return connectionPromise;
   }
 
-  /* ===================================================
-     NORMALISASI PENDAFTARAN
-     Format disesuaikan dengan Registry HTML.
-     =================================================== */
-
-  function normalizeRecord(input) {
-    if (
-      !input ||
-      typeof input !== "object" ||
-      Array.isArray(input)
-    ) {
-      throw new TypeError("Data pendaftaran harus berupa objek.");
+  function normalizeUserPayload(payload) {
+    if (!payload || typeof payload !== "object") {
+      throw new TypeError("Data pengguna tidak valid.");
     }
 
-    const name = normalizeName(input.name);
+    const displayName =
+      typeof payload.displayName === "string"
+        ? payload.displayName.trim()
+        : "";
 
-    if (
-      typeof input.title !== "string" ||
-      !input.title.trim()
-    ) {
-      throw new Error(
-        'Judul pendaftaran "' + name + '" tidak valid.'
-      );
+    const username =
+      typeof payload.username === "string"
+        ? payload.username.trim().toLowerCase()
+        : "";
+
+    const email =
+      typeof payload.email === "string"
+        ? payload.email.trim().toLowerCase()
+        : "";
+
+    const password =
+      typeof payload.password === "string"
+        ? payload.password
+        : "";
+
+    if (displayName.length < 2 || displayName.length > 80) {
+      throw new Error("Nama lengkap tidak valid.");
+    }
+
+    if (!/^[a-z0-9_.]{3,30}$/.test(username)) {
+      throw new Error("Format username tidak valid.");
     }
 
     if (
-      !Number.isInteger(input.position) ||
-      input.position < 1
+      email.length > 254 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     ) {
-      throw new Error(
-        'Posisi pendaftaran "' + name + '" tidak valid.'
-      );
+      throw new Error("Format email tidak valid.");
     }
 
-    if (
-      input.file !== null &&
-      input.file !== undefined &&
-      typeof input.file !== "string"
-    ) {
-      throw new Error(
-        'Jalur file "' + name + '" tidak valid.'
-      );
+    if (password.length < 8 || password.length > 72) {
+      throw new Error("Kata sandi tidak memenuhi batas yang ditetapkan.");
     }
-
-    const status = input.status === "ready"
-      ? "ready"
-      : "registered";
 
     return {
-      name,
-      title: input.title.trim(),
-      version: input.version || VERSION,
-      system_type: input.type || "module",
-      file_path: input.file || null,
-      position: input.position,
-      description: input.description || "",
-      status,
-      updated_at: new Date().toISOString()
+      displayName,
+      username,
+      email,
+      password
     };
   }
 
-  /* ===================================================
-     KIRIM HASIL DATABASE KE SYSTEM PENGELOLAAN DATA
+  /*
+   * Meneruskan HASIL AUTH ke System Pengelolaan Data.
+   * Password tidak pernah diteruskan ke modul tersebut.
+   *
+   * Kontrak modul berikutnya:
+   * MEXA_DATA_MANAGEMENT.receiveRegisteredUser(record)
+   */
+  async function forwardToDataManagement(record) {
+    const manager = window.MEXA_DATA_MANAGEMENT;
 
-     Kontrak yang disiapkan:
-     MEXA_DATA_MANAGEMENT.receiveRegistryRecord(record)
-
-     Pusat meneruskan hasil Supabase, bukan data mentah
-     sebelum penyimpanan.
-     =================================================== */
-
-  async function forwardToManagement(savedRecord) {
-    const manager = getManagement();
-
-    if (!manager) {
-      pendingManagement.set(savedRecord.name, savedRecord);
+    if (
+      !manager ||
+      typeof manager.receiveRegisteredUser !== "function"
+    ) {
+      emit("mexa:center:user-registered", {
+        user: { ...record },
+        managementStatus: "waiting-for-data-management"
+      });
 
       return {
         forwarded: false,
@@ -296,206 +209,140 @@
       };
     }
 
+    const response = await manager.receiveRegisteredUser({
+      ...record
+    });
+
+    if (!response || response.accepted !== true) {
+      throw new Error(
+        "System Pengelolaan Data belum mengonfirmasi penerimaan."
+      );
+    }
+
+    return {
+      forwarded: true,
+      status: "delivered"
+    };
+  }
+
+  /*
+   * PINTU DAFTAR AKUN RESMI
+   * Hanya dipanggil oleh Penghubung 1.
+   */
+  async function registerUser(payload) {
+    if (registrationBusy) {
+      throw new Error(
+        "Pendaftaran lain sedang diproses."
+      );
+    }
+
+    registrationBusy = true;
+
     try {
-      const response = await manager.receiveRegistryRecord({
-        ...savedRecord
+      const input = normalizeUserPayload(payload);
+      const supabase = await connectSupabase();
+
+      const { data, error } = await supabase.auth.signUp({
+        email: input.email,
+        password: input.password,
+        options: {
+          data: {
+            display_name: input.displayName,
+            username: input.username
+          }
+        }
       });
 
-      if (
-        !response ||
-        response.accepted !== true
-      ) {
+      if (error) {
         throw new Error(
-          "System Pengelolaan Data belum mengonfirmasi penerimaan."
+          "Supabase menolak pendaftaran: " + error.message
         );
       }
 
-      pendingManagement.delete(savedRecord.name);
+      if (!data || !data.user || !data.user.id) {
+        throw new Error(
+          "Supabase tidak mengembalikan identitas akun."
+        );
+      }
 
-      emit("mexa:center:forwarded-to-management", {
-        name: savedRecord.name
+      /*
+       * Beberapa konfigurasi dapat mengembalikan identities
+       * kosong untuk alamat email yang sudah terdaftar.
+       */
+      if (
+        Array.isArray(data.user.identities) &&
+        data.user.identities.length === 0
+      ) {
+        throw new Error(
+          "Akun dengan email tersebut mungkin sudah terdaftar. " +
+          "Coba masuk atau gunakan pemulihan kata sandi."
+        );
+      }
+
+      const safeUserRecord = {
+        id: data.user.id,
+        email: data.user.email || input.email,
+        displayName: input.displayName,
+        username: input.username,
+        createdAt: data.user.created_at || new Date().toISOString()
+      };
+
+      /*
+       * Supabase Auth sudah memberikan respons sukses.
+       * Data pengguna aman diteruskan ke pengelolaan data.
+       */
+      let managementResult;
+
+      try {
+        managementResult =
+          await forwardToDataManagement(safeUserRecord);
+      } catch (error) {
+        /*
+         * Akun Auth mungkin sudah dibuat walaupun penerusan
+         * profil gagal. Jangan menyebut akun gagal dibuat.
+         */
+        managementResult = {
+          forwarded: false,
+          status: "handoff-failed",
+          error: String(error.message || error)
+        };
+
+        console.error(
+          "[MEXA SYSTEM CENTER] Penerusan profil gagal:",
+          error
+        );
+      }
+
+      registrationsCompleted += 1;
+      lastError = null;
+
+      const confirmationRequired = !data.session;
+
+      const message = confirmationRequired
+        ? "Akun berhasil didaftarkan. Periksa email untuk konfirmasi sebelum masuk."
+        : "Akun MEXA berhasil dibuat.";
+
+      emit("mexa:center:registration-completed", {
+        user: safeUserRecord,
+        confirmationRequired,
+        management: managementResult
       });
 
       return {
-        forwarded: true,
-        status: "delivered"
+        accepted: true,
+        accountCreated: true,
+        userId: safeUserRecord.id,
+        emailConfirmationRequired: confirmationRequired,
+        management: managementResult,
+        message
       };
+
     } catch (error) {
-      pendingManagement.set(savedRecord.name, savedRecord);
-
-      console.error(
-        "[MEXA CENTER] Penerusan ke pengelolaan data gagal:",
-        error
-      );
-
-      return {
-        forwarded: false,
-        status: "pending",
-        error: String(error.message || error)
-      };
+      lastError = String(error.message || error);
+      throw error;
+    } finally {
+      registrationBusy = false;
     }
-  }
-
-  /* ===================================================
-     PENERIMA RESMI DARI PENGHUBUNG 1
-
-     Penghubung 1 mengharapkan:
-     { accepted: true, persisted: true }
-     =================================================== */
-
-  async function receiveRegistration(input) {
-    const row = normalizeRecord(input);
-    const supabase = await connect();
-
-    const { data, error } = await supabase
-      .from(TABLE)
-      .upsert(row, {
-        onConflict: "name"
-      })
-      .select(
-        "name,title,version,system_type,file_path," +
-        "position,description,status,created_at,updated_at"
-      )
-      .single();
-
-    if (error) {
-      lastError = error.message;
-
-      throw new Error(
-        'Gagal menyimpan "' + row.name +
-        '" ke Supabase: ' + error.message
-      );
-    }
-
-    if (!data || data.name !== row.name) {
-      throw new Error(
-        "Supabase tidak mengembalikan hasil penyimpanan yang valid."
-      );
-    }
-
-    // Di titik ini Supabase sudah mengembalikan baris tersimpan.
-    successfulWrites += 1;
-    lastError = null;
-
-    console.info(
-      "[MEXA CENTER] Pendaftaran berhasil disimpan:",
-      data.name
-    );
-
-    emit("mexa:center:registration-saved", {
-      name: data.name,
-      record: data
-    });
-
-    // Teruskan record hasil database, bukan record mentah.
-    const management = await forwardToManagement(data);
-
-    return {
-      accepted: true,
-      persisted: true,
-      name: data.name,
-      record: data,
-      management
-    };
-  }
-
-  /* ===================================================
-     SAMBUNGKAN SYSTEM PENGELOLAAN DATA
-
-     Dapat dipanggil ketika modul pengelolaan selesai
-     dimuat. Semua data dibaca kembali dari Supabase.
-     =================================================== */
-
-  async function connectDataManagement(manager) {
-    if (
-      !manager ||
-      typeof manager.receiveRegistryRecord !== "function"
-    ) {
-      throw new TypeError(
-        "System Pengelolaan Data harus menyediakan " +
-        "receiveRegistryRecord(record)."
-      );
-    }
-
-    const supabase = await connect();
-
-    const { data, error } = await supabase
-      .from(TABLE)
-      .select(
-        "name,title,version,system_type,file_path," +
-        "position,description,status,created_at,updated_at"
-      )
-      .order("position", { ascending: true });
-
-    if (error) {
-      lastError = error.message;
-      throw new Error(
-        "Gagal mengambil Registry dari Supabase: " +
-        error.message
-      );
-    }
-
-    const results = [];
-
-    for (const record of data || []) {
-      try {
-        const response =
-          await manager.receiveRegistryRecord({ ...record });
-
-        if (!response || response.accepted !== true) {
-          throw new Error(
-            "System Pengelolaan Data menolak " + record.name
-          );
-        }
-
-        pendingManagement.delete(record.name);
-
-        results.push({
-          name: record.name,
-          forwarded: true
-        });
-      } catch (error) {
-        pendingManagement.set(record.name, record);
-
-        results.push({
-          name: record.name,
-          forwarded: false,
-          error: String(error.message || error)
-        });
-      }
-    }
-
-    return {
-      totalFromSupabase: (data || []).length,
-      results
-    };
-  }
-
-  /* ===================================================
-     BACA DATA TERSIMPAN
-     =================================================== */
-
-  async function listRegistrations() {
-    const supabase = await connect();
-
-    const { data, error } = await supabase
-      .from(TABLE)
-      .select("*")
-      .order("position", { ascending: true });
-
-    if (error) {
-      lastError = error.message;
-      throw new Error(
-        "Gagal membaca Registry: " + error.message
-      );
-    }
-
-    return data || [];
-  }
-
-  function getPendingManagement() {
-    return Array.from(pendingManagement.values())
-      .map(record => ({ ...record }));
   }
 
   function getStatus() {
@@ -503,74 +350,22 @@
       name: "MEXA SYSTEM CENTER",
       version: VERSION,
       ready: true,
-      connected: Boolean(client),
-      connecting,
-      table: TABLE,
-      successfulWrites,
-      pendingManagement: pendingManagement.size,
+      supabaseConnected: Boolean(client),
+      registrationBusy,
+      registrationsCompleted,
       lastError
     };
   }
 
-  /* ===================================================
-     API PUBLIK — NAMA DIKUNCI
-     =================================================== */
-
   window.MEXA_SYSTEM_CENTER = Object.freeze({
     version: VERSION,
-    connect,
-    receiveRegistration,
-    listRegistrations,
-    connectDataManagement,
-    getPendingManagement,
+    connectSupabase,
+    registerUser,
     getStatus
   });
 
-  /*
-   * Beri tahu Penghubung 1 bahwa API pusat tersedia.
-   * Penghubung 1 akan mencoba mengirim antreannya.
-   */
-  emit("mexa:center:ready", {
-    api: window.MEXA_SYSTEM_CENTER
-  });
-
-  /*
-   * Jika System Pengelolaan Data sudah tersedia,
-   * sinkronkan data yang ada di Supabase.
-   */
-  const existingManager = getManagement();
-
-  if (existingManager) {
-    connectDataManagement(existingManager).catch(error => {
-      lastError = String(error.message || error);
-      console.error("[MEXA CENTER] Sinkronisasi gagal:", error);
-    });
-  }
-
-  /*
-   * Bila Pengelolaan Data dimuat setelah pusat,
-   * gunakan event kesiapan yang sama.
-   */
-  document.addEventListener(
-    "mexa:data-management:ready",
-    function (event) {
-      const manager =
-        event.detail?.api || getManagement();
-
-      if (!manager) return;
-
-      connectDataManagement(manager).catch(error => {
-        lastError = String(error.message || error);
-        console.error(
-          "[MEXA CENTER] Sambungan pengelolaan gagal:",
-          error
-        );
-      });
-    }
-  );
-
   console.info(
-    "[MEXA CENTER] API penerima pendaftaran siap."
+    "[MEXA SYSTEM CENTER] API pendaftaran siap."
   );
 
 })(window, document);
