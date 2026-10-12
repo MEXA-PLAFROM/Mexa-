@@ -1,18 +1,19 @@
+
 /* =====================================================
    MEXA SMART — SYSTEM PENGHUBUNG 2
    File: js/core/mexa-connector-2.js
-   Version: 1.0.0
+   Version: 1.1.0
 
-   JALUR:
-   MEXA SYSTEM CENTER
-          ↓
-   MEXA CONNECTOR 2
-          ↓
-   MEXA DATA MANAGEMENT
+   SYSTEM CENTER
+        ↓
+   PENGHUBUNG 2
+        ↓
+   SYSTEM PENGELOLAAN DATA
 
-   Kontrak penerima:
+   Kontrak:
    - receiveRegistryRecord(record)
    - receiveRegisteredUser(record)
+   - receiveProfileRecord(record)
 
    Tidak membuat koneksi Supabase.
    Tidak mengklaim sukses tanpa konfirmasi penerima.
@@ -22,16 +23,19 @@
   "use strict";
 
   if (window.MEXA_CONNECTOR_2) {
-    console.warn("[MEXA CONNECTOR 2] Sudah aktif.");
+    console.warn(
+      "[MEXA CONNECTOR 2] Sudah aktif."
+    );
     return;
   }
 
-  const VERSION = "1.0.0";
+  const VERSION = "1.1.0";
 
   let management = null;
   let forwarding = 0;
   let forwardedRegistry = 0;
   let forwardedUsers = 0;
+  let forwardedProfiles = 0;
   let failed = 0;
   let lastError = null;
 
@@ -40,6 +44,12 @@
       new window.CustomEvent(eventName, { detail })
     );
   }
+
+  // ---------------------------------------------------
+  // PENGHUBUNG KE SYSTEM PENGELOLAAN DATA
+  // Dua API lama wajib dipertahankan.
+  // API profil diperiksa saat profil dikirim.
+  // ---------------------------------------------------
 
   function getManagement() {
     const manager = window.MEXA_DATA_MANAGEMENT;
@@ -53,7 +63,11 @@
       return manager;
     }
 
-    if (management) {
+    if (
+      management &&
+      typeof management.receiveRegistryRecord === "function" &&
+      typeof management.receiveRegisteredUser === "function"
+    ) {
       return management;
     }
 
@@ -61,6 +75,10 @@
       "MEXA DATA MANAGEMENT belum siap atau kontraknya belum cocok."
     );
   }
+
+  // ---------------------------------------------------
+  // VALIDASI RECORD REGISTRY
+  // ---------------------------------------------------
 
   function validateRegistryRecord(record) {
     if (
@@ -78,7 +96,7 @@
       !record.name.trim()
     ) {
       throw new Error(
-        "Nama sistem dalam data Registry tidak valid."
+        "Nama sistem dalam Registry tidak valid."
       );
     }
 
@@ -87,7 +105,7 @@
       !record.title.trim()
     ) {
       throw new Error(
-        "Judul sistem dalam data Registry tidak valid."
+        "Judul sistem dalam Registry tidak valid."
       );
     }
 
@@ -95,14 +113,17 @@
       name: record.name.trim().toLowerCase(),
       title: record.title.trim(),
       version: record.version || VERSION,
-      system_type: record.system_type || record.type || "module",
-      file_path: record.file_path || record.file || null,
+      system_type:
+        record.system_type || record.type || "module",
+      file_path:
+        record.file_path || record.file || null,
       position: Number.isInteger(record.position)
         ? record.position
         : null,
-      description: typeof record.description === "string"
-        ? record.description
-        : "",
+      description:
+        typeof record.description === "string"
+          ? record.description
+          : "",
       status: record.status === "ready"
         ? "ready"
         : "registered",
@@ -110,6 +131,11 @@
       updated_at: record.updated_at || null
     };
   }
+
+  // ---------------------------------------------------
+  // VALIDASI DATA DASAR PENGGUNA
+  // Password dan token tidak diteruskan.
+  // ---------------------------------------------------
 
   function validateUserRecord(record) {
     if (
@@ -123,7 +149,9 @@
     }
 
     const id =
-      typeof record.id === "string" ? record.id.trim() : "";
+      typeof record.id === "string"
+        ? record.id.trim()
+        : "";
 
     const email =
       typeof record.email === "string"
@@ -144,11 +172,14 @@
       throw new Error("ID pengguna tidak tersedia.");
     }
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       throw new Error("Email pengguna tidak valid.");
     }
 
-    if (displayName.length < 2 || displayName.length > 80) {
+    if (
+      displayName.length < 2 ||
+      displayName.length > 80
+    ) {
       throw new Error("Nama pengguna tidak valid.");
     }
 
@@ -156,10 +187,6 @@
       throw new Error("Username pengguna tidak valid.");
     }
 
-    /*
-     * Hanya field yang diperlukan yang diteruskan.
-     * Kata sandi dan token autentikasi tidak ikut dikirim.
-     */
     return {
       id,
       email,
@@ -169,6 +196,73 @@
     };
   }
 
+  // ---------------------------------------------------
+  // VALIDASI PROFIL DARI SYSTEM CENTER
+  // Sesuai kolom public.profiles yang direncanakan.
+  // ---------------------------------------------------
+
+  function validateProfileRecord(record) {
+    if (
+      !record ||
+      typeof record !== "object" ||
+      Array.isArray(record)
+    ) {
+      throw new TypeError(
+        "Data profil harus berupa objek."
+      );
+    }
+
+    const id =
+      typeof record.id === "string"
+        ? record.id.trim()
+        : "";
+
+    if (!id) {
+      throw new Error(
+        "ID profil tidak tersedia."
+      );
+    }
+
+    function textField(value, fallback) {
+      return typeof value === "string"
+        ? value
+        : fallback;
+    }
+
+    const email = textField(record.email, "")
+      .trim()
+      .toLowerCase();
+
+    if (
+      email &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    ) {
+      throw new Error(
+        "Email pada data profil tidak valid."
+      );
+    }
+
+    // Whitelist mencegah password atau token
+    // ikut diteruskan sebagai bagian dari record.
+    return {
+      id,
+      email,
+      display_name: textField(record.display_name, ""),
+      username: textField(record.username, ""),
+      avatar_url: textField(record.avatar_url, ""),
+      cover_url: textField(record.cover_url, ""),
+      bio: textField(record.bio, ""),
+      location: textField(record.location, ""),
+      website: textField(record.website, ""),
+      created_at: record.created_at || null,
+      updated_at: record.updated_at || null
+    };
+  }
+
+  // ---------------------------------------------------
+  // 1. KIRIM REGISTRY KE PENGELOLAAN DATA
+  // ---------------------------------------------------
+
   async function forwardRegistryRecord(input) {
     forwarding += 1;
 
@@ -176,11 +270,12 @@
       const manager = getManagement();
       const record = validateRegistryRecord(input);
 
-      const result = await manager.receiveRegistryRecord(record);
+      const result =
+        await manager.receiveRegistryRecord(record);
 
       if (!result || result.accepted !== true) {
         throw new Error(
-          "System Pengelolaan Data belum mengonfirmasi penerimaan Registry."
+          "System Pengelolaan Data belum mengonfirmasi Registry."
         );
       }
 
@@ -213,6 +308,10 @@
     }
   }
 
+  // ---------------------------------------------------
+  // 2. KIRIM DATA PENDAFTARAN PENGGUNA
+  // ---------------------------------------------------
+
   async function forwardRegisteredUser(input) {
     forwarding += 1;
 
@@ -220,11 +319,12 @@
       const manager = getManagement();
       const record = validateUserRecord(input);
 
-      const result = await manager.receiveRegisteredUser(record);
+      const result =
+        await manager.receiveRegisteredUser(record);
 
       if (!result || result.accepted !== true) {
         throw new Error(
-          "System Pengelolaan Data belum mengonfirmasi penerimaan pengguna."
+          "System Pengelolaan Data belum mengonfirmasi pengguna."
         );
       }
 
@@ -258,6 +358,73 @@
     }
   }
 
+  // ---------------------------------------------------
+  // 3. KIRIM PROFIL LENGKAP KE PENGELOLAAN DATA
+  //
+  // System Center akan memanggil fungsi ini setelah
+  // mengambil data profil melalui koneksi Supabase
+  // miliknya.
+  // ---------------------------------------------------
+
+  async function forwardProfileRecord(input) {
+    forwarding += 1;
+
+    try {
+      const manager = getManagement();
+
+      if (
+        typeof manager.receiveProfileRecord !== "function"
+      ) {
+        throw new Error(
+          "System Pengelolaan Data belum menyediakan " +
+          "receiveProfileRecord(record)."
+        );
+      }
+
+      const record = validateProfileRecord(input);
+
+      const result =
+        await manager.receiveProfileRecord(record);
+
+      if (!result || result.accepted !== true) {
+        throw new Error(
+          "System Pengelolaan Data belum mengonfirmasi profil."
+        );
+      }
+
+      forwardedProfiles += 1;
+      lastError = null;
+
+      emit("mexa:connector-2:profile-forwarded", {
+        id: record.id,
+        accepted: true
+      });
+
+      return {
+        accepted: true,
+        userId: record.id,
+        destination: "MEXA_DATA_MANAGEMENT",
+        result
+      };
+    } catch (error) {
+      failed += 1;
+      lastError = String(error.message || error);
+
+      console.error(
+        "[MEXA CONNECTOR 2] Pengiriman profil gagal:",
+        error
+      );
+
+      throw error;
+    } finally {
+      forwarding -= 1;
+    }
+  }
+
+  // ---------------------------------------------------
+  // SAMBUNGKAN SYSTEM PENGELOLAAN DATA
+  // ---------------------------------------------------
+
   function connectManagement(api) {
     if (
       !api ||
@@ -284,36 +451,57 @@
     return getStatus();
   }
 
+  // ---------------------------------------------------
+  // STATUS DAN KONTRAK YANG TERSEDIA
+  // ---------------------------------------------------
+
   function getStatus() {
+    const manager =
+      window.MEXA_DATA_MANAGEMENT || management;
+
     return {
       name: "MEXA CONNECTOR 2",
       version: VERSION,
       ready: true,
+
       managementConnected: Boolean(
-        management &&
-        typeof management.receiveRegistryRecord === "function" &&
-        typeof management.receiveRegisteredUser === "function"
+        manager &&
+        typeof manager.receiveRegistryRecord === "function" &&
+        typeof manager.receiveRegisteredUser === "function"
       ),
+
+      profileForwardingReady: Boolean(
+        manager &&
+        typeof manager.receiveProfileRecord === "function"
+      ),
+
       forwarding,
       forwardedRegistry,
       forwardedUsers,
+      forwardedProfiles,
       failed,
       lastError
     };
   }
+
+  // ---------------------------------------------------
+  // API GLOBAL
+  // Fungsi lama dipertahankan.
+  // ---------------------------------------------------
 
   window.MEXA_CONNECTOR_2 = Object.freeze({
     version: VERSION,
     connectManagement,
     forwardRegistryRecord,
     forwardRegisteredUser,
+    forwardProfileRecord,
     getStatus
   });
 
-  /*
-   * Sambungkan otomatis jika Pengelolaan Data
-   * sudah tersedia atau memberi event siap.
-   */
+  // ---------------------------------------------------
+  // SAMBUNG OTOMATIS JIKA PENGELOLAAN SUDAH SIAP
+  // ---------------------------------------------------
+
   if (window.MEXA_DATA_MANAGEMENT) {
     try {
       connectManagement(window.MEXA_DATA_MANAGEMENT);
@@ -326,7 +514,8 @@
   document.addEventListener(
     "mexa:data-management:ready",
     function (event) {
-      const api = event.detail?.api ||
+      const api =
+        (event.detail && event.detail.api) ||
         window.MEXA_DATA_MANAGEMENT;
 
       if (!api) return;
@@ -341,7 +530,7 @@
   );
 
   console.info(
-    "[MEXA CONNECTOR 2] Siap."
+    "[MEXA CONNECTOR 2] Siap — versi " + VERSION
   );
 
 })(window, document);
