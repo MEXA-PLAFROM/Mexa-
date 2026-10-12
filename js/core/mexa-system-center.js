@@ -22,8 +22,8 @@
    * ke JavaScript publik.
    */
   const CONFIG = Object.freeze({
-    SUPABASE_URL: "https://GANTI_PROJECT_REF.supabase.co",
-    SUPABASE_PUBLIC_KEY: "GANTI_DENGAN_PUBLISHABLE_ATAU_ANON_KEY"
+    SUPABASE_URL: "https://hhxygoblxshqxhkwybxq.supabase.co",
+    SUPABASE_PUBLIC_KEY: "sb_publishable_nOvOu3SneFk0t2eSooT6uw_VbBZHQ3J"
   });
 
   let client = null;
