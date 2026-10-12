@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0818">
+
   <title>Daftar MEXA SMART</title>
 
   <style>
@@ -11,142 +12,224 @@
       color-scheme: dark;
       --bg: #0b0818;
       --panel: #151027;
+      --surface: #201832;
       --border: #302544;
       --text: #f6f3ff;
       --muted: #aaa4c2;
       --primary: #8b5cf6;
       --accent: #00e5ff;
+      --success: #34d399;
       --danger: #fb7185;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 24px 14px;
+      padding: 28px 14px;
       display: grid;
       place-items: center;
       background:
-        radial-gradient(ellipse at top, #32175b66, transparent 55%),
+        radial-gradient(
+          ellipse at 50% 0%,
+          #392060 0%,
+          transparent 48%
+        ),
         var(--bg);
       color: var(--text);
-      font-family: system-ui, sans-serif;
+      font-family:
+        Inter, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .register-page {
-      width: min(100%, 440px);
+    button,
+    input {
+      font: inherit;
     }
+
+    .page {
+      width: min(100%, 440px);
+      margin: auto;
+    }
+
+    /* =========================================
+       LOGO MEXA — DESAIN RESMI
+       M dan A = warna utama
+       X = warna berbeda
+       E = tepat tiga strip horizontal
+       ========================================= */
 
     .brand {
-      text-align: center;
-      margin-bottom: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 27px;
     }
 
     .logo {
-      font-size: 39px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-size: 46px;
       font-weight: 950;
-      letter-spacing: 3px;
+      line-height: 1;
+      letter-spacing: 1px;
     }
 
-    .m, .a { color: var(--primary); }
-    .x { color: var(--accent); }
+    .logo-m,
+    .logo-a {
+      color: var(--primary);
+    }
 
-    .e {
+    .logo-x {
+      color: var(--accent);
+    }
+
+    .logo-e {
       display: inline-flex;
       flex-direction: column;
+      align-items: flex-start;
       justify-content: space-between;
-      vertical-align: -3px;
-      width: 20px;
-      height: 26px;
+      flex: 0 0 22px;
+      width: 22px;
+      height: 31px;
       margin: 0 2px;
     }
 
-    .e i {
-      height: 4px;
-      width: 100%;
+    .logo-e span {
+      display: block;
+      height: 5px;
+      flex: 0 0 5px;
       background: var(--primary);
-      border-radius: 2px;
+      border-radius: 1px;
     }
 
-    .brand p {
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 3px;
-      margin-top: 3px;
+    .logo-e span:nth-child(1) {
+      width: 22px;
     }
+
+    .logo-e span:nth-child(2) {
+      width: 13px;
+    }
+
+    .logo-e span:nth-child(3) {
+      width: 18px;
+    }
+
+    .brand-caption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+    }
+
+    /* =========================================
+       KARTU PENDAFTARAN
+       ========================================= */
 
     .card {
       padding: 28px;
-      background: #151027ee;
+      background: rgb(21 16 39 / 96%);
       border: 1px solid var(--border);
       border-radius: 20px;
-      box-shadow: 0 20px 70px #0005;
+      box-shadow: 0 24px 75px rgb(0 0 0 / 28%);
     }
 
     .eyebrow {
       color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 800;
       font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
     }
 
     h1 {
-      font-size: 28px;
-      margin: 9px 0;
+      margin: 9px 0 10px;
+      font-size: clamp(25px, 6vw, 30px);
+      letter-spacing: -.7px;
     }
 
     .intro {
+      margin: 0 0 25px;
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.7;
-      margin-bottom: 24px;
+      line-height: 1.8;
     }
 
     .field {
-      margin-bottom: 16px;
+      margin-bottom: 17px;
     }
 
-    label {
+    .field label {
       display: block;
-      margin-bottom: 7px;
+      margin-bottom: 8px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 750;
     }
 
-    input {
+    .field input {
       display: block;
       width: 100%;
-      min-height: 46px;
-      padding: 12px;
-      background: #0d0a17;
+      min-height: 47px;
+      padding: 12px 13px;
       color: var(--text);
+      background: #0d0a17;
       border: 1px solid var(--border);
       border-radius: 10px;
-      font: inherit;
+      outline: none;
       font-size: 14px;
+      transition:
+        border-color .18s,
+        box-shadow .18s;
     }
 
-    input:focus {
-      outline: 2px solid var(--primary);
-      outline-offset: 1px;
+    .field input::placeholder {
+      color: #766d89;
+    }
+
+    .field input:focus {
       border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgb(139 92 246 / 15%);
     }
 
-    input::placeholder { color: #766d89; }
+    .field input[aria-invalid="true"] {
+      border-color: var(--danger);
+    }
+
+    .field-hint {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
 
     .register-button {
       width: 100%;
-      min-height: 47px;
-      margin-top: 6px;
+      min-height: 48px;
+      margin-top: 5px;
+      padding: 12px 16px;
+      color: white;
+      background: linear-gradient(
+        110deg,
+        #7c3aed,
+        #8b5cf6
+      );
       border: 1px solid #a78bfa;
       border-radius: 10px;
-      background: linear-gradient(110deg, #7c3aed, #8b5cf6);
-      color: white;
+      font-weight: 850;
       font-size: 14px;
-      font-weight: 800;
       cursor: pointer;
+      transition: filter .18s, transform .18s;
+    }
+
+    .register-button:hover:not(:disabled) {
+      filter: brightness(1.12);
+      transform: translateY(-1px);
     }
 
     .register-button:disabled {
@@ -154,25 +237,46 @@
       cursor: not-allowed;
     }
 
+    .register-button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
     .message {
       display: none;
-      margin-top: 16px;
-      padding: 12px;
+      margin-top: 15px;
+      padding: 12px 13px;
+      border: 1px solid var(--border);
       border-radius: 10px;
       background: #0d0a17;
-      border: 1px solid var(--border);
-      font-size: 13px;
+      color: var(--muted);
+      font-size: 12px;
       line-height: 1.7;
       overflow-wrap: anywhere;
     }
 
-    .message.visible { display: block; }
-    .message.error { color: var(--danger); }
-    .message.info { color: var(--accent); }
+    .message.visible {
+      display: block;
+    }
+
+    .message.success {
+      color: var(--success);
+      border-color: #245840;
+    }
+
+    .message.error {
+      color: var(--danger);
+      border-color: #713449;
+    }
+
+    .message.info {
+      color: var(--accent);
+    }
 
     .login-note {
+      margin: 23px 0 0;
       text-align: center;
-      margin: 20px 0 0;
       color: var(--muted);
       font-size: 13px;
     }
@@ -180,46 +284,77 @@
     .login-note a {
       color: var(--accent);
       text-decoration: none;
+      font-weight: 750;
     }
 
-    .footnote {
-      text-align: center;
-      color: #766d89;
-      font-size: 11px;
+    .login-note a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
       margin-top: 22px;
-      line-height: 1.7;
+      color: #827996;
+      font-size: 11px;
+      line-height: 1.8;
+      text-align: center;
     }
 
-    @media (max-width: 400px) {
-      .card { padding: 22px 18px; }
-      h1 { font-size: 25px; }
+    @media (max-width: 380px) {
+      .card {
+        padding: 22px 18px;
+      }
+
+      .logo {
+        font-size: 40px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: .01ms !important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <main class="register-page">
+  <main class="page">
+
+    <!-- LOGO MEXA -->
     <header class="brand">
-      <div class="logo" aria-label="MEXA">
-        <span class="m">M</span>
-        <span class="e" aria-label="E">
-          <i></i><i></i><i></i>
+      <div class="logo" role="img" aria-label="MEXA">
+        <span class="logo-m">M</span>
+
+        <span class="logo-e" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
         </span>
-        <span class="x">X</span><span class="a">A</span>
+
+        <span class="logo-x">X</span>
+        <span class="logo-a">A</span>
       </div>
-      <p>SMART SOCIAL PLATFORM</p>
+
+      <div class="brand-caption">
+        SMART SOCIAL PLATFORM
+      </div>
     </header>
 
+    <!-- FORM PENDAFTARAN -->
     <section class="card">
-      <div class="eyebrow">Gabung MEXA</div>
+      <div class="eyebrow">Bergabung dengan MEXA</div>
+
       <h1>Buat akun baru</h1>
+
       <p class="intro">
-        Daftar untuk memulai akun MEXA SMART.
-        Informasi akun akan diteruskan melalui jalur
-        pendaftaran resmi MEXA.
+        Daftar untuk memulai perjalananmu di MEXA SMART.
+        Isi informasi di bawah ini dengan benar.
       </p>
 
       <form id="mexaRegisterForm">
+
         <div class="field">
           <label for="displayName">Nama lengkap</label>
           <input
@@ -244,8 +379,13 @@
             maxlength="30"
             pattern="[A-Za-z0-9_.]+"
             placeholder="Contoh: arip_rahman"
+            aria-describedby="usernameHint"
             required
           >
+          <p class="field-hint" id="usernameHint">
+            Gunakan 3–30 karakter: huruf, angka, titik,
+            atau garis bawah.
+          </p>
         </div>
 
         <div class="field">
@@ -276,7 +416,9 @@
         </div>
 
         <div class="field">
-          <label for="confirmPassword">Ulangi kata sandi</label>
+          <label for="confirmPassword">
+            Konfirmasi kata sandi
+          </label>
           <input
             id="confirmPassword"
             name="confirmPassword"
@@ -298,8 +440,8 @@
         </button>
 
         <div
-          class="message"
           id="registerMessage"
+          class="message"
           role="status"
           aria-live="polite"
         ></div>
@@ -311,11 +453,12 @@
       </p>
     </section>
 
-    <footer class="footnote">
+    <footer class="footer">
       MEXA SMART · Registrasi akun<br>
-      Keamanan akun dan kata sandi ditangani melalui
+      Keamanan kata sandi ditangani melalui
       sistem autentikasi resmi.
     </footer>
+
   </main>
 
   <script>
@@ -332,14 +475,13 @@
     }
 
     /*
-     * KONTRAK RESMI UNTUK PENGHUBUNG 1:
+     * KONTRAK PENDAFTARAN
+     *
+     * Penghubung 1 nantinya harus menyediakan:
      * MEXA_CONNECTOR_1.registerUser(payload)
      *
-     * Penghubung 1 meneruskan pendaftaran ke System Pusat.
-     * System Pusat menangani Supabase Auth.
-     *
-     * Kata sandi tidak disimpan di Registry dan
-     * tidak dimasukkan ke profil/database biasa.
+     * Belum mengaku membuat akun sebelum pusat
+     * mengonfirmasi hasil pendaftaran.
      */
     window.MEXA_HTML_REGISTRY = Object.freeze({
       version: "1.0.0",
@@ -352,9 +494,8 @@
           typeof connector.registerUser !== "function"
         ) {
           throw new Error(
-            "Jalur pendaftaran belum tersambung. " +
-            "Penghubung 1 dan System Pusat harus disamakan " +
-            "dengan kontrak registerUser(payload) terlebih dahulu."
+            "Sistem pendaftaran belum tersambung. " +
+            "Penghubung 1 dan System Pusat harus diaktifkan terlebih dahulu."
           );
         }
 
@@ -367,51 +508,66 @@
 
       if (!form.reportValidity()) return;
 
-      const displayName =
-        document.getElementById("displayName").value.trim();
+      const displayName = document
+        .getElementById("displayName")
+        .value.trim();
 
-      const username =
-        document.getElementById("username").value.trim().toLowerCase();
+      const username = document
+        .getElementById("username")
+        .value.trim()
+        .toLowerCase();
 
-      const email =
-        document.getElementById("email").value.trim().toLowerCase();
+      const email = document
+        .getElementById("email")
+        .value.trim()
+        .toLowerCase();
 
-      const password =
-        document.getElementById("password").value;
+      const password = document
+        .getElementById("password")
+        .value;
 
-      const confirmation =
-        document.getElementById("confirmPassword").value;
+      const confirmPassword = document
+        .getElementById("confirmPassword")
+        .value;
 
-      if (password !== confirmation) {
+      if (password !== confirmPassword) {
         showMessage(
           "Kata sandi dan konfirmasinya tidak sama.",
           "error"
         );
+
+        document
+          .getElementById("confirmPassword")
+          .setAttribute("aria-invalid", "true");
+
         return;
       }
 
+      document
+        .getElementById("confirmPassword")
+        .removeAttribute("aria-invalid");
+
       if (!/^[a-z0-9_.]{3,30}$/.test(username)) {
-        showMessage(
-          "Username harus 3–30 karakter: huruf, angka, titik, atau garis bawah.",
-          "error"
-        );
+        showMessage("Format username tidak valid.", "error");
         return;
       }
 
       button.disabled = true;
-      button.textContent = "Mengirim pendaftaran...";
+      button.textContent = "Memproses pendaftaran...";
+
       showMessage(
-        "Menghubungkan formulir dengan jalur pendaftaran MEXA...",
+        "Memeriksa sambungan pendaftaran MEXA...",
         "info"
       );
 
       try {
-        const result = await window.MEXA_HTML_REGISTRY.registerUser({
-          displayName,
-          username,
-          email,
-          password
-        });
+        const result =
+          await window.MEXA_HTML_REGISTRY.registerUser({
+            displayName,
+            username,
+            email,
+            password
+          });
 
         if (!result || result.accepted !== true) {
           throw new Error(
@@ -419,16 +575,12 @@
           );
         }
 
-        /*
-         * Jangan mempertahankan kata sandi di form
-         * setelah pendaftaran berhasil.
-         */
         form.reset();
 
         showMessage(
           result.message ||
-          "Pendaftaran diterima. Ikuti petunjuk konfirmasi akun dari sistem.",
-          "info"
+          "Pendaftaran diterima oleh sistem.",
+          "success"
         );
       } catch (error) {
         showMessage(
@@ -444,4 +596,4 @@
   })(window, document);
   </script>
 </body>
-</html>
+  </html>
