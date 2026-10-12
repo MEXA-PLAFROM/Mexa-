@@ -1,0 +1,713 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0818">
+
+  <title>MEXA SMART — HTML Registry</title>
+
+  <!--
+    MEXA SMART
+    TAHAP 1: HTML REGISTRY
+
+    Tahap ini belum menggunakan Themes CSS/JS
+    atau koneksi Supabase.
+  -->
+
+  <style>
+    :root {
+      --bg: #0b0818;
+      --panel: #151027;
+      --surface: #211936;
+      --border: #302544;
+      --text: #f6f3ff;
+      --muted: #aaa4c2;
+      --primary: #8b5cf6;
+      --accent: #00e5ff;
+      --success: #34d399;
+      --warning: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 22px 0 40px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .brand-main {
+      color: var(--primary);
+    }
+
+    .brand-x {
+      color: var(--accent);
+    }
+
+    /* E menggunakan tepat tiga strip horizontal */
+    .brand-e {
+      width: 18px;
+      height: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand-e span {
+      display: block;
+      width: 100%;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 1px;
+    }
+
+    .brand-caption {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .header-badge {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      color: var(--accent);
+      font-size: 11px;
+    }
+
+    .intro {
+      padding: 30px 0 20px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      margin: 8px 0;
+      font-size: clamp(29px, 5vw, 42px);
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .notice {
+      padding: 15px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .summary-card {
+      padding: 16px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .summary-card strong {
+      display: block;
+      color: var(--accent);
+      font-size: 25px;
+    }
+
+    .summary-card span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section-title {
+      margin: 30px 0 14px;
+    }
+
+    .registry-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+      gap: 14px;
+    }
+
+    .registry-card {
+      min-width: 0;
+      padding: 17px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    .card-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-heading h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .position {
+      color: var(--accent);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .description {
+      min-height: 40px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .file-path {
+      display: block;
+      padding: 9px;
+      border-radius: 7px;
+      background: var(--surface);
+      color: #d8c8ff;
+      font: 12px/1.6 monospace;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 5px 9px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--warning);
+      font-size: 10px;
+    }
+
+    .status.ready {
+      color: var(--success);
+    }
+
+    .flow {
+      display: grid;
+      gap: 8px;
+      max-width: 650px;
+      margin: 20px auto;
+    }
+
+    .flow-step {
+      padding: 14px;
+      text-align: center;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .flow-step strong {
+      display: block;
+    }
+
+    .flow-step small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .arrow {
+      color: var(--accent);
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .footer {
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 520px) {
+      .app {
+        width: calc(100% - 24px);
+        padding-top: 16px;
+      }
+
+      .brand {
+        font-size: 26px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <header class="header">
+      <div>
+        <div class="brand" aria-label="MEXA">
+          <span class="brand-main">M</span>
+
+          <span class="brand-e" aria-label="E">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+
+          <span class="brand-x">X</span>
+          <span class="brand-main">A</span>
+        </div>
+
+        <div class="brand-caption">
+          SMART SOCIAL PLATFORM
+        </div>
+      </div>
+
+      <div class="header-badge">
+        TAHAP 1 · HTML REGISTRY
+      </div>
+    </header>
+
+    <section class="intro">
+      <div class="eyebrow">MEXA SMART SYSTEM</div>
+      <h1>Global Registry</h1>
+
+      <p class="muted">
+        Tempat pendaftaran sistem, pencatatan nama file,
+        dan penentuan jalur penghubung MEXA SMART.
+      </p>
+    </section>
+
+    <div class="notice">
+      <strong>Fondasi MEXA SMART</strong><br>
+      Halaman Registry disiapkan terlebih dahulu.
+      Sambungan Supabase akan dibuat pada tahap kedua.
+      Sistem tema akan dibuat setelah jalur utama ditetapkan.
+    </div>
+
+    <section class="summary" aria-label="Ringkasan Registry">
+      <div class="summary-card">
+        <strong id="totalSystems">0</strong>
+        <span>Sistem terdaftar</span>
+      </div>
+
+      <div class="summary-card">
+        <strong id="readySystems">0</strong>
+        <span>Bagian halaman aktif</span>
+      </div>
+
+      <div class="summary-card">
+        <strong id="pendingSystems">0</strong>
+        <span>Jalur belum disambungkan</span>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">
+        Daftar Pendaftaran Global
+      </h2>
+
+      <div
+        class="registry-grid"
+        id="registryList"
+        aria-live="polite"
+      ></div>
+    </section>
+
+    <section>
+      <h2 class="section-title">
+        Jalur Utama MEXA SMART
+      </h2>
+
+      <div class="flow">
+        <div class="flow-step">
+          <strong>1. HTML Registry</strong>
+          <small>Mendaftarkan nama sistem dan jalurnya</small>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flow-step">
+          <strong>2. System Penghubung 1</strong>
+          <small>Meneruskan pendaftaran ke System Pusat</small>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flow-step">
+          <strong>3. System Pusat</strong>
+          <small>Menerima dan mengatur pendaftaran</small>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flow-step">
+          <strong>4. System Penghubung 2</strong>
+          <small>Menghubungkan pusat ke pengelolaan data</small>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flow-step">
+          <strong>5. System Pengelolaan Data</strong>
+          <small>Menyediakan data untuk modul</small>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flow-step">
+          <strong>6. Modul Pertama</strong>
+          <small>Dihubungkan setelah fondasi siap</small>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="flow-step">
+          <strong>7. System Penghubung 3</strong>
+          <small>Menyediakan jalur akses untuk modul yang membutuhkan data</small>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      MEXA SMART · Satu Registry · Jalur sistem terpusat
+    </footer>
+
+  </main>
+
+  <script>
+  (function (window, document) {
+    "use strict";
+
+    const VERSION = "1.0.0";
+    const records = new Map();
+
+    /*
+     * DAFTAR PENDAFTARAN AWAL
+     *
+     * File di bawah merupakan jalur rancangan.
+     * Status bukan klaim bahwa file tersebut sudah aktif.
+     */
+    const initialEntries = [
+      {
+        name: "html-registry",
+        title: "HTML Registry",
+        position: 1,
+        file: "./index.html",
+        description: "Halaman pertama dan pintu masuk Registry.",
+        status: "ready"
+      },
+      {
+        name: "connector-1",
+        title: "System Penghubung 1",
+        position: 2,
+        file: "./js/core/mexa-connector-1.js",
+        description: "Tujuan jalur pengiriman data pendaftaran.",
+        status: "registered"
+      },
+      {
+        name: "system-center",
+        title: "System Pusat",
+        position: 3,
+        file: "./js/core/mexa-system-center.js",
+        description: "Pusat penerimaan dan pengaturan pendaftaran.",
+        status: "registered"
+      },
+      {
+        name: "connector-2",
+        title: "System Penghubung 2",
+        position: 4,
+        file: "./js/core/mexa-connector-2.js",
+        description: "Jalur dari pusat ke pengelolaan data.",
+        status: "registered"
+      },
+      {
+        name: "data-management",
+        title: "System Pengelolaan Data",
+        position: 5,
+        file: "./js/core/mexa-data-management.js",
+        description: "Layanan data untuk seluruh modul.",
+        status: "registered"
+      },
+      {
+        name: "first-module",
+        title: "Modul Pertama",
+        position: 6,
+        file: null,
+        description: "Modul akan ditentukan setelah fondasi selesai.",
+        status: "registered"
+      },
+      {
+        name: "connector-3",
+        title: "System Penghubung 3",
+        position: 7,
+        file: "./js/core/mexa-connector-3.js",
+        description: "Jalur akses data bagi modul yang membutuhkan.",
+        status: "registered"
+      },
+      {
+        name: "login",
+        title: "Tampilan Login",
+        position: 8,
+        file: "./login.html",
+        description: "Jalur halaman Login; file aktual belum dipastikan.",
+        status: "registered"
+      },
+      {
+        name: "themes-css",
+        title: "Themes CSS",
+        position: 9,
+        file: "./themes.css",
+        description: "Sumber desain global, dibuat pada tahap tema.",
+        status: "registered"
+      },
+      {
+        name: "themes-js",
+        title: "Themes JS",
+        position: 10,
+        file: "./themes.js",
+        description: "Pengendali tema global, dibuat pada tahap tema.",
+        status: "registered"
+      },
+      {
+        name: "supabase",
+        title: "Supabase",
+        position: 11,
+        file: null,
+        description: "Koneksi database pada tahap kedua.",
+        status: "registered"
+      }
+    ];
+
+    function normalizeName(name) {
+      if (typeof name !== "string" || !name.trim()) {
+        throw new TypeError(
+          "Nama pendaftaran wajib berupa teks."
+        );
+      }
+
+      return name.trim().toLowerCase();
+    }
+
+    function copy(record) {
+      return { ...record };
+    }
+
+    function register(definition) {
+      if (
+        !definition ||
+        typeof definition !== "object" ||
+        Array.isArray(definition)
+      ) {
+        throw new TypeError(
+          "Data pendaftaran harus berupa objek."
+        );
+      }
+
+      const name = normalizeName(definition.name);
+
+      if (records.has(name)) {
+        throw new Error(
+          'Pendaftaran "' + name + '" sudah ada.'
+        );
+      }
+
+      const record = {
+        name,
+        title: definition.title || name,
+        position: Number.isFinite(definition.position)
+          ? definition.position
+          : 100,
+        file: definition.file || null,
+        description: definition.description || "",
+        status: definition.status || "registered"
+      };
+
+      records.set(name, record);
+      render();
+
+      return copy(record);
+    }
+
+    function get(name) {
+      const record = records.get(normalizeName(name));
+      return record ? copy(record) : null;
+    }
+
+    function list() {
+      return Array.from(records.values())
+        .sort((a, b) => a.position - b.position)
+        .map(copy);
+    }
+
+    function getConnectorRoute() {
+      return {
+        name: "connector-1",
+        file: "./js/core/mexa-connector-1.js",
+        destination: "system-center",
+        method: "receiveRegistration"
+      };
+    }
+
+    function getStatus() {
+      const all = list();
+      const ready = all.filter(
+        item => item.status === "ready"
+      ).length;
+
+      return {
+        name: "MEXA HTML Registry",
+        version: VERSION,
+        total: all.length,
+        ready,
+        pending: all.length - ready
+      };
+    }
+
+    function render() {
+      const container = document.getElementById("registryList");
+
+      if (!container) return;
+
+      container.replaceChildren();
+
+      list().forEach(record => {
+        const card = document.createElement("article");
+        card.className = "registry-card";
+
+        const heading = document.createElement("div");
+        heading.className = "card-heading";
+
+        const title = document.createElement("h3");
+        title.textContent = record.title;
+
+        const position = document.createElement("span");
+        position.className = "position";
+        position.textContent = "POSISI " + record.position;
+
+        heading.append(title, position);
+
+        const description = document.createElement("p");
+        description.className = "description";
+        description.textContent = record.description;
+
+        const path = document.createElement("code");
+        path.className = "file-path";
+        path.textContent =
+          record.file || "Lokasi file belum ditentukan";
+
+        const status = document.createElement("span");
+        status.className =
+          record.status === "ready"
+            ? "status ready"
+            : "status";
+
+        status.textContent =
+          record.status === "ready"
+            ? "HALAMAN REGISTRY AKTIF"
+            : "TERDAFTAR · BELUM DISAMBUNGKAN";
+
+        card.append(heading, description, path, status);
+        container.appendChild(card);
+      });
+
+      const summary = getStatus();
+
+      document.getElementById("totalSystems").textContent =
+        summary.total;
+
+      document.getElementById("readySystems").textContent =
+        summary.ready;
+
+      document.getElementById("pendingSystems").textContent =
+        summary.pending;
+    }
+
+    initialEntries.forEach(entry => {
+      records.set(entry.name, copy(entry));
+    });
+
+    /*
+     * API Registry lokal.
+     * Belum mengirim atau menyimpan data ke server.
+     */
+    window.MEXA_HTML_REGISTRY = Object.freeze({
+      version: VERSION,
+      register,
+      get,
+      list,
+      getStatus,
+      getConnectorRoute
+    });
+
+    render();
+
+    console.log(
+      "[MEXA SMART] HTML Registry siap.",
+      getStatus()
+    );
+
+  })(window, document);
+  </script>
+
+</body>
+</html>
