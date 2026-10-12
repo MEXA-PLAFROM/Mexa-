@@ -20,7 +20,7 @@
    * Jangan pernah masukkan service_role / secret key
    * ke file JavaScript yang dikirim ke browser.
    */
-  const SUPABASE_KEY = "TEMPEL_PUBLISHABLE_KEY_MEXA_DI_SINI";
+  const SUPABASE_KEY = "sb_publishable_nOvOu3SneFk0t2eSooT6uw_VbBZHQ3J";
 
   if (!window.supabase || !window.supabase.createClient) {
     console.error("Supabase SDK belum dimuat.");
