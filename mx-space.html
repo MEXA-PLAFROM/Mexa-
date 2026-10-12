@@ -1,657 +1,815 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0818">
-  <title>MEXA SMART — MX Space</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050b1b">
+<title>MEXA — Social Universe</title>
 
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0b0818;
-      --panel: #151027;
-      --surface: #201832;
-      --border: #302544;
-      --text: #f6f3ff;
-      --muted: #aaa4c2;
-      --primary: #8b5cf6;
-      --accent: #00e5ff;
-      --green: #34d399;
-      --yellow: #fbbf24;
-      --red: #fb7185;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(ellipse at 15% 0%, #39206055, transparent 42%),
-        var(--bg);
-      color: var(--text);
-      font-family: system-ui, sans-serif;
-    }
-
-    button, a { font: inherit; }
-
-    .app {
-      width: min(920px, calc(100% - 28px));
-      margin: auto;
-      padding: 22px 0 40px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      padding-bottom: 22px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 31px;
-      font-weight: 950;
-      letter-spacing: 1px;
-    }
-
-    .m, .a { color: var(--primary); }
-    .x { color: var(--accent); }
-
-    /* E memiliki tepat tiga strip horizontal */
-    .e {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      width: 20px;
-      height: 27px;
-      margin: 0 2px;
-    }
-
-    .e span {
-      height: 4px;
-      background: var(--primary);
-      border-radius: 1px;
-    }
-
-    .e span:nth-child(1) { width: 20px; }
-    .e span:nth-child(2) { width: 12px; }
-    .e span:nth-child(3) { width: 17px; }
-
-    .caption {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: 2px;
-    }
-
-    .badge {
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 25px;
-      color: var(--accent);
-      font-size: 11px;
-    }
-
-    .hero { padding: 30px 0 18px; }
-
-    .eyebrow {
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 850;
-      letter-spacing: 2px;
-    }
-
-    h1 {
-      margin: 8px 0;
-      font-size: clamp(29px, 5vw, 42px);
-    }
-
-    h2 { font-size: 17px; }
-
-    .muted {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-    }
-
-    .panel {
-      margin-top: 15px;
-      padding: 19px;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      background: var(--panel);
-    }
-
-    .panel h2 { margin-top: 0; }
-
-    .status-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .status-row:last-child { border-bottom: 0; }
-
-    .label {
-      font-size: 13px;
-      font-weight: 650;
-    }
-
-    .detail {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.6;
-    }
-
-    .value {
-      max-width: 53%;
-      text-align: right;
-      font-size: 12px;
-      font-weight: 750;
-      overflow-wrap: anywhere;
-    }
-
-    .green { color: var(--green); }
-    .yellow { color: var(--yellow); }
-    .red { color: var(--red); }
-
-    .account {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-    }
-
-    .avatar {
-      display: grid;
-      flex: 0 0 48px;
-      width: 48px;
-      height: 48px;
-      place-items: center;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      font-size: 22px;
-      font-weight: 900;
-    }
-
-    .account-name {
-      font-weight: 800;
-      overflow-wrap: anywhere;
-    }
-
-    .account-email {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
-      overflow-wrap: anywhere;
-    }
-
-    .message {
-      margin-top: 15px;
-      padding: 13px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--surface);
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.8;
-      overflow-wrap: anywhere;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .button {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 43px;
-      padding: 11px 15px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--surface);
-      color: var(--text);
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 750;
-      cursor: pointer;
-    }
-
-    .button.primary {
-      border-color: var(--primary);
-      background: var(--primary);
-      color: white;
-    }
-
-    .button:disabled {
-      opacity: .55;
-      cursor: wait;
-    }
-
-    .footer {
-      margin-top: 25px;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.8;
-      text-align: center;
-    }
-
-    @media (max-width: 560px) {
-      .panel { padding: 15px; }
-      .status-row { gap: 8px; }
-      .value { max-width: 48%; }
-    }
-  </style>
+<style>
+:root {
+  --bg:#050b1b;
+  --panel:#0a162c;
+  --panel2:#0e1d36;
+  --line:#1b3557;
+  --text:#f4f7ff;
+  --muted:#91a7c9;
+  --cyan:#27e4e5;
+  --purple:#9b62ff;
+  --pink:#ff4eaa;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  color:var(--text);
+  background:radial-gradient(ellipse at top,#192653,var(--bg) 55%);
+  font:14px Arial,sans-serif;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--cyan);
+}
+.topbar{
+  height:68px;
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:0 22px;
+  background:#050b1bf5;
+  border-bottom:1px solid var(--line);
+}
+.brand{
+  width:190px;
+  flex-shrink:0;
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-decoration:none;
+  background:linear-gradient(100deg,var(--cyan),#4ba9ed,var(--purple),var(--pink));
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.search{flex:1;max-width:620px}
+.search input{
+  width:100%;
+  padding:12px 15px;
+  color:white;
+  background:var(--panel);
+  border:1px solid #3b3876;
+  border-radius:13px;
+}
+.top-actions{margin-left:auto;display:flex;gap:9px}
+.primary{
+  border:0;
+  padding:12px 16px;
+  border-radius:12px;
+  color:#061326;
+  font-weight:bold;
+  background:linear-gradient(110deg,var(--cyan),var(--purple));
+}
+.icon-btn{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:9px 12px;
+  color:white;
+  background:var(--panel);
+}
+.layout{
+  max-width:1600px;
+  margin:auto;
+  padding:20px;
+  display:grid;
+  grid-template-columns:220px minmax(0,1fr) 300px;
+  gap:20px;
+}
+.sidebar,.rightbar{
+  position:sticky;
+  top:85px;
+  align-self:start;
+}
+.nav button{
+  width:100%;
+  padding:13px;
+  margin-bottom:5px;
+  text-align:left;
+  color:#c9d7ef;
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:12px;
+}
+.nav button:hover,.nav button.active{
+  color:var(--cyan);
+  background:#0c2540;
+  border-color:#17506b;
+}
+.creator{
+  margin-top:25px;
+  padding:17px;
+  border:1px solid #55418c;
+  border-radius:16px;
+  background:linear-gradient(140deg,#172450,#241442);
+}
+.creator h3{margin:0 0 8px}
+.creator p{color:#bac8e4;font-size:12px;line-height:1.7}
+.panel{
+  min-width:0;
+  margin-bottom:15px;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:linear-gradient(145deg,var(--panel),#071126);
+}
+.welcome{margin:4px 0 20px}
+.welcome h1{font-size:27px;margin:0 0 6px}
+.muted{color:var(--muted);font-size:12px}
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:13px;
+}
+.section-title h2{font-size:15px;margin:0}
+.link{border:0;background:none;color:var(--cyan)}
+.stories{display:flex;gap:13px;overflow:auto}
+.story{
+  flex:0 0 67px;
+  text-align:center;
+  border:0;
+  background:none;
+  color:white;
+}
+.ring{
+  width:61px;height:61px;
+  margin:0 auto 7px;
+  padding:3px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink));
+}
+.avatar{
+  width:100%;height:100%;
+  display:grid;place-items:center;
+  border:3px solid var(--panel);
+  border-radius:50%;
+  background:linear-gradient(135deg,#246b8a,#7549a7);
+  font-size:19px;font-weight:bold;
+}
+.story-name{font-size:11px}
+.compose-row{display:flex;align-items:center;gap:12px}
+.user-avatar{
+  width:43px;height:43px;
+  flex-shrink:0;
+  display:grid;place-items:center;
+  border-radius:50%;
+  color:#071329;
+  font-weight:bold;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+}
+.compose-trigger{
+  flex:1;
+  padding:13px;
+  text-align:left;
+  color:var(--muted);
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#071126;
+}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.tool{
+  flex:1;
+  min-width:80px;
+  padding:10px 5px;
+  color:#d5e1f7;
+  border:1px solid transparent;
+  border-radius:10px;
+  background:transparent;
+}
+.tool:hover{background:var(--panel2);color:var(--cyan)}
+.post-head{display:flex;align-items:center;gap:10px}
+.post-info{flex:1}
+.post-info strong{display:block}
+.post-info small{color:var(--muted);font-size:11px}
+.more{border:0;background:none;color:white;font-size:22px}
+.post-text{line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.post-media{
+  width:100%;
+  max-height:420px;
+  object-fit:contain;
+  border-radius:12px;
+  background:#030816;
+}
+.post-actions{
+  display:flex;
+  gap:5px;
+  border-top:1px solid var(--line);
+  padding-top:9px;
+  margin-top:10px;
+}
+.post-action{
+  flex:1;
+  padding:9px 4px;
+  border:0;
+  border-radius:9px;
+  color:#a8bedf;
+  background:transparent;
+}
+.post-action:hover,.post-action.liked{
+  color:var(--cyan);
+  background:#102743;
+}
+.friend,.game{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid #172b49;
+}
+.friend:last-child,.game:last-child{border-bottom:0}
+.small-avatar,.game-cover{
+  width:43px;height:43px;
+  flex-shrink:0;
+  display:grid;place-items:center;
+  border-radius:12px;
+  font-weight:bold;
+  background:linear-gradient(135deg,#2ddadd,#8d55ed);
+  color:#061326;
+}
+.friend-info,.game-info{flex:1;min-width:0}
+.friend-info strong,.game-info strong{font-size:12px}
+.friend-info small,.game-info small{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:10px;
+}
+.follow,.play{
+  padding:7px 10px;
+  border:1px solid var(--cyan);
+  border-radius:20px;
+  color:var(--cyan);
+  background:#07182b;
+  font-size:11px;
+}
+.tag{
+  display:inline-block;
+  margin:4px 3px;
+  padding:8px 10px;
+  border:1px solid #25466b;
+  border-radius:20px;
+  color:#c5d7f1;
+  font-size:11px;
+}
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:30;
+  padding:18px;
+  align-items:center;
+  justify-content:center;
+  background:#020611d9;
+}
+.modal.open{display:flex}
+.modal-box{
+  width:100%;
+  max-width:550px;
+  max-height:90vh;
+  overflow:auto;
+  padding:20px;
+  border:1px solid #31577d;
+  border-radius:18px;
+  background:#09162c;
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{font-size:18px}
+.field{
+  display:block;
+  width:100%;
+  margin:12px 0;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  color:white;
+  background:#050d1d;
+}
+textarea.field{min-height:130px;resize:vertical}
+.preview{max-width:100%;max-height:250px;margin:8px 0}
+#feedStatus{font-size:12px;color:var(--muted);line-height:1.6}
+.mobile-nav{display:none}
+.toast{
+  position:fixed;
+  z-index:50;
+  right:15px;bottom:15px;
+  padding:13px 16px;
+  border:1px solid #276582;
+  border-radius:12px;
+  color:white;
+  background:#102742;
+}
+@media(max-width:1150px){
+  .layout{grid-template-columns:65px minmax(0,1fr) 270px;gap:12px;padding:13px}
+  .nav button{text-align:center;padding:13px 3px;font-size:18px}
+  .nav button .label,.creator{display:none}
+}
+@media(max-width:850px){
+  .layout{grid-template-columns:60px minmax(0,1fr)}
+  .rightbar{display:none}
+}
+@media(max-width:600px){
+  .topbar{height:58px;padding:0 10px;gap:10px}
+  .brand{width:auto;font-size:23px}
+  .search input{font-size:11px;padding:10px}
+  .top-actions .primary{display:none}
+  .layout{display:block;padding:13px 10px 80px}
+  .sidebar{display:none}
+  .welcome h1{font-size:23px}
+  .panel{padding:13px}
+  .mobile-nav{
+    position:fixed;bottom:0;left:0;right:0;
+    z-index:20;
+    display:flex;
+    justify-content:space-around;
+    padding:8px 2px calc(8px + env(safe-area-inset-bottom));
+    border-top:1px solid var(--line);
+    background:#050b1bf5;
+  }
+  .mobile-nav button{
+    color:#9cb2d2;
+    background:none;border:0;
+    font-size:10px;
+  }
+  .mobile-nav button span{display:block;font-size:19px;margin-bottom:3px}
+  .mobile-nav button.active{color:var(--cyan)}
+}
+</style>
 </head>
-
 <body>
-  <main class="app">
 
-    <header>
-      <div>
-        <div class="logo" role="img" aria-label="MEXA">
-          <span class="m">M</span>
-          <span class="e" aria-hidden="true">
-            <span></span><span></span><span></span>
-          </span>
-          <span class="x">X</span>
-          <span class="a">A</span>
-        </div>
-        <div class="caption">SMART SOCIAL PLATFORM</div>
+<header class="topbar">
+  <a class="brand" href="./smarin.html">MEXA</a>
+  <div class="search">
+    <input id="globalSearch" type="search"
+      placeholder="Cari teman, postingan, game...">
+  </div>
+  <div class="top-actions">
+    <button class="primary" id="openComposer">＋ Buat Postingan</button>
+    <button class="icon-btn" id="notifications">♧</button>
+    <button class="icon-btn" id="account">◉</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <nav class="nav">
+      <button class="active" data-section="home">⌂ <span class="label">Home</span></button>
+      <button data-section="stories">◉ <span class="label">Cerita</span></button>
+      <button data-section="friends">♧ <span class="label">Teman</span></button>
+      <button data-section="games">🎮 <span class="label">Game</span></button>
+      <button data-section="messages">▱ <span class="label">Pesan</span></button>
+      <button data-section="notifications">♧ <span class="label">Notifikasi</span></button>
+      <button data-section="profile">◉ <span class="label">Profil</span></button>
+      <button data-section="settings">⚙ <span class="label">Pengaturan</span></button>
+    </nav>
+    <div class="creator">
+      <h3>✦ Kreator MEXA</h3>
+      <p>Tempat berbagi karya, membangun komunitas, dan mengembangkan kreativitas.</p>
+      <button class="follow" id="creatorInfo">Pelajari</button>
+    </div>
+  </aside>
+
+  <main id="home">
+    <div class="welcome">
+      <h1>Beranda MEXA ✦</h1>
+      <div class="muted">Terhubung dengan dunia yang kamu sukai.</div>
+    </div>
+
+    <section class="panel" id="stories">
+      <div class="section-title">
+        <h2>◉ Cerita</h2>
+        <button class="link" id="allStories">Lihat Semua →</button>
       </div>
-
-      <div class="badge">MX SPACE · SYSTEM CHECK</div>
-    </header>
-
-    <section class="hero">
-      <div class="eyebrow">MEXA SMART</div>
-      <h1>MX Space</h1>
-      <p class="muted">
-        Halaman pemeriksaan jalur sistem, koneksi Supabase,
-        dan sesi autentikasi. Halaman ini tidak membuat akun
-        baru atau mengubah data pendaftaran.
-      </p>
-    </section>
-
-    <section class="panel">
-      <h2>Status Jalur MEXA</h2>
-
-      <div class="status-row">
-        <div>
-          <div class="label">System Pusat</div>
-          <div class="detail">MEXA_SYSTEM_CENTER</div>
-        </div>
-        <div id="centerStatus" class="value yellow">Memeriksa file...</div>
-      </div>
-
-      <div class="status-row">
-        <div>
-          <div class="label">Penghubung 1</div>
-          <div class="detail">MEXA_CONNECTOR_1</div>
-        </div>
-        <div id="connector1Status" class="value yellow">Memeriksa file...</div>
-      </div>
-
-      <div class="status-row">
-        <div>
-          <div class="label">Penghubung 2</div>
-          <div class="detail">MEXA_CONNECTOR_2</div>
-        </div>
-        <div id="connector2Status" class="value yellow">Memeriksa file...</div>
-      </div>
-
-      <div class="status-row">
-        <div>
-          <div class="label">System Pengelolaan Data</div>
-          <div class="detail">MEXA_DATA_MANAGEMENT</div>
-        </div>
-        <div id="managementStatus" class="value yellow">Memeriksa file...</div>
-      </div>
-
-      <div class="status-row">
-        <div>
-          <div class="label">Supabase</div>
-          <div class="detail">Client yang dibuat System Pusat</div>
-        </div>
-        <div id="supabaseStatus" class="value yellow">Belum diperiksa</div>
-      </div>
-
-      <div class="status-row">
-        <div>
-          <div class="label">Tabel Registry</div>
-          <div class="detail">mexa_system_registry</div>
-        </div>
-        <div id="tableStatus" class="value yellow">Belum diperiksa</div>
-      </div>
-
-      <div class="status-row">
-        <div>
-          <div class="label">Sesi Login</div>
-          <div class="detail">Sesi pada browser ini</div>
-        </div>
-        <div id="sessionStatus" class="value yellow">Belum diperiksa</div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Informasi Akun</h2>
-
-      <div class="account">
-        <div class="avatar" id="avatar">M</div>
-        <div>
-          <div class="account-name" id="accountName">
-            Belum diperiksa
-          </div>
-          <div class="account-email" id="accountEmail">
-            Informasi sesi belum tersedia.
-          </div>
-        </div>
-      </div>
-
-      <div class="message" id="testMessage" role="status" aria-live="polite">
-        Tekan tombol di bawah untuk memeriksa koneksi dan sesi.
-      </div>
-
-      <div class="actions">
-        <button class="button primary" id="checkButton" type="button">
-          Periksa Sistem
+      <div class="stories">
+        <button class="story" data-story="mine">
+          <div class="ring"><div class="avatar">＋</div></div>
+          <span class="story-name">Cerita Saya</span>
         </button>
-
-        <a class="button" href="./index.html">
-          Kembali ke Pendaftaran
-        </a>
+        <button class="story" data-story="Arip Rahman">
+          <div class="ring"><div class="avatar">A</div></div>
+          <span class="story-name">Arip Rahman</span>
+        </button>
+        <button class="story" data-story="Siti Nur">
+          <div class="ring"><div class="avatar">S</div></div>
+          <span class="story-name">Siti Nur</span>
+        </button>
+        <button class="story" data-story="Dimas">
+          <div class="ring"><div class="avatar">D</div></div>
+          <span class="story-name">Dimas</span>
+        </button>
+        <button class="story" data-story="Rina">
+          <div class="ring"><div class="avatar">R</div></div>
+          <span class="story-name">Rina</span>
+        </button>
+        <button class="story" data-story="Fajar">
+          <div class="ring"><div class="avatar">F</div></div>
+          <span class="story-name">Fajar</span>
+        </button>
       </div>
     </section>
 
-    <footer class="footer">
-      MEXA SMART · MX Space<br>
-      Nama samaran halaman tes. Status API, koneksi database,
-      dan sesi login diperiksa secara terpisah.
-    </footer>
+    <section class="panel" id="composerSection">
+      <div class="compose-row">
+        <div class="user-avatar" id="myAvatar">M</div>
+        <button class="compose-trigger" id="composerTrigger">
+          Apa yang ingin kamu bagikan?
+        </button>
+      </div>
+      <div class="tools">
+        <button class="tool" id="photoButton">▧ Foto</button>
+        <button class="tool" id="videoButton">▷ Video</button>
+        <button class="tool" id="storyButton">◉ Cerita</button>
+        <button class="tool" id="feelingButton">☺ Aktivitas</button>
+      </div>
+    </section>
+
+    <div class="section-title">
+      <h2>Postingan untuk kamu</h2>
+      <button class="link" id="refreshFeed">↻ Muat ulang</button>
+    </div>
+
+    <section id="feedList">
+      <article class="panel post">
+        <div class="post-head">
+          <div class="user-avatar">A</div>
+          <div class="post-info">
+            <strong>Arip Rahman</strong>
+            <small>Contoh postingan · Publik</small>
+          </div>
+          <button class="more">⋯</button>
+        </div>
+        <p class="post-text">Selamat datang di MEXA! ✨
+Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
+        <div class="post-actions">
+          <button class="post-action" data-like>♡ Suka</button>
+          <button class="post-action" data-comment>▢ Komentar</button>
+          <button class="post-action" data-share>↗ Bagikan</button>
+        </div>
+      </article>
+    </section>
+    <p id="feedStatus">Ini masih tampilan awal. Database belum disambungkan.</p>
   </main>
 
-  <!-- Satu jalur client Supabase: System Pusat -->
-  <script src="./js/core/mexa-system-center.js"></script>
-  <script src="./js/core/mexa-connector-1.js"></script>
-  <script src="./js/core/mexa-connector-2.js"></script>
-  <script src="./js/core/mexa-data-management.js"></script>
+  <aside class="rightbar">
+    <section class="panel" id="friends">
+      <div class="section-title">
+        <h2>Rekomendasi Teman</h2>
+        <button class="link" data-nav="friends">Lihat Semua</button>
+      </div>
+      <div class="friend">
+        <div class="small-avatar">R</div>
+        <div class="friend-info"><strong>Raka Pratama</strong><small>Teman yang mungkin kamu kenal</small></div>
+        <button class="follow">Ikuti</button>
+      </div>
+      <div class="friend">
+        <div class="small-avatar">N</div>
+        <div class="friend-info"><strong>Nadia Putri</strong><small>Komunitas kreator</small></div>
+        <button class="follow">Ikuti</button>
+      </div>
+      <div class="friend">
+        <div class="small-avatar">D</div>
+        <div class="friend-info"><strong>Dimas Saputra</strong><small>Suka game dan teknologi</small></div>
+        <button class="follow">Ikuti</button>
+      </div>
+    </section>
 
-  <script>
-  (function (window, document) {
-    "use strict";
+    <section class="panel" id="games">
+      <div class="section-title">
+        <h2>🎮 Game Pilihan</h2>
+        <button class="link" data-nav="games">Lihat Semua</button>
+      </div>
+      <div class="game">
+        <div class="game-cover">⚔️</div>
+        <div class="game-info"><strong>Mobile Legends</strong><small>MOBA · 5v5</small></div>
+        <button class="play" data-game>Main</button>
+      </div>
+      <div class="game">
+        <div class="game-cover">🔥</div>
+        <div class="game-info"><strong>Free Fire</strong><small>Battle Royale</small></div>
+        <button class="play" data-game>Main</button>
+      </div>
+      <div class="game">
+        <div class="game-cover">✨</div>
+        <div class="game-info"><strong>Genshin Impact</strong><small>RPG · Open World</small></div>
+        <button class="play" data-game>Main</button>
+      </div>
+    </section>
 
-    const button = document.getElementById("checkButton");
+    <section class="panel">
+      <div class="section-title"><h2>🔥 Sedang Ramai</h2></div>
+      <span class="tag">#MEXACommunity</span>
+      <span class="tag">#Gaming</span>
+      <span class="tag">#Kreativitas</span>
+      <span class="tag">#CeritaHariIni</span>
+    </section>
+  </aside>
+</div>
 
-    function setStatus(id, text, type) {
-      const element = document.getElementById(id);
-      element.textContent = text;
-      element.className = "value " + (type || "yellow");
+<nav class="mobile-nav">
+  <button class="active" data-section="home"><span>⌂</span>Home</button>
+  <button data-section="stories"><span>◉</span>Cerita</button>
+  <button id="mobileCreate"><span>＋</span>Buat</button>
+  <button data-section="games"><span>🎮</span>Game</button>
+  <button data-section="profile"><span>◉</span>Profil</button>
+</nav>
+
+<div class="modal" id="composerModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="modalTitle">Buat Postingan</h2>
+      <button class="icon-btn" id="closeModal">×</button>
+    </div>
+    <form id="postForm">
+      <textarea id="postText" class="field" maxlength="5000"
+        placeholder="Apa yang ingin kamu bagikan?"></textarea>
+      <label class="muted" for="mediaInput">Foto atau video</label>
+      <input id="mediaInput" class="field" type="file" accept="image/*,video/*">
+      <div id="mediaPreview"></div>
+      <button class="primary" type="submit">Terbitkan</button>
+      <p class="muted" id="composeStatus">Mode tampilan lokal.</p>
+    </form>
+  </div>
+</div>
+<input id="photoInput" type="file" accept="image/*" hidden>
+<input id="videoInput" type="file" accept="video/*" hidden>
+
+<script>
+(() => {
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
+  const modal = $("#composerModal");
+  const text = $("#postText");
+  const media = $("#mediaInput");
+  const preview = $("#mediaPreview");
+  let selectedFile = null;
+  let selectedUrl = null;
+
+  function toast(message) {
+    const old = $(".toast");
+    if (old) old.remove();
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = message;
+    document.body.append(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+
+  function openComposer(mode = "post") {
+    modal.classList.add("open");
+    $("#modalTitle").textContent =
+      mode === "story" ? "Buat Cerita" : "Buat Postingan";
+    text.focus();
+  }
+
+  function closeComposer() {
+    modal.classList.remove("open");
+  }
+
+  $("#openComposer").onclick = () => openComposer();
+  $("#composerTrigger").onclick = () => openComposer();
+  $("#mobileCreate").onclick = () => openComposer();
+  $("#storyButton").onclick = () => openComposer("story");
+  $("#closeModal").onclick = closeComposer;
+
+  modal.addEventListener("click", e => {
+    if (e.target === modal) closeComposer();
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeComposer();
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      $("#globalSearch").focus();
+    }
+  });
+
+  function setFile(file) {
+    if (!file) return;
+    if (!file.type.startsWith("image/") &&
+        !file.type.startsWith("video/")) {
+      toast("Pilih foto atau video yang valid.");
+      return;
+    }
+    selectedFile = file;
+    if (selectedUrl) URL.revokeObjectURL(selectedUrl);
+    selectedUrl = URL.createObjectURL(file);
+    preview.replaceChildren();
+
+    const element = document.createElement(
+      file.type.startsWith("video/") ? "video" : "img"
+    );
+    element.src = selectedUrl;
+    element.className = "preview";
+    if (element.tagName === "VIDEO") element.controls = true;
+    else element.alt = "Pratinjau media";
+    preview.append(element);
+  }
+
+  $("#photoButton").onclick = () => $("#photoInput").click();
+  $("#videoButton").onclick = () => $("#videoInput").click();
+  $("#photoInput").onchange = e => {
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
+      openComposer();
+    }
+  };
+  $("#videoInput").onchange = e => {
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
+      openComposer();
+    }
+  };
+  media.onchange = e => setFile(e.target.files[0]);
+
+  $("#feelingButton").onclick = () => {
+    openComposer();
+    text.value += "😊 ";
+  };
+
+  $("#postForm").onsubmit = e => {
+    e.preventDefault();
+    const value = text.value.trim();
+    const file = media.files[0] || selectedFile;
+
+    if (!value && !file) {
+      toast("Tulis sesuatu atau pilih foto/video dulu.");
+      return;
     }
 
-    function showMessage(text, type) {
-      const element = document.getElementById("testMessage");
-      element.textContent = text;
-      element.style.color =
-        type === "success" ? "var(--green)" :
-        type === "error" ? "var(--red)" :
-        "var(--muted)";
+    const card = document.createElement("article");
+    card.className = "panel post";
+
+    const head = document.createElement("div");
+    head.className = "post-head";
+    const avatar = document.createElement("div");
+    avatar.className = "user-avatar";
+    avatar.textContent = "M";
+
+    const info = document.createElement("div");
+    info.className = "post-info";
+    const name = document.createElement("strong");
+    name.textContent = "Pengguna MEXA";
+    const time = document.createElement("small");
+    time.textContent = "Baru saja · Lokal";
+    info.append(name, time);
+    head.append(avatar, info);
+    card.append(head);
+
+    if (value) {
+      const paragraph = document.createElement("p");
+      paragraph.className = "post-text";
+      paragraph.textContent = value;
+      card.append(paragraph);
     }
 
-    function inspectAPIs() {
-      const center = window.MEXA_SYSTEM_CENTER;
-      const connector1 = window.MEXA_CONNECTOR_1;
-      const connector2 = window.MEXA_CONNECTOR_2;
-      const manager = window.MEXA_DATA_MANAGEMENT;
-
-      setStatus(
-        "centerStatus",
-        center && typeof center.connectSupabase === "function"
-          ? "API tersedia"
-          : "Tidak ditemukan",
-        center && typeof center.connectSupabase === "function"
-          ? "green" : "red"
+    if (file) {
+      const url = URL.createObjectURL(file);
+      const element = document.createElement(
+        file.type.startsWith("video/") ? "video" : "img"
       );
-
-      setStatus(
-        "connector1Status",
-        connector1 &&
-        typeof connector1.registerUser === "function"
-          ? "API pendaftaran tersedia"
-          : "API pendaftaran tidak cocok",
-        connector1 &&
-        typeof connector1.registerUser === "function"
-          ? "green" : "red"
-      );
-
-      setStatus(
-        "connector2Status",
-        connector2 &&
-        typeof connector2.forwardRegistryRecord === "function" &&
-        typeof connector2.forwardRegisteredUser === "function"
-          ? "API tersedia"
-          : "Tidak ditemukan / kontrak berbeda",
-        connector2 &&
-        typeof connector2.forwardRegistryRecord === "function" &&
-        typeof connector2.forwardRegisteredUser === "function"
-          ? "green" : "red"
-      );
-
-      setStatus(
-        "managementStatus",
-        manager &&
-        typeof manager.receiveRegistryRecord === "function" &&
-        typeof manager.receiveRegisteredUser === "function"
-          ? "API tersedia"
-          : "Tidak ditemukan / kontrak berbeda",
-        manager &&
-        typeof manager.receiveRegistryRecord === "function" &&
-        typeof manager.receiveRegisteredUser === "function"
-          ? "green" : "red"
-      );
+      element.src = url;
+      element.className = "post-media";
+      if (element.tagName === "VIDEO") element.controls = true;
+      else element.alt = "Media postingan";
+      card.append(element);
     }
 
-    async function runCheck() {
-      button.disabled = true;
-      button.textContent = "Memeriksa...";
+    const actions = document.createElement("div");
+    actions.className = "post-actions";
+    [
+      ["♡ Suka", "like"],
+      ["▢ Komentar", "comment"],
+      ["↗ Bagikan", "share"]
+    ].forEach(([label, action]) => {
+      const button = document.createElement("button");
+      button.className = "post-action";
+      button.textContent = label;
+      button.onclick = () => {
+        if (action === "like") {
+          button.classList.toggle("liked");
+          button.textContent = button.classList.contains("liked")
+            ? "♥ Disukai" : "♡ Suka";
+        } else {
+          toast(action === "comment"
+            ? "Komentar belum tersambung."
+            : "Bagikan belum tersambung.");
+        }
+      };
+      actions.append(button);
+    });
 
-      inspectAPIs();
+    card.append(actions);
+    $("#feedList").prepend(card);
 
-      setStatus("supabaseStatus", "Menghubungkan...", "yellow");
-      setStatus("tableStatus", "Belum diperiksa", "yellow");
-      setStatus("sessionStatus", "Memeriksa...", "yellow");
+    text.value = "";
+    media.value = "";
+    $("#photoInput").value = "";
+    $("#videoInput").value = "";
+    preview.replaceChildren();
+    selectedFile = null;
+    selectedUrl = null;
+    closeComposer();
 
-      showMessage(
-        "Memeriksa System Pusat dan Supabase...",
-        "normal"
+    $("#feedStatus").textContent =
+      "Postingan ini hanya tampil di browser dan belum tersimpan ke database.";
+    toast("Postingan ditambahkan ke tampilan lokal.");
+  };
+
+  $$("[data-like]").forEach(button => {
+    button.onclick = () => {
+      button.classList.toggle("liked");
+      button.textContent = button.classList.contains("liked")
+        ? "♥ Disukai" : "♡ Suka";
+    };
+  });
+
+  $$("[data-comment]").forEach(button => {
+    button.onclick = () => toast("Komentar akan disambungkan nanti.");
+  });
+  $$("[data-share]").forEach(button => {
+    button.onclick = () => toast("Bagikan akan disambungkan nanti.");
+  });
+
+  $$(".follow").forEach(button => {
+    button.onclick = () => {
+      const followed = button.dataset.followed === "true";
+      button.dataset.followed = String(!followed);
+      button.textContent = followed ? "Ikuti" : "✓ Diikuti";
+    };
+  });
+
+  $$(".story").forEach(button => {
+    button.onclick = () => {
+      const person = button.dataset.story;
+      if (person === "mine") openComposer("story");
+      else toast("Cerita " + person + " masih berupa contoh.");
+    };
+  });
+
+  $$("[data-game]").forEach(button => {
+    button.onclick = () => toast("Tautan game belum ditambahkan.");
+  });
+
+  $("#notifications").onclick =
+    () => toast("Notifikasi belum tersambung ke backend.");
+  $("#account").onclick =
+    () => toast("Profil akan disambungkan ke sistem identitas.");
+  $("#creatorInfo").onclick =
+    () => toast("Modul kreator akan dibuat terpisah.");
+  $("#allStories").onclick =
+    () => toast("Modul Cerita akan disambungkan nanti.");
+  $("#refreshFeed").onclick =
+    () => toast("Feed Supabase belum disambungkan.");
+
+  $("#globalSearch").addEventListener("input", e => {
+    const query = e.target.value.trim().toLowerCase();
+    let count = 0;
+    $$("#feedList .post").forEach(post => {
+      const match = !query ||
+        post.textContent.toLowerCase().includes(query);
+      post.style.display = match ? "" : "none";
+      if (match) count++;
+    });
+    $("#feedStatus").textContent = query
+      ? count + " postingan cocok di feed yang tampil."
+      : "Konten contoh ditampilkan. Pencarian global belum tersambung.";
+  });
+
+  function navigate(section) {
+    const target = document.getElementById(section);
+    if (target) target.scrollIntoView({
+      behavior: "smooth", block: "start"
+    });
+    else toast("Modul " + section + " akan dibuat pada jalur tersendiri.");
+
+    $$("[data-section]").forEach(button => {
+      button.classList.toggle(
+        "active", button.dataset.section === section
       );
+    });
+  }
 
-      try {
-        const center = window.MEXA_SYSTEM_CENTER;
-
-        if (
-          !center ||
-          typeof center.connectSupabase !== "function"
-        ) {
-          throw new Error(
-            "System Pusat tidak tersedia. Periksa nama dan lokasi filenya."
-          );
-        }
-
-        // Client dibuat hanya oleh System Pusat.
-        const supabase = await center.connectSupabase();
-
-        if (!supabase || !supabase.auth) {
-          throw new Error(
-            "System Pusat tidak mengembalikan client Auth."
-          );
-        }
-
-        setStatus(
-          "supabaseStatus",
-          "Client berhasil dibuat",
-          "green"
-        );
-
-        /*
-         * Tes baca aman. Tidak membuat atau mengubah baris.
-         * Gagalnya tabel tidak otomatis berarti Auth gagal.
-         */
-        try {
-          const { error } = await supabase
-            .from("mexa_system_registry")
-            .select("name")
-            .limit(1);
-
-          if (error) {
-            throw error;
-          }
-
-          setStatus(
-            "tableStatus",
-            "Bisa dibaca",
-            "green"
-          );
-        } catch (error) {
-          setStatus(
-            "tableStatus",
-            "Belum tersedia / izin ditolak",
-            "red"
-          );
-
-          console.warn(
-            "[MX SPACE] Pemeriksaan tabel:",
-            error.message
-          );
-        }
-
-        // Periksa sesi lokal pada browser ini.
-        const { data, error: sessionError } =
-          await supabase.auth.getSession();
-
-        if (sessionError) {
-          throw sessionError;
-        }
-
-        const session = data && data.session;
-
-        if (!session || !session.user) {
-          setStatus(
-            "sessionStatus",
-            "Belum login",
-            "yellow"
-          );
-
-          document.getElementById("avatar").textContent = "M";
-          document.getElementById("accountName").textContent =
-            "Tidak ada sesi aktif";
-          document.getElementById("accountEmail").textContent =
-            "Masuk melalui halaman Login untuk memeriksa akun.";
-
-          showMessage(
-            "Client Supabase berhasil dibuat, tetapi browser ini " +
-            "belum memiliki sesi login. Jika pendaftaran baru saja " +
-            "dilakukan dengan konfirmasi email aktif, verifikasi email " +
-            "terlebih dahulu lalu masuk melalui halaman Login.",
-            "success"
-          );
-
-          return;
-        }
-
-        // Verifikasi pengguna ke Auth server menggunakan sesi aktif.
-        const { data: userData, error: userError } =
-          await supabase.auth.getUser();
-
-        if (userError) {
-          throw userError;
-        }
-
-        const user = userData && userData.user;
-
-        if (!user) {
-          throw new Error(
-            "Auth tidak mengembalikan pengguna untuk sesi ini."
-          );
-        }
-
-        const metadata = user.user_metadata || {};
-        const displayName =
-          metadata.display_name ||
-          metadata.full_name ||
-          metadata.name ||
-          metadata.username ||
-          "Anggota MEXA";
-
-        setStatus(
-          "sessionStatus",
-          "Login aktif",
-          "green"
-        );
-
-        document.getElementById("avatar").textContent =
-          String(displayName).charAt(0).toUpperCase();
-
-        document.getElementById("accountName").textContent =
-          displayName;
-
-        document.getElementById("accountEmail").textContent =
-          user.email || "Email tidak tersedia";
-
-        showMessage(
-          "Sesi pengguna berhasil diverifikasi oleh Supabase Auth.",
-          "success"
-        );
-
-      } catch (error) {
-        setStatus(
-          "supabaseStatus",
-          "Gagal diperiksa",
-          "red"
-        );
-
-        setStatus(
-          "sessionStatus",
-          "Belum dapat diverifikasi",
-          "yellow"
-        );
-
-        showMessage(
-          String(error.message || error),
-          "error"
-        );
-
-        console.error("[MX SPACE]", error);
-
-      } finally {
-        button.disabled = false;
-        button.textContent = "Periksa Sistem";
-      }
-    }
-
-    inspectAPIs();
-
-    button.addEventListener("click", runCheck);
-
-  })(window, document);
-  </script>
+  $$("[data-section]").forEach(button => {
+    button.onclick = () => navigate(button.dataset.section);
+  });
+  $$("[data-nav]").forEach(button => {
+    button.onclick = () => navigate(button.dataset.nav);
+  });
+})();
+</script>
 </body>
 </html>
