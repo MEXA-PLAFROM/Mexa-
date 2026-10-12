@@ -29,7 +29,7 @@
 
   if (
     !SUPABASE_KEY ||
-    SUPABASE_KEY === "TEMPEL_PUBLISHABLE_KEY_MEXA_DI_SINI"
+    SUPABASE_KEY === "sb_publishable_nOvOu3SneFk0t2eSooT6uw_VbBZHQ3J"
   ) {
     console.error("MEXA: isi Supabase publishable key terlebih dahulu.");
     return;
