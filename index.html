@@ -1114,7 +1114,9 @@ async function loadHomePeople() {
     const { data: messages, error: messagesError } = await supabase
       .from("messages")
       .select("sender_id, receiver_id, created_at")
-      .or(`sender_id.eq.\( {currentUser.id},receiver_id.eq. \){currentUser.id}`)
+      .or(
+`and(sender_id.eq.${currentUser.id},receiver_id.eq.${otherId}),and(sender_id.eq.${otherId},receiver_id.eq.${currentUser.id})`
+)
       .order("created_at", { ascending: false })
       .limit(300);
 
