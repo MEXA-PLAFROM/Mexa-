@@ -37,6 +37,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .sendrow input{margin:0;min-width:0}
 .user-result{display:block;width:100%;text-align:left;margin-top:8px;background:#17253d;color:white;border:1px solid var(--line);overflow-wrap:anywhere}
 .user-result small{display:block;color:var(--muted);font-weight:normal}
+.user-result-actions{display:flex;gap:6px;margin-top:6px}
+.user-result-actions button{flex:1;font-size:12px;padding:8px}
 .appnav{display:flex;gap:9px;flex-wrap:wrap;align-items:center;padding:12px;margin-bottom:12px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(120deg,#101a2e,#111f38)}
 .navitem{display:flex;align-items:center;gap:8px;border:1px solid #2b3d5b;background:#111d33;color:#eaf5ff;padding:10px 13px;border-radius:12px}
 .navitem:hover,.navitem.active{background:#12394a;border-color:var(--accent)}
@@ -147,9 +149,14 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <input id="profileDisplayName" maxlength="60" placeholder="Nama tampilan">
 <label for="profileUsername">Username</label>
 <input id="profileUsername" disabled>
-<div class="actions"><button id="saveProfileBtn">Simpan perubahan</button></div>
+<label class="hint"><input id="shareProfileToggle" type="checkbox" style="width:auto;margin-right:8px">Bagikan profil ke fitur pencarian dan NEXORA</label>
+<div class="actions">
+<button id="saveProfileBtn">Simpan perubahan</button>
+<button id="shareProfileBtn" class="secondary">Bagikan profil</button>
+<button id="copyUsernameBtn" class="secondary">Salin username</button>
+</div>
 <div id="profileStatus" class="status" role="status"></div>
-<p class="hint">Username dibuat otomatis ketika akun didaftarkan.</p>
+<p class="hint">Saat berbagi, username kamu dapat disalin dan dikirim ke teman.</p>
 </div>
 </section>
 
@@ -157,7 +164,10 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <div class="panel" style="margin-bottom:12px">
 <div class="actions" style="justify-content:space-between;align-items:center">
 <div><strong id="myName">Pengguna NEXORA</strong><div id="myUsername" class="muted"></div></div>
+<div class="actions">
+<button id="enablePushBtn" class="secondary">🔔 Aktifkan notifikasi</button>
 <button id="logoutBtn" class="secondary">Keluar</button>
+</div>
 </div>
 <div id="appStatus" class="status" role="status"></div>
 </div>
@@ -169,7 +179,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <button id="searchBtn" style="width:100%">Cari pengguna</button>
 <div id="searchResults" class="userbox"></div>
 <hr style="border-color:var(--line);margin:18px 0">
-<p class="hint">Pilih hasil pencarian untuk membuka percakapan.</p>
+<p class="hint">Pilih hasil pencarian untuk membuka percakapan. Tekan Salin untuk menyalin username.</p>
 </aside>
 <section class="panel">
 <div class="chathead"><h3 id="chatTitle">Chat pribadi</h3><div id="chatSubtitle" class="muted">Cari pengguna untuk memulai.</div></div>
@@ -187,12 +197,15 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-/* KONFIGURASI PROJECT SUPABASE BARU */
 const SUPABASE_URL = "https://ibtjoqellbexcsspncqc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OkE0tiMSLNfxnkNf5XnmKQ__hMk0AWv";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-const $ = id => document.getElementById(id);
 
+/* GANTI dengan VAPID PUBLIC KEY hasil generate.
+   Jangan pernah menaruh VAPID PRIVATE KEY atau service_role di HTML. */
+const VAPID_PUBLIC_KEY = "GANTI_DENGAN_VAPID_PUBLIC_KEY";
+
+const $ = id => document.getElementById(id);
 let currentUser = null;
 let currentProfile = null;
 let activeChat = null;
@@ -215,22 +228,21 @@ function showApp() {
 }
 
 async function loadProfile() {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("id, username, display_name")
-    .eq("id", currentUser.id)
-    .single();
+  const { data, error } = await supabase.from("profiles")
+    .select("id, username, display_name, share_profile")
+    .eq("id", currentUser.id).single();
 
   if (error) throw error;
-
   currentProfile = data;
   $("myName").textContent = data.display_name || "Pengguna NEXORA";
   $("myUsername").textContent = "@" + data.username;
+  $("profileDisplayName").value = data.display_name || "";
+  $("profileUsername").value = data.username || "";
+  $("shareProfileToggle").checked = data.share_profile !== false;
 }
 
 async function enterApp(user) {
   currentUser = user;
-
   try {
     await loadProfile();
     showApp();
@@ -239,17 +251,11 @@ async function enterApp(user) {
     setupRealtime();
   } catch (error) {
     showAuth();
-    status(
-      "authStatus",
-      "Login berhasil, tetapi profil gagal dimuat: " + error.message +
-      ". Periksa tabel profiles, data profil, dan kebijakan RLS.",
-      true
-    );
+    status("authStatus", "Login berhasil, tetapi profil gagal dimuat: " + error.message +
+      ". Jalankan SQL tambahan yang disediakan di bawah.", true);
   }
 }
 
-/* DAFTAR AKUN — TIDAK ADA KODE OTP ATAU PENGIRIMAN EMAIL MANUAL.
-   Konfirmasi email diatur melalui dashboard Supabase. */
 $("signupBtn").addEventListener("click", async () => {
   const email = $("email").value.trim();
   const password = $("password").value;
@@ -262,30 +268,18 @@ $("signupBtn").addEventListener("click", async () => {
 
   $("signupBtn").disabled = true;
   status("authStatus", "Mendaftarkan akun...");
-
   try {
     const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { display_name: displayName }
-      }
+      email, password, options: { data: { display_name: displayName } }
     });
-
     if (error) throw error;
-
     if (data.session && data.user) {
       status("authStatus", "Pendaftaran berhasil. Memuat profil...");
       await enterApp(data.user);
     } else if (data.user) {
-      status(
-        "authStatus",
-        "Akun berhasil dibuat, tetapi sesi login belum tersedia. " +
-        "Pastikan Confirm email dimatikan di Supabase. Jika sudah mati, " +
-        "periksa konfigurasi Auth dan database."
-      );
+      status("authStatus", "Akun dibuat, tetapi sesi belum tersedia. Pastikan Confirm email dimatikan jika ingin langsung login.");
     } else {
-      status("authStatus", "Pendaftaran selesai, tetapi data akun tidak diterima.", true);
+      status("authStatus", "Data akun tidak diterima.", true);
     }
   } catch (error) {
     status("authStatus", "Pendaftaran gagal: " + error.message, true);
@@ -297,21 +291,14 @@ $("signupBtn").addEventListener("click", async () => {
 $("loginBtn").addEventListener("click", async () => {
   const email = $("email").value.trim();
   const password = $("password").value;
-
   if (!email || !password) {
     status("authStatus", "Masukkan email dan password.", true);
     return;
   }
-
   $("loginBtn").disabled = true;
   status("authStatus", "Sedang login...");
-
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     await enterApp(data.user);
   } catch (error) {
@@ -326,14 +313,11 @@ $("logoutBtn").addEventListener("click", async () => {
     await supabase.removeChannel(messageChannel);
     messageChannel = null;
   }
-
   const { error } = await supabase.auth.signOut();
-
   if (error) {
     status("appStatus", "Gagal keluar: " + error.message, true);
     return;
   }
-
   currentUser = null;
   currentProfile = null;
   activeChat = null;
@@ -344,9 +328,25 @@ $("logoutBtn").addEventListener("click", async () => {
   status("authStatus", "Kamu sudah keluar.");
 });
 
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (_) {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    const ok = document.execCommand("copy");
+    area.remove();
+    return ok;
+  }
+}
+
 $("searchBtn").addEventListener("click", async () => {
   if (!currentUser) return;
-
   const query = $("searchInput").value.trim().replace(/^@/, "");
   const results = $("searchResults");
   results.replaceChildren();
@@ -355,37 +355,51 @@ $("searchBtn").addEventListener("click", async () => {
     status("appStatus", "Masukkan username minimal 3 karakter.", true);
     return;
   }
-
   status("appStatus", "Mencari pengguna...");
-
   try {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("id, username, display_name")
+    let request = supabase.from("profiles")
+      .select("id, username, display_name, share_profile")
       .ilike("username", query)
       .neq("id", currentUser.id)
       .limit(10);
 
+    request = request.eq("share_profile", true);
+    const { data, error } = await request;
     if (error) throw error;
 
-    if (!data || !data.length) {
-      status("appStatus", "Pengguna tidak ditemukan.");
+    if (!data?.length) {
+      status("appStatus", "Pengguna tidak ditemukan atau profil tidak dibagikan.");
       return;
     }
 
     for (const profile of data) {
-      const button = document.createElement("button");
-      button.className = "user-result";
-      button.textContent = profile.display_name || "Pengguna NEXORA";
+      const card = document.createElement("div");
+      card.className = "user-result";
+      const name = document.createElement("div");
+      name.textContent = profile.display_name || "Pengguna NEXORA";
+      const username = document.createElement("small");
+      username.textContent = "@" + profile.username;
+      card.append(name, username);
 
-      const detail = document.createElement("small");
-      detail.textContent = "@" + profile.username;
-      button.appendChild(detail);
+      const actions = document.createElement("div");
+      actions.className = "user-result-actions";
 
-      button.addEventListener("click", () => openChat(profile));
-      results.appendChild(button);
+      const chatButton = document.createElement("button");
+      chatButton.textContent = "Buka chat";
+      chatButton.addEventListener("click", () => openChat(profile));
+
+      const copyButton = document.createElement("button");
+      copyButton.className = "secondary";
+      copyButton.textContent = "Salin username";
+      copyButton.addEventListener("click", async () => {
+        const ok = await copyText("@" + profile.username);
+        status("appStatus", ok ? "Username @" + profile.username + " berhasil disalin." : "Gagal menyalin username.", !ok);
+      });
+
+      actions.append(chatButton, copyButton);
+      card.appendChild(actions);
+      results.appendChild(card);
     }
-
     status("appStatus", "Hasil pencarian: " + data.length + " pengguna.");
   } catch (error) {
     status("appStatus", "Pencarian gagal: " + error.message, true);
@@ -398,22 +412,19 @@ async function openChat(profile) {
   $("chatSubtitle").textContent = "@" + profile.username;
   $("messageInput").disabled = false;
   $("sendBtn").disabled = false;
+  showPage("chatPage");
   await loadMessages();
 }
 
 function formatTime(value) {
   return new Date(value).toLocaleString("id-ID", {
-    hour: "2-digit",
-    minute: "2-digit",
-    day: "2-digit",
-    month: "short"
+    hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short"
   });
 }
 
 function renderMessages(rows) {
   const container = $("messages");
   container.replaceChildren();
-
   if (!rows.length) {
     const empty = document.createElement("p");
     empty.className = "muted";
@@ -421,41 +432,27 @@ function renderMessages(rows) {
     container.appendChild(empty);
     return;
   }
-
   for (const row of rows) {
     const bubble = document.createElement("div");
-    bubble.className =
-      "bubble" + (row.sender_id === currentUser.id ? " mine" : "");
-
+    bubble.className = "bubble" + (row.sender_id === currentUser.id ? " mine" : "");
     bubble.appendChild(document.createTextNode(row.body));
-
     const time = document.createElement("time");
     time.textContent = formatTime(row.created_at);
     bubble.appendChild(time);
     container.appendChild(bubble);
   }
-
   container.scrollTop = container.scrollHeight;
 }
 
 async function loadMessages() {
   if (!activeChat || loadingMessages || !currentUser) return;
-
   loadingMessages = true;
-
   try {
     const otherId = activeChat.id;
-
-    const { data, error } = await supabase
-      .from("messages")
+    const { data, error } = await supabase.from("messages")
       .select("id, sender_id, receiver_id, body, created_at")
-      .or(
-        `and(sender_id.eq.${currentUser.id},receiver_id.eq.${otherId}),` +
-        `and(sender_id.eq.${otherId},receiver_id.eq.${currentUser.id})`
-      )
-      .order("created_at", { ascending: true })
-      .limit(200);
-
+      .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${otherId}),and(sender_id.eq.${otherId},receiver_id.eq.${currentUser.id})`)
+      .order("created_at", { ascending: true }).limit(200);
     if (error) throw error;
     renderMessages(data || []);
   } catch (error) {
@@ -467,27 +464,18 @@ async function loadMessages() {
 
 $("sendForm").addEventListener("submit", async event => {
   event.preventDefault();
-
   const body = $("messageInput").value.trim();
-
   if (!currentUser || !activeChat || !body) return;
-
   if (body.length > 2000) {
     status("appStatus", "Pesan maksimal 2000 karakter.", true);
     return;
   }
-
   $("sendBtn").disabled = true;
-
   try {
     const { error } = await supabase.from("messages").insert({
-      sender_id: currentUser.id,
-      receiver_id: activeChat.id,
-      body
+      sender_id: currentUser.id, receiver_id: activeChat.id, body
     });
-
     if (error) throw error;
-
     $("messageInput").value = "";
     await loadMessages();
     status("appStatus", "Pesan terkirim.");
@@ -499,143 +487,159 @@ $("sendForm").addEventListener("submit", async event => {
 });
 
 function setupRealtime() {
-  if (messageChannel) {
-    supabase.removeChannel(messageChannel);
-  }
-
-  messageChannel = supabase
-    .channel("nexora-messages-" + currentUser.id)
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "messages" },
-      payload => {
-        const message = payload.new;
-
-        if (
-          activeChat &&
-          (
-            (message.sender_id === currentUser.id &&
-             message.receiver_id === activeChat.id) ||
-            (message.sender_id === activeChat.id &&
-             message.receiver_id === currentUser.id)
-          )
-        ) {
-          loadMessages();
-        }
+  if (messageChannel) supabase.removeChannel(messageChannel);
+  messageChannel = supabase.channel("nexora-messages-" + currentUser.id)
+    .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, payload => {
+      const message = payload.new;
+      if (activeChat &&
+        ((message.sender_id === currentUser.id && message.receiver_id === activeChat.id) ||
+         (message.sender_id === activeChat.id && message.receiver_id === currentUser.id))) {
+        loadMessages();
       }
-    )
-    .subscribe();
+    }).subscribe();
 }
 
 const navButtons = [...document.querySelectorAll(".navitem")];
-
 function showPage(pageId) {
-  document.querySelectorAll(".page").forEach(page => {
-    page.classList.toggle("hidden", page.id !== pageId);
-  });
-
-  navButtons.forEach(button => {
-    button.classList.toggle("active", button.dataset.page === pageId);
-  });
-
+  document.querySelectorAll(".page").forEach(page => page.classList.toggle("hidden", page.id !== pageId));
+  navButtons.forEach(button => button.classList.toggle("active", button.dataset.page === pageId));
   if (pageId === "profilePage" && currentProfile) {
     $("profileDisplayName").value = currentProfile.display_name || "";
     $("profileUsername").value = currentProfile.username || "";
+    $("shareProfileToggle").checked = currentProfile.share_profile !== false;
   }
-
-  if (pageId === "chatPage" && !activeChat) {
-    status("appStatus", "Cari username di panel kiri untuk memulai chat.");
-  }
+  if (pageId === "chatPage" && !activeChat) status("appStatus", "Cari username di panel kiri untuk memulai chat.");
 }
-
-navButtons.forEach(button => {
-  button.addEventListener("click", () => showPage(button.dataset.page));
-});
-
+navButtons.forEach(button => button.addEventListener("click", () => showPage(button.dataset.page)));
 $("heroChatBtn").addEventListener("click", () => showPage("chatPage"));
 $("heroGamesBtn").addEventListener("click", () => showPage("gamesPage"));
 
 const labelEls = [...document.querySelectorAll(".navlabel")];
 let menuEditing = false;
-
 labelEls.forEach(el => {
   try {
     const saved = localStorage.getItem("nexora-menu-" + el.dataset.label);
     if (saved) el.textContent = saved;
   } catch (_) {}
 });
-
 $("editMenuBtn").addEventListener("click", () => {
   menuEditing = !menuEditing;
-
   labelEls.forEach(el => {
     el.contentEditable = menuEditing ? "true" : "false";
     el.spellcheck = false;
   });
-
-  $("editMenuBtn").textContent = menuEditing
-    ? "✓ Simpan nama menu"
-    : "✎ Edit nama menu";
-
+  $("editMenuBtn").textContent = menuEditing ? "✓ Simpan nama menu" : "✎ Edit nama menu";
   if (!menuEditing) {
     labelEls.forEach(el => {
       try {
-        localStorage.setItem(
-          "nexora-menu-" + el.dataset.label,
-          el.textContent.trim().slice(0, 24)
-        );
+        localStorage.setItem("nexora-menu-" + el.dataset.label, el.textContent.trim().slice(0, 24));
       } catch (_) {}
     });
-
     status("appStatus", "Nama menu disimpan di browser perangkat ini.");
   } else {
-    status(
-      "appStatus",
-      "Ketuk nama menu untuk mengedit, lalu tekan Simpan nama menu."
-    );
+    status("appStatus", "Ketuk nama menu untuk mengedit, lalu tekan Simpan nama menu.");
   }
 });
 
 $("saveProfileBtn").addEventListener("click", async () => {
   const display_name = $("profileDisplayName").value.trim();
-
+  const share_profile = $("shareProfileToggle").checked;
   if (!currentUser) return;
-
   if (!display_name || display_name.length > 60) {
     status("profileStatus", "Nama tampilan harus berisi 1–60 karakter.", true);
     return;
   }
-
   $("saveProfileBtn").disabled = true;
-
   try {
-    const { data, error } = await supabase
-      .from("profiles")
-      .update({ display_name })
+    const { data, error } = await supabase.from("profiles")
+      .update({ display_name, share_profile })
       .eq("id", currentUser.id)
-      .select("id, username, display_name")
-      .single();
-
+      .select("id, username, display_name, share_profile").single();
     if (error) throw error;
-
     currentProfile = data;
     $("myName").textContent = data.display_name;
-    status("profileStatus", "Profil berhasil disimpan.");
+    $("myUsername").textContent = "@" + data.username;
+    status("profileStatus", "Profil berhasil disimpan dan pengaturan berbagi diperbarui.");
   } catch (error) {
-    status("profileStatus", "Gagal menyimpan profil: " + error.message, true);
+    status("profileStatus", "Gagal menyimpan profil: " + error.message +
+      ". Pastikan SQL tambahan sudah dijalankan.", true);
   } finally {
     $("saveProfileBtn").disabled = false;
+  }
+});
+
+$("copyUsernameBtn").addEventListener("click", async () => {
+  if (!currentProfile) return;
+  const ok = await copyText("@" + currentProfile.username);
+  status("profileStatus", ok ? "Username berhasil disalin!" : "Gagal menyalin username.", !ok);
+});
+
+$("shareProfileBtn").addEventListener("click", async () => {
+  if (!currentProfile) return;
+  const text = `${currentProfile.display_name || "Pengguna NEXORA"} (@${currentProfile.username}) — NEXORA Indonesia`;
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "Profil NEXORA", text });
+      status("profileStatus", "Menu berbagi dibuka.");
+    } else {
+      const ok = await copyText(text);
+      status("profileStatus", ok ? "Info profil disalin. Sekarang kamu bisa membagikannya." : "Gagal menyalin profil.", !ok);
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") status("profileStatus", "Gagal membagikan profil: " + error.message, true);
+  }
+});
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const raw = atob(base64);
+  return Uint8Array.from([...raw].map(char => char.charCodeAt(0)));
+}
+
+$("enablePushBtn").addEventListener("click", async () => {
+  if (!currentUser) return;
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+    status("appStatus", "Browser ini belum mendukung Web Push.", true);
+    return;
+  }
+  if (VAPID_PUBLIC_KEY.startsWith("GANTI_")) {
+    status("appStatus", "Notifikasi belum siap: isi VAPID_PUBLIC_KEY di index.html setelah membuat kunci VAPID.", true);
+    return;
+  }
+  $("enablePushBtn").disabled = true;
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") throw new Error("Izin notifikasi tidak diberikan.");
+    const registration = await navigator.serviceWorker.register("/service-worker.js");
+    await navigator.serviceWorker.ready;
+    let subscription = await registration.pushManager.getSubscription();
+    if (!subscription) {
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+    }
+    const json = subscription.toJSON();
+    const { error } = await supabase.from("push_subscriptions").upsert({
+      user_id: currentUser.id,
+      endpoint: subscription.endpoint,
+      p256dh: json.keys.p256dh,
+      auth: json.keys.auth
+    }, { onConflict: "endpoint" });
+    if (error) throw error;
+    status("appStatus", "Notifikasi aktif di perangkat ini. Pastikan Edge Function dan webhook juga sudah dipasang.");
+  } catch (error) {
+    status("appStatus", "Aktivasi notifikasi gagal: " + error.message, true);
+  } finally {
+    $("enablePushBtn").disabled = false;
   }
 });
 
 document.querySelectorAll(".game-more").forEach(button => {
   button.addEventListener("click", () => {
     showPage("gamesPage");
-    status(
-      "appStatus",
-      "Kategori " + button.dataset.game +
-      " masih berupa slot desain. Game belum tersedia untuk dimainkan."
-    );
+    status("appStatus", "Kategori " + button.dataset.game + " masih berupa desain. Game belum tersedia.");
   });
 });
 
@@ -648,9 +652,7 @@ supabase.auth.onAuthStateChange(event => {
   }
 });
 
-const { data: initialSession, error: sessionError } =
-  await supabase.auth.getSession();
-
+const { data: initialSession, error: sessionError } = await supabase.auth.getSession();
 if (sessionError) {
   showAuth();
   status("authStatus", "Gagal memeriksa sesi: " + sessionError.message, true);
@@ -662,4 +664,3 @@ if (sessionError) {
 </script>
 </body>
 </html>
-```
