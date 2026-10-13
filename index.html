@@ -3,70 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#080d1c">
+<meta name="theme-color" content="#060913">
 <title>NEXORA Indonesia 2027</title>
 <style>
-:root{color-scheme:dark;--bg:#080d1c;--panel:#101a2e;--line:#243552;--accent:#00e5ff;--text:#eef5ff;--muted:#9aabc5}
+:root {
+  color-scheme: dark;
+  --bg: #060913;
+  --panel: rgba(16, 26, 46, 0.85);
+  --line: rgba(36, 53, 82, 0.6);
+  --accent: #00f0ff;
+  --accent-secondary: #7000ff;
+  --text: #f0f6fc;
+  --muted: #8b9bb4;
+}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at top,#142444,var(--bg) 65%);color:var(--text);font-family:system-ui,Arial,sans-serif;min-height:100vh}
+body{margin:0;background:radial-gradient(circle at 50% 0%,#132247,var(--bg) 70%);color:var(--text);font-family:system-ui,-apple-system,sans-serif;min-height:100vh;padding-bottom:30px}
 button,input{font:inherit}button{cursor:pointer}
-.brand{text-align:center;padding:24px 12px 16px}
-.brand h1{margin:0;color:var(--accent);letter-spacing:5px;font-size:clamp(27px,6vw,40px);text-shadow:0 0 18px #00e5ff55}
-.brand p{color:var(--muted);font-size:11px;letter-spacing:3px}
-.wrap{max-width:960px;margin:auto;padding:12px}
-.panel{background:#101a2eeb;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 12px 40px #0004}
+.brand{text-align:center;padding:28px 12px 18px}
+.brand h1{margin:0;color:var(--accent);letter-spacing:6px;font-size:clamp(28px,6vw,42px);text-shadow:0 0 20px rgba(0,240,255,0.4)}
+.brand p{color:var(--muted);font-size:11px;letter-spacing:4px;margin-top:6px}
+.wrap{max-width:1000px;margin:auto;padding:14px}
+.panel{background:var(--panel);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 16px 48px rgba(0,0,0,0.5)}
 h2,h3{margin-top:0}
-input{width:100%;padding:12px;border-radius:9px;border:1px solid #344765;background:#080f20;color:white;outline:none;margin:6px 0 12px}
-input:focus{border-color:var(--accent)}
-button{border:0;border-radius:9px;padding:11px 14px;background:var(--accent);color:#06101b;font-weight:700}
-button.secondary{background:#243550;color:white;border:1px solid #344765}
-button:disabled{opacity:.5;cursor:not-allowed}
-.actions{display:flex;flex-wrap:wrap;gap:8px}
+input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #283d63;background:#09101f;color:white;outline:none;margin:6px 0 14px;transition:0.2s}
+input:focus{border-color:var(--accent);box-shadow:0 0 10px rgba(0,240,255,0.2)}
+button{border:0;border-radius:10px;padding:12px 16px;background:var(--accent);color:#040d1a;font-weight:700;transition:0.2s}
+button:hover{opacity:0.9;transform:translateY(-1px)}
+button.secondary{background:#1b2d4f;color:white;border:1px solid #2f497a}
+button:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
 .hint,.muted{color:var(--muted);font-size:13px}
 .status{min-height:24px;margin:10px 0;color:var(--accent);font-size:13px;overflow-wrap:anywhere}
 .hidden{display:none!important}
-.layout{display:grid;grid-template-columns:260px 1fr;gap:12px}
-.userbox{overflow-wrap:anywhere}
-.chathead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}
-.messages{height:min(48vh,440px);min-height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:5px 2px 15px}
-.bubble{max-width:85%;padding:10px 12px;border-radius:13px;background:#1a2942;align-self:flex-start;overflow-wrap:anywhere;white-space:pre-wrap}
-.bubble.mine{align-self:flex-end;background:#07556a;border:1px solid #087f96}
-.bubble time{display:block;font-size:10px;color:#c0d4e9;margin-top:6px}
-.sendrow{display:flex;gap:8px;align-items:center}
-.sendrow input{margin:0;min-width:0}
-.user-result{display:block;width:100%;text-align:left;margin-top:8px;background:#17253d;color:white;border:1px solid var(--line);overflow-wrap:anywhere}
-.user-result small{display:block;color:var(--muted);font-weight:normal}
-.user-result-actions{display:flex;gap:6px;margin-top:6px}
-.user-result-actions button{flex:1;font-size:12px;padding:8px}
-.appnav{display:flex;gap:9px;flex-wrap:wrap;align-items:center;padding:12px;margin-bottom:12px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(120deg,#101a2e,#111f38)}
-.navitem{display:flex;align-items:center;gap:8px;border:1px solid #2b3d5b;background:#111d33;color:#eaf5ff;padding:10px 13px;border-radius:12px}
-.navitem:hover,.navitem.active{background:#12394a;border-color:var(--accent)}
-.navicon{font-size:19px}
+
+/* Layout & Navigation */
+.appnav{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px;margin-bottom:16px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,rgba(16,26,46,0.9),rgba(20,35,65,0.9))}
+.navitem{display:flex;align-items:center;gap:8px;border:1px solid #2c436d;background:#111e38;color:#f0f6fc;padding:10px 16px;border-radius:12px;transition:0.2s}
+.navitem:hover,.navitem.active{background:linear-gradient(135deg,#00b8cc,#00f0ff);color:#040d1a;border-color:var(--accent);font-weight:700}
+.navicon{font-size:18px}
 .navlabel{outline:none}
 .navlabel[contenteditable=true]{border-bottom:1px dashed var(--accent);min-width:35px}
 .editnav{margin-left:auto}
-.hero{position:relative;overflow:hidden;padding:25px;background:linear-gradient(125deg,#122744,#102039 55%,#123d4a);border:1px solid #28516b;border-radius:18px;margin-bottom:14px}
-.hero:after{content:"✦";position:absolute;right:25px;top:4px;font-size:100px;color:#00e5ff1c;pointer-events:none}
-.eyebrow{color:var(--accent);letter-spacing:2px;font-size:11px;font-weight:800}
-.hero h2{font-size:clamp(25px,5vw,38px);margin:9px 0;max-width:560px}
-.hero p{color:#b9cbe3;max-width:560px;line-height:1.65}
-.section-title{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:22px 2px 12px}
-.section-title h3{margin:0 0 5px}
-.game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.game-card{min-width:0;padding:16px;border-radius:15px;border:1px solid var(--line);background:linear-gradient(145deg,#14223a,#0d1729);overflow:hidden}
-.game-art{display:flex;align-items:center;justify-content:center;height:100px;border-radius:11px;margin-bottom:12px;font-size:42px;background:radial-gradient(circle at 50% 20%,#28617a,#172b49 60%,#111b2e);border:1px solid #304664}
+
+/* Hero Section */
+.hero{position:relative;overflow:hidden;padding:30px;background:linear-gradient(135deg,#152951,#0f1f3d 60%,#091428);border:1px solid #2a4c7a;border-radius:20px;margin-bottom:18px;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+.hero:after{content:"✦";position:absolute;right:25px;top:10px;font-size:110px;color:rgba(0,240,255,0.06);pointer-events:none}
+.eyebrow{color:var(--accent);letter-spacing:2.5px;font-size:11px;font-weight:800}
+.hero h2{font-size:clamp(24px,4.5vw,36px);margin:10px 0;max-width:580px}
+.hero p{color:#cbd8ec;max-width:560px;line-height:1.6;font-size:14px}
+
+/* Chat Layout & Components */
+.layout{display:grid;grid-template-columns:300px 1fr;gap:16px}
+.chathead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px;display:flex;flex-direction:column;gap:4px}
+.messages{height:min(50vh,460px);min-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:8px 4px}
+.bubble{max-width:82%;padding:12px 15px;border-radius:14px;background:#182844;align-self:flex-start;overflow-wrap:anywhere;white-space:pre-wrap;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.bubble.mine{align-self:flex-end;background:linear-gradient(135deg,#00839c,#005b6e);border:1px solid #00b8cc;color:#fff}
+.bubble time{display:block;font-size:10px;color:#a3c2df;margin-top:6px;text-align:right}
+.sendrow{display:flex;gap:10px;align-items:center;margin-top:10px}
+.sendrow input{margin:0;min-width:0}
+
+/* Avatars & Results */
+.avatar-preview{width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);background:#132244;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 0 15px rgba(0,240,255,0.3)}
+.avatar-small{width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid var(--accent);background:#132244;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.user-result{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;margin-top:8px;background:#121e36;color:white;border:1px solid var(--line);padding:12px;border-radius:12px}
+.user-result small{color:var(--muted)}
+.user-result-actions{display:flex;gap:8px;margin-top:4px}
+.user-result-actions button{flex:1;font-size:12px;padding:9px}
+
+.chat-history-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#132038;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:0.2s}
+.chat-history-item:hover{border-color:var(--accent);background:#182847;transform:translateX(2px)}
+
+/* Games & Features Grid */
+.section-title{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin:24px 4px 14px}
+.section-title h3{margin:0 0 4px}
+.game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.game-card{padding:18px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(145deg,#12203a,#0a1324);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.game-art{display:flex;align-items:center;justify-content:center;height:110px;border-radius:12px;margin-bottom:14px;font-size:46px;background:radial-gradient(circle at 50% 20%,#244973,#122442 70%);border:1px solid #2d507d}
 .game-card p{color:var(--muted);font-size:13px;line-height:1.5}
-.tag{display:inline-block;border:1px solid #31516c;border-radius:30px;padding:4px 8px;color:#8defff;font-size:10px}
-.game-card button{width:100%;margin-top:8px}
-.feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
-.feature{padding:14px;border:1px solid var(--line);border-radius:13px;background:#0d1729}
+.tag{display:inline-block;border:1px solid #2f567a;border-radius:30px;padding:4px 10px;color:var(--accent);font-size:10px;font-weight:700}
+.game-card button{width:100%;margin-top:10px}
+.feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.feature{padding:16px;border:1px solid var(--line);border-radius:14px;background:#0d1729}
 .feature strong{display:block;margin:8px 0 4px}
-.feature span{color:var(--muted);font-size:12px}
-.profile-card{max-width:650px}
-.game-note{border:1px dashed #3b6077;border-radius:12px;padding:12px;color:#b6c8df;font-size:12px;margin-top:12px}
-.page{animation:appear .22s ease-out}
-@keyframes appear{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:650px){.appnav{gap:7px}.navitem{flex:1;justify-content:center;padding:10px 8px}.editnav{flex:0 0 100%;margin-left:0}.game-grid,.feature-grid{grid-template-columns:1fr}.hero{padding:20px}.layout{grid-template-columns:1fr}.messages{height:42vh}.panel{padding:14px}}
+.feature span{color:var(--muted);font-size:12px;line-height:1.4}
+.profile-card{max-width:680px;margin:auto}
+.game-note{border:1px dashed #345c7a;border-radius:12px;padding:14px;color:#c1d5ed;font-size:12px;margin-top:14px;background:rgba(0,240,255,0.02)}
+.page{animation:appear .25s ease-out}
+
+@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:768px){
+  .appnav{gap:6px;padding:10px}
+  .navitem{flex:1;justify-content:center;padding:10px 6px;font-size:13px}
+  .editnav{flex:0 0 100%;margin-left:0}
+  .game-grid,.feature-grid{grid-template-columns:1fr}
+  .hero{padding:20px}
+  .layout{grid-template-columns:1fr}
+  .messages{height:44vh}
+  .panel{padding:14px}
+}
 </style>
 </head>
 <body>
@@ -76,7 +111,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 </header>
 
 <main class="wrap">
-<section id="authPanel" class="panel">
+<section id="authPanel" class="panel" style="max-width:480px;margin:auto">
 <h2>Masuk ke NEXORA</h2>
 <p class="muted">Buat akun atau masuk untuk mulai terhubung.</p>
 <label for="displayName">Nama tampilan (untuk pendaftaran)</label>
@@ -86,10 +121,10 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <label for="password">Password</label>
 <input id="password" type="password" autocomplete="current-password" minlength="8" placeholder="Minimal 8 karakter">
 <div class="actions">
-<button id="loginBtn">Masuk</button>
-<button id="signupBtn" class="secondary">Daftar akun</button>
+<button id="loginBtn" style="flex:1">Masuk</button>
+<button id="signupBtn" class="secondary" style="flex:1">Daftar akun</button>
 </div>
-<p class="hint">Gunakan email valid dan password minimal 8 karakter.</p>
+<p class="hint" style="margin-top:12px">Gunakan email valid dan password minimal 8 karakter.</p>
 <div id="authStatus" class="status" role="status"></div>
 </section>
 
@@ -106,8 +141,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <div class="hero">
 <div class="eyebrow">NEXORA NETWORK · 2027</div>
 <h2>Selamat datang di dunia koneksi tanpa batas.</h2>
-<p>Temukan teman, mulai percakapan pribadi, dan jelajahi rekomendasi game pilihan dalam satu ruang digital.</p>
-<div class="actions">
+<p>Temukan teman, mulai percakapan pribadi secara real-time, dan jelajahi rekomendasi game pilihan dalam satu ruang digital futuristik.</p>
+<div class="actions" style="margin-top:16px">
 <button id="heroChatBtn">▣ Mulai chat</button>
 <button id="heroGamesBtn" class="secondary">🎮 Jelajahi game</button>
 </div>
@@ -122,16 +157,16 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <article class="game-card"><div class="game-art">🏎️</div><span class="tag">BALAP</span><h3>Velocity Rush</h3><p>Konsep rekomendasi untuk penggemar balapan.</p><button class="secondary game-more" data-game="Velocity Rush">Segera hadir</button></article>
 <article class="game-card"><div class="game-art">🧩</div><span class="tag">SANTAI</span><h3>Mind Garden</h3><p>Konsep permainan teka-teki dan hiburan ringan.</p><button class="secondary game-more" data-game="Mind Garden">Segera hadir</button></article>
 </div>
-<div class="game-note">Kartu game saat ini adalah contoh desain. Game belum dapat dimainkan langsung.</div>
+<div class="game-note">Kartu game saat ini adalah contoh desain antarmuka. Game belum dapat dimainkan langsung.</div>
 <div class="feature-grid">
-<div class="feature">💬<strong>Chat pribadi</strong><span>Berkomunikasi dengan pengguna lain.</span></div>
-<div class="feature">🛡️<strong>Berbasis akun</strong><span>Fitur membutuhkan login.</span></div>
-<div class="feature">✨<strong>Terus berkembang</strong><span>Fitur baru bisa ditambahkan bertahap.</span></div>
+<div class="feature">💬<strong>Chat pribadi</strong><span>Berkomunikasi instan dengan pengguna lain.</span></div>
+<div class="feature">🛡️<strong>Berbasis akun</strong><span>Fitur aman membutuhkan autentikasi login.</span></div>
+<div class="feature">✨<strong>Terus berkembang</strong><span>Fitur baru ditambahkan secara bertahap.</span></div>
 </div>
 </section>
 
 <section id="gamesPage" class="page hidden">
-<div class="hero"><div class="eyebrow">NEXORA DISCOVERY</div><h2>Temukan game favoritmu.</h2><p>Katalog rekomendasi akan diisi pada pembaruan berikutnya.</p></div>
+<div class="hero"><div class="eyebrow">NEXORA DISCOVERY</div><h2>Temukan game favoritmu.</h2><p>Katalog rekomendasi game komunitas akan diisi pada pembaruan berikutnya.</p></div>
 <div class="game-grid">
 <article class="game-card"><div class="game-art">⚔️</div><h3>Battle Arena</h3><p>Rekomendasi kategori strategi.</p><span class="tag">SEGERA HADIR</span></article>
 <article class="game-card"><div class="game-art">🚀</div><h3>Galaxy Quest</h3><p>Rekomendasi kategori petualangan.</p><span class="tag">SEGERA HADIR</span></article>
@@ -143,12 +178,19 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <section id="profilePage" class="page hidden">
 <div class="panel profile-card">
 <div class="eyebrow">ACCOUNT CENTER</div><h2>Profil NEXORA</h2>
-<p class="muted">Informasi akun yang sedang digunakan.</p>
+<p class="muted">Informasi akun dan foto profil kamu.</p>
+<div style="display:flex;align-items:center;gap:16px;margin:16px 0">
+<img id="profileAvatarPreview" class="avatar-preview" src="" alt="Foto Profil" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'84\' height=\'84\'><rect width=\'100%\' height=\'100%\' fill=\'%23132244\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300f0ff\' font-size=\'32\'>👤</text></svg>'">
+<div style="flex:1">
+<label for="profileAvatarUrl" style="margin:0 0 4px">URL Foto Profil / Avatar</label>
+<input id="profileAvatarUrl" placeholder="https://contoh.com/foto.jpg" style="margin:0">
+</div>
+</div>
 <label for="profileDisplayName">Nama tampilan</label>
 <input id="profileDisplayName" maxlength="60" placeholder="Nama tampilan">
 <label for="profileUsername">Username</label>
 <input id="profileUsername" disabled>
-<label class="hint"><input id="shareProfileToggle" type="checkbox" style="width:auto;margin-right:8px">Bagikan profil ke fitur pencarian dan NEXORA</label>
+<label class="hint" style="display:flex;align-items:center;margin:10px 0 16px"><input id="shareProfileToggle" type="checkbox" style="width:auto;margin-right:10px">Bagikan profil ke fitur pencarian dan NEXORA</label>
 <div class="actions">
 <button id="saveProfileBtn">Simpan perubahan</button>
 <button id="shareProfileBtn" class="secondary">Bagikan profil</button>
@@ -160,29 +202,35 @@ button:disabled{opacity:.5;cursor:not-allowed}
 </section>
 
 <section id="chatPage" class="page hidden">
-<div class="panel" style="margin-bottom:12px">
+<div class="panel" style="margin-bottom:14px">
 <div class="actions" style="justify-content:space-between;align-items:center">
+<div style="display:flex;align-items:center;gap:12px">
+<img id="myHeaderAvatar" class="avatar-small" src="" alt="Avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'100%\' height=\'100%\' fill=\'%23132244\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300f0ff\' font-size=\'15\'>👤</text></svg>'">
 <div><strong id="myName">Pengguna NEXORA</strong><div id="myUsername" class="muted"></div></div>
+</div>
 <div class="actions">
-<button id="enablePushBtn" class="secondary">🔔 Aktifkan notifikasi</button>
+<button id="enablePushBtn" class="secondary">🔔 Notifikasi</button>
 <button id="logoutBtn" class="secondary">Keluar</button>
 </div>
 </div>
 <div id="appStatus" class="status" role="status"></div>
 </div>
 <div class="layout">
-<aside class="panel">
+<aside class="panel" style="display:flex;flex-direction:column">
+<h3>Pesan Tersimpan</h3>
+<p class="hint">Riwayat chat otomatis.</p>
+<div id="chatHistoryList" class="userbox" style="margin:10px 0 14px;max-height:180px;overflow-y:auto">
+<p class="muted" style="font-size:12px">Belum ada riwayat chat.</p>
+</div>
+<hr style="border-color:var(--line);margin:6px 0 14px">
 <h3>Cari pengguna</h3>
-<p class="hint">Masukkan username pengguna yang ingin kamu chat.</p>
-<input id="searchInput" placeholder="Contoh: nx_a1b2c3..." maxlength="40">
+<input id="searchInput" placeholder="Ketik username..." maxlength="40">
 <button id="searchBtn" style="width:100%">Cari pengguna</button>
-<div id="searchResults" class="userbox"></div>
-<hr style="border-color:var(--line);margin:18px 0">
-<p class="hint">Pilih hasil pencarian untuk membuka percakapan. Tekan Salin untuk menyalin username.</p>
+<div id="searchResults" class="userbox" style="margin-top:10px"></div>
 </aside>
-<section class="panel">
-<div class="chathead"><h3 id="chatTitle">Chat pribadi</h3><div id="chatSubtitle" class="muted">Cari pengguna untuk memulai.</div></div>
-<div id="messages" class="messages" aria-live="polite"><p class="muted">Pesan akan tampil di sini.</p></div>
+<section class="panel" style="display:flex;flex-direction:column">
+<div class="chathead"><h3 id="chatTitle">Chat pribadi</h3><div id="chatSubtitle" class="muted">Pilih dari riwayat atau cari pengguna.</div></div>
+<div id="messages" class="messages" aria-live="polite"><p class="muted" style="text-align:center;margin-top:40px">Pesan akan tampil di sini.</p></div>
 <form id="sendForm" class="sendrow">
 <input id="messageInput" maxlength="2000" placeholder="Tulis pesan..." autocomplete="off" disabled>
 <button id="sendBtn" type="submit" disabled>Kirim</button>
@@ -211,7 +259,7 @@ let loadingMessages = false;
 
 function status(id, text, isError = false) {
   $(id).textContent = text;
-  $(id).style.color = isError ? "#ff9caa" : "var(--accent)";
+  $(id).style.color = isError = isError ? "#ff7b96" : "var(--accent)";
 }
 
 function showAuth() {
@@ -226,7 +274,7 @@ function showApp() {
 
 async function loadProfile() {
   const { data, error } = await supabase.from("profiles")
-    .select("id, username, display_name, share_profile")
+    .select("id, username, display_name, share_profile, avatar_url")
     .eq("id", currentUser.id).single();
 
   if (error) throw error;
@@ -235,7 +283,13 @@ async function loadProfile() {
   $("myUsername").textContent = "@" + data.username;
   $("profileDisplayName").value = data.display_name || "";
   $("profileUsername").value = data.username || "";
+  $("profileAvatarUrl").value = data.avatar_url || "";
   $("shareProfileToggle").checked = data.share_profile !== false;
+  
+  if(data.avatar_url) {
+    $("profileAvatarPreview").src = data.avatar_url;
+    $("myHeaderAvatar").src = data.avatar_url;
+  }
 }
 
 async function enterApp(user) {
@@ -246,6 +300,7 @@ async function enterApp(user) {
     showPage("homePage");
     status("appStatus", "Kamu sudah login dan siap menggunakan NEXORA.");
     setupRealtime();
+    loadChatHistory();
   } catch (error) {
     showAuth();
     status("authStatus", "Login berhasil, tetapi profil gagal dimuat: " + error.message, true);
@@ -273,7 +328,7 @@ $("signupBtn").addEventListener("click", async () => {
       status("authStatus", "Pendaftaran berhasil. Memuat profil...");
       await enterApp(data.user);
     } else if (data.user) {
-      status("authStatus", "Akun dibuat, tetapi sesi belum tersedia. Pastikan Confirm email dimatikan jika ingin langsung login.");
+      status("authStatus", "Akun dibuat, tetapi sesi belum tersedia. Pastikan Confirm email dimatikan.");
     } else {
       status("authStatus", "Data akun tidak diterima.", true);
     }
@@ -354,7 +409,7 @@ $("searchBtn").addEventListener("click", async () => {
   status("appStatus", "Mencari pengguna...");
   try {
     let request = supabase.from("profiles")
-      .select("id, username, display_name, share_profile")
+      .select("id, username, display_name, share_profile, avatar_url")
       .ilike("username", query)
       .neq("id", currentUser.id)
       .limit(10);
@@ -371,11 +426,26 @@ $("searchBtn").addEventListener("click", async () => {
     for (const profile of data) {
       const card = document.createElement("div");
       card.className = "user-result";
+      
+      const header = document.createElement("div");
+      header.style.display = "flex";
+      header.style.alignItems = "center";
+      header.style.gap = "10px";
+      
+      const av = document.createElement("img");
+      av.className = "avatar-small";
+      av.src = profile.avatar_url || "";
+      av.onerror = () => { av.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="%23132244"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300f0ff" font-size="15">👤</text></svg>'; };
+      
+      const info = document.createElement("div");
       const name = document.createElement("div");
+      name.style.fontWeight = "600";
       name.textContent = profile.display_name || "Pengguna NEXORA";
       const username = document.createElement("small");
       username.textContent = "@" + profile.username;
-      card.append(name, username);
+      info.append(name, username);
+      header.append(av, info);
+      card.appendChild(header);
 
       const actions = document.createElement("div");
       actions.className = "user-result-actions";
@@ -389,7 +459,7 @@ $("searchBtn").addEventListener("click", async () => {
       copyButton.textContent = "Salin username";
       copyButton.addEventListener("click", async () => {
         const ok = await copyText("@" + profile.username);
-        status("appStatus", ok ? "Username @" + profile.username + " berhasil disalin." : "Gagal menyalin username.", !ok);
+        status("appStatus", ok ? "Username @" + profile.username + " disalin." : "Gagal menyalin.", !ok);
       });
 
       actions.append(chatButton, copyButton);
@@ -412,6 +482,66 @@ async function openChat(profile) {
   await loadMessages();
 }
 
+async function loadChatHistory() {
+  if (!currentUser) return;
+  try {
+    const { data, error } = await supabase.from("messages")
+      .select("sender_id, receiver_id, created_at, body")
+      .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+      .order("created_at", { ascending: false });
+    
+    if (error) throw error;
+    
+    const partnerIds = new Set();
+    data.forEach(m => {
+      if (m.sender_id !== currentUser.id) partnerIds.add(m.sender_id);
+      if (m.receiver_id !== currentUser.id) partnerIds.add(m.receiver_id);
+    });
+
+    if (partnerIds.size === 0) {
+      $("chatHistoryList").innerHTML = '<p class="muted" style="font-size:12px">Belum ada riwayat chat.</p>';
+      return;
+    }
+
+    const { data: profiles, error: pErr } = await supabase.from("profiles")
+      .select("id, username, display_name, avatar_url")
+      .in("id", Array.from(partnerIds));
+
+    if (pErr) throw pErr;
+
+    const historyContainer = $("chatHistoryList");
+    historyContainer.replaceChildren();
+
+    for (const p of profiles) {
+      const item = document.createElement("div");
+      item.className = "chat-history-item";
+      
+      const av = document.createElement("img");
+      av.className = "avatar-small";
+      av.src = p.avatar_url || "";
+      av.onerror = () => { av.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="%23132244"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300f0ff" font-size="15">👤</text></svg>'; };
+      
+      const details = document.createElement("div");
+      details.style.overflow = "hidden";
+      const name = document.createElement("div");
+      name.style.fontWeight = "bold";
+      name.style.fontSize = "13px";
+      name.textContent = p.display_name || "Pengguna";
+      const uname = document.createElement("div");
+      uname.className = "muted";
+      uname.style.fontSize = "11px";
+      uname.textContent = "@" + p.username;
+      details.append(name, uname);
+
+      item.append(av, details);
+      item.addEventListener("click", () => openChat(p));
+      historyContainer.appendChild(item);
+    }
+  } catch (err) {
+    console.error("Gagal memuat riwayat chat:", err);
+  }
+}
+
 function formatTime(value) {
   return new Date(value).toLocaleString("id-ID", {
     hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short"
@@ -424,6 +554,8 @@ function renderMessages(rows) {
   if (!rows.length) {
     const empty = document.createElement("p");
     empty.className = "muted";
+    empty.style.textAlign = "center";
+    empty.style.marginTop = "40px";
     empty.textContent = "Belum ada pesan. Mulai percakapan!";
     container.appendChild(empty);
     return;
@@ -474,6 +606,7 @@ $("sendForm").addEventListener("submit", async event => {
     if (error) throw error;
     $("messageInput").value = "";
     await loadMessages();
+    loadChatHistory();
     status("appStatus", "Pesan terkirim.");
   } catch (error) {
     status("appStatus", "Pesan gagal dikirim: " + error.message, true);
@@ -492,6 +625,7 @@ function setupRealtime() {
          (message.sender_id === activeChat.id && message.receiver_id === currentUser.id))) {
         loadMessages();
       }
+      loadChatHistory();
     }).subscribe();
 }
 
@@ -502,9 +636,14 @@ function showPage(pageId) {
   if (pageId === "profilePage" && currentProfile) {
     $("profileDisplayName").value = currentProfile.display_name || "";
     $("profileUsername").value = currentProfile.username || "";
+    $("profileAvatarUrl").value = currentProfile.avatar_url || "";
+    $("profileAvatarPreview").src = currentProfile.avatar_url || "";
     $("shareProfileToggle").checked = currentProfile.share_profile !== false;
   }
-  if (pageId === "chatPage" && !activeChat) status("appStatus", "Cari username di panel kiri untuk memulai chat.");
+  if (pageId === "chatPage") {
+    if(!activeChat) status("appStatus", "Cari username atau pilih riwayat chat.");
+    loadChatHistory();
+  }
 }
 navButtons.forEach(button => button.addEventListener("click", () => showPage(button.dataset.page)));
 $("heroChatBtn").addEventListener("click", () => showPage("chatPage"));
@@ -531,14 +670,15 @@ $("editMenuBtn").addEventListener("click", () => {
         localStorage.setItem("nexora-menu-" + el.dataset.label, el.textContent.trim().slice(0, 24));
       } catch (_) {}
     });
-    status("appStatus", "Nama menu disimpan di browser perangkat ini.");
+    status("appStatus", "Nama menu disimpan di perangkat ini.");
   } else {
-    status("appStatus", "Ketuk nama menu untuk mengedit, lalu tekan Simpan nama menu.");
+    status("appStatus", "Ketuk nama menu untuk mengedit, lalu tekan Simpan.");
   }
 });
 
 $("saveProfileBtn").addEventListener("click", async () => {
   const display_name = $("profileDisplayName").value.trim();
+  const avatar_url = $("profileAvatarUrl").value.trim();
   const share_profile = $("shareProfileToggle").checked;
   if (!currentUser) return;
   if (!display_name || display_name.length > 60) {
@@ -548,17 +688,20 @@ $("saveProfileBtn").addEventListener("click", async () => {
   $("saveProfileBtn").disabled = true;
   try {
     const { data, error } = await supabase.from("profiles")
-      .update({ display_name, share_profile })
+      .update({ display_name, avatar_url, share_profile })
       .eq("id", currentUser.id)
-      .select("id, username, display_name, share_profile").single();
+      .select("id, username, display_name, share_profile, avatar_url").single();
     if (error) throw error;
     currentProfile = data;
     $("myName").textContent = data.display_name;
     $("myUsername").textContent = "@" + data.username;
-    status("profileStatus", "Profil berhasil disimpan dan pengaturan berbagi diperbarui.");
+    if(data.avatar_url) {
+      $("profileAvatarPreview").src = data.avatar_url;
+      $("myHeaderAvatar").src = data.avatar_url;
+    }
+    status("profileStatus", "Profil & foto berhasil disimpan!");
   } catch (error) {
-    status("profileStatus", "Gagal menyimpan profil: " + error.message +
-      ". Pastikan SQL tambahan sudah dijalankan.", true);
+    status("profileStatus", "Gagal menyimpan profil: " + error.message, true);
   } finally {
     $("saveProfileBtn").disabled = false;
   }
@@ -567,7 +710,7 @@ $("saveProfileBtn").addEventListener("click", async () => {
 $("copyUsernameBtn").addEventListener("click", async () => {
   if (!currentProfile) return;
   const ok = await copyText("@" + currentProfile.username);
-  status("profileStatus", ok ? "Username berhasil disalin!" : "Gagal menyalin username.", !ok);
+  status("profileStatus", ok ? "Username berhasil disalin!" : "Gagal menyalin.", !ok);
 });
 
 $("shareProfileBtn").addEventListener("click", async () => {
@@ -579,10 +722,10 @@ $("shareProfileBtn").addEventListener("click", async () => {
       status("profileStatus", "Menu berbagi dibuka.");
     } else {
       const ok = await copyText(text);
-      status("profileStatus", ok ? "Info profil disalin. Sekarang kamu bisa membagikannya." : "Gagal menyalin profil.", !ok);
+      status("profileStatus", ok ? "Info profil disalin." : "Gagal membagikan.", !ok);
     }
   } catch (error) {
-    if (error.name !== "AbortError") status("profileStatus", "Gagal membagikan profil: " + error.message, true);
+    if (error.name !== "AbortError") status("profileStatus", "Gagal: " + error.message, true);
   }
 });
 
@@ -596,7 +739,7 @@ function urlBase64ToUint8Array(base64String) {
 $("enablePushBtn").addEventListener("click", async () => {
   if (!currentUser) return;
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-    status("appStatus", "Browser ini belum mendukung Web Push.", true);
+    status("appStatus", "Browser tidak mendukung Web Push.", true);
     return;
   }
   $("enablePushBtn").disabled = true;
@@ -622,7 +765,7 @@ $("enablePushBtn").addEventListener("click", async () => {
     if (error) throw error;
     status("appStatus", "Notifikasi aktif di perangkat ini.");
   } catch (error) {
-    status("appStatus", "Aktivasi notifikasi gagal: " + error.message, true);
+    status("appStatus", "Aktivasi gagal: " + error.message, true);
   } finally {
     $("enablePushBtn").disabled = false;
   }
@@ -631,7 +774,7 @@ $("enablePushBtn").addEventListener("click", async () => {
 document.querySelectorAll(".game-more").forEach(button => {
   button.addEventListener("click", () => {
     showPage("gamesPage");
-    status("appStatus", "Kategori " + button.dataset.game + " masih berupa desain. Game belum tersedia.");
+    status("appStatus", "Kategori " + button.dataset.game + " masih berupa desain.");
   });
 });
 
