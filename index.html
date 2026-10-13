@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -187,8 +187,9 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-const SUPABASE_URL = "https://hhxygoblxshqxhkwybxq.supabase.co";
-const SUPABASE_KEY = "sb_publishable_nOvOu3SneFk0t2eSooT6uw_VbBZHQ3J";
+/* KONFIGURASI PROJECT SUPABASE BARU */
+const SUPABASE_URL = "https://ibtjoqellbexcsspncqc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OkE0tiMSLNfxnkNf5XnmKQ__hMk0AWv";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = id => document.getElementById(id);
 
@@ -202,10 +203,12 @@ function status(id, text, isError = false) {
   $(id).textContent = text;
   $(id).style.color = isError ? "#ff9caa" : "var(--accent)";
 }
+
 function showAuth() {
   $("authPanel").classList.remove("hidden");
   $("appPanel").classList.add("hidden");
 }
+
 function showApp() {
   $("authPanel").classList.add("hidden");
   $("appPanel").classList.remove("hidden");
@@ -217,7 +220,9 @@ async function loadProfile() {
     .select("id, username, display_name")
     .eq("id", currentUser.id)
     .single();
+
   if (error) throw error;
+
   currentProfile = data;
   $("myName").textContent = data.display_name || "Pengguna NEXORA";
   $("myUsername").textContent = "@" + data.username;
@@ -225,6 +230,7 @@ async function loadProfile() {
 
 async function enterApp(user) {
   currentUser = user;
+
   try {
     await loadProfile();
     showApp();
@@ -232,10 +238,18 @@ async function enterApp(user) {
     status("appStatus", "Kamu sudah login dan siap menggunakan NEXORA.");
     setupRealtime();
   } catch (error) {
-    status("authStatus", "Gagal memuat profil: " + error.message, true);
+    showAuth();
+    status(
+      "authStatus",
+      "Login berhasil, tetapi profil gagal dimuat: " + error.message +
+      ". Periksa tabel profiles, data profil, dan kebijakan RLS.",
+      true
+    );
   }
 }
 
+/* DAFTAR AKUN — TIDAK ADA KODE OTP ATAU PENGIRIMAN EMAIL MANUAL.
+   Konfirmasi email diatur melalui dashboard Supabase. */
 $("signupBtn").addEventListener("click", async () => {
   const email = $("email").value.trim();
   const password = $("password").value;
@@ -245,6 +259,7 @@ $("signupBtn").addEventListener("click", async () => {
     status("authStatus", "Isi email valid dan password minimal 8 karakter.", true);
     return;
   }
+
   $("signupBtn").disabled = true;
   status("authStatus", "Mendaftarkan akun...");
 
@@ -252,17 +267,28 @@ $("signupBtn").addEventListener("click", async () => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { display_name: displayName } }
+      options: {
+        data: { display_name: displayName }
+      }
     });
+
     if (error) throw error;
 
     if (data.session && data.user) {
+      status("authStatus", "Pendaftaran berhasil. Memuat profil...");
       await enterApp(data.user);
+    } else if (data.user) {
+      status(
+        "authStatus",
+        "Akun berhasil dibuat, tetapi sesi login belum tersedia. " +
+        "Pastikan Confirm email dimatikan di Supabase. Jika sudah mati, " +
+        "periksa konfigurasi Auth dan database."
+      );
     } else {
-      status("authStatus", "Akun dibuat, tetapi sesi login belum tersedia. Periksa pengaturan Confirm email di Supabase, lalu coba login.");
+      status("authStatus", "Pendaftaran selesai, tetapi data akun tidak diterima.", true);
     }
   } catch (error) {
-    status("authStatus", error.message, true);
+    status("authStatus", "Pendaftaran gagal: " + error.message, true);
   } finally {
     $("signupBtn").disabled = false;
   }
@@ -271,18 +297,25 @@ $("signupBtn").addEventListener("click", async () => {
 $("loginBtn").addEventListener("click", async () => {
   const email = $("email").value.trim();
   const password = $("password").value;
+
   if (!email || !password) {
     status("authStatus", "Masukkan email dan password.", true);
     return;
   }
+
   $("loginBtn").disabled = true;
   status("authStatus", "Sedang login...");
+
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
     if (error) throw error;
     await enterApp(data.user);
   } catch (error) {
-    status("authStatus", error.message, true);
+    status("authStatus", "Login gagal: " + error.message, true);
   } finally {
     $("loginBtn").disabled = false;
   }
@@ -293,7 +326,14 @@ $("logoutBtn").addEventListener("click", async () => {
     await supabase.removeChannel(messageChannel);
     messageChannel = null;
   }
-  await supabase.auth.signOut();
+
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    status("appStatus", "Gagal keluar: " + error.message, true);
+    return;
+  }
+
   currentUser = null;
   currentProfile = null;
   activeChat = null;
@@ -306,6 +346,7 @@ $("logoutBtn").addEventListener("click", async () => {
 
 $("searchBtn").addEventListener("click", async () => {
   if (!currentUser) return;
+
   const query = $("searchInput").value.trim().replace(/^@/, "");
   const results = $("searchResults");
   results.replaceChildren();
@@ -314,7 +355,9 @@ $("searchBtn").addEventListener("click", async () => {
     status("appStatus", "Masukkan username minimal 3 karakter.", true);
     return;
   }
+
   status("appStatus", "Mencari pengguna...");
+
   try {
     const { data, error } = await supabase
       .from("profiles")
@@ -322,21 +365,27 @@ $("searchBtn").addEventListener("click", async () => {
       .ilike("username", query)
       .neq("id", currentUser.id)
       .limit(10);
+
     if (error) throw error;
+
     if (!data || !data.length) {
       status("appStatus", "Pengguna tidak ditemukan.");
       return;
     }
+
     for (const profile of data) {
       const button = document.createElement("button");
       button.className = "user-result";
       button.textContent = profile.display_name || "Pengguna NEXORA";
+
       const detail = document.createElement("small");
       detail.textContent = "@" + profile.username;
       button.appendChild(detail);
+
       button.addEventListener("click", () => openChat(profile));
       results.appendChild(button);
     }
+
     status("appStatus", "Hasil pencarian: " + data.length + " pengguna.");
   } catch (error) {
     status("appStatus", "Pencarian gagal: " + error.message, true);
@@ -354,14 +403,17 @@ async function openChat(profile) {
 
 function formatTime(value) {
   return new Date(value).toLocaleString("id-ID", {
-    hour: "2-digit", minute: "2-digit",
-    day: "2-digit", month: "short"
+    hour: "2-digit",
+    minute: "2-digit",
+    day: "2-digit",
+    month: "short"
   });
 }
 
 function renderMessages(rows) {
   const container = $("messages");
   container.replaceChildren();
+
   if (!rows.length) {
     const empty = document.createElement("p");
     empty.className = "muted";
@@ -369,23 +421,31 @@ function renderMessages(rows) {
     container.appendChild(empty);
     return;
   }
+
   for (const row of rows) {
     const bubble = document.createElement("div");
-    bubble.className = "bubble" + (row.sender_id === currentUser.id ? " mine" : "");
+    bubble.className =
+      "bubble" + (row.sender_id === currentUser.id ? " mine" : "");
+
     bubble.appendChild(document.createTextNode(row.body));
+
     const time = document.createElement("time");
     time.textContent = formatTime(row.created_at);
     bubble.appendChild(time);
     container.appendChild(bubble);
   }
+
   container.scrollTop = container.scrollHeight;
 }
 
 async function loadMessages() {
   if (!activeChat || loadingMessages || !currentUser) return;
+
   loadingMessages = true;
+
   try {
     const otherId = activeChat.id;
+
     const { data, error } = await supabase
       .from("messages")
       .select("id, sender_id, receiver_id, body, created_at")
@@ -395,6 +455,7 @@ async function loadMessages() {
       )
       .order("created_at", { ascending: true })
       .limit(200);
+
     if (error) throw error;
     renderMessages(data || []);
   } catch (error) {
@@ -406,20 +467,27 @@ async function loadMessages() {
 
 $("sendForm").addEventListener("submit", async event => {
   event.preventDefault();
+
   const body = $("messageInput").value.trim();
+
   if (!currentUser || !activeChat || !body) return;
+
   if (body.length > 2000) {
     status("appStatus", "Pesan maksimal 2000 karakter.", true);
     return;
   }
+
   $("sendBtn").disabled = true;
+
   try {
     const { error } = await supabase.from("messages").insert({
       sender_id: currentUser.id,
       receiver_id: activeChat.id,
       body
     });
+
     if (error) throw error;
+
     $("messageInput").value = "";
     await loadMessages();
     status("appStatus", "Pesan terkirim.");
@@ -431,45 +499,65 @@ $("sendForm").addEventListener("submit", async event => {
 });
 
 function setupRealtime() {
-  if (messageChannel) supabase.removeChannel(messageChannel);
+  if (messageChannel) {
+    supabase.removeChannel(messageChannel);
+  }
+
   messageChannel = supabase
     .channel("nexora-messages-" + currentUser.id)
-    .on("postgres_changes",
+    .on(
+      "postgres_changes",
       { event: "INSERT", schema: "public", table: "messages" },
       payload => {
         const message = payload.new;
-        if (activeChat &&
-          ((message.sender_id === currentUser.id && message.receiver_id === activeChat.id) ||
-           (message.sender_id === activeChat.id && message.receiver_id === currentUser.id))) {
+
+        if (
+          activeChat &&
+          (
+            (message.sender_id === currentUser.id &&
+             message.receiver_id === activeChat.id) ||
+            (message.sender_id === activeChat.id &&
+             message.receiver_id === currentUser.id)
+          )
+        ) {
           loadMessages();
         }
-      })
+      }
+    )
     .subscribe();
 }
 
 const navButtons = [...document.querySelectorAll(".navitem")];
+
 function showPage(pageId) {
   document.querySelectorAll(".page").forEach(page => {
     page.classList.toggle("hidden", page.id !== pageId);
   });
+
   navButtons.forEach(button => {
     button.classList.toggle("active", button.dataset.page === pageId);
   });
+
   if (pageId === "profilePage" && currentProfile) {
     $("profileDisplayName").value = currentProfile.display_name || "";
     $("profileUsername").value = currentProfile.username || "";
   }
+
   if (pageId === "chatPage" && !activeChat) {
     status("appStatus", "Cari username di panel kiri untuk memulai chat.");
   }
 }
 
-navButtons.forEach(button => button.addEventListener("click", () => showPage(button.dataset.page)));
+navButtons.forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
 $("heroChatBtn").addEventListener("click", () => showPage("chatPage"));
 $("heroGamesBtn").addEventListener("click", () => showPage("gamesPage"));
 
 const labelEls = [...document.querySelectorAll(".navlabel")];
 let menuEditing = false;
+
 labelEls.forEach(el => {
   try {
     const saved = localStorage.getItem("nexora-menu-" + el.dataset.label);
@@ -479,31 +567,47 @@ labelEls.forEach(el => {
 
 $("editMenuBtn").addEventListener("click", () => {
   menuEditing = !menuEditing;
+
   labelEls.forEach(el => {
     el.contentEditable = menuEditing ? "true" : "false";
     el.spellcheck = false;
   });
-  $("editMenuBtn").textContent = menuEditing ? "✓ Simpan nama menu" : "✎ Edit nama menu";
+
+  $("editMenuBtn").textContent = menuEditing
+    ? "✓ Simpan nama menu"
+    : "✎ Edit nama menu";
+
   if (!menuEditing) {
     labelEls.forEach(el => {
       try {
-        localStorage.setItem("nexora-menu-" + el.dataset.label, el.textContent.trim().slice(0, 24));
+        localStorage.setItem(
+          "nexora-menu-" + el.dataset.label,
+          el.textContent.trim().slice(0, 24)
+        );
       } catch (_) {}
     });
+
     status("appStatus", "Nama menu disimpan di browser perangkat ini.");
   } else {
-    status("appStatus", "Ketuk nama menu untuk mengedit, lalu tekan Simpan nama menu.");
+    status(
+      "appStatus",
+      "Ketuk nama menu untuk mengedit, lalu tekan Simpan nama menu."
+    );
   }
 });
 
 $("saveProfileBtn").addEventListener("click", async () => {
   const display_name = $("profileDisplayName").value.trim();
+
   if (!currentUser) return;
+
   if (!display_name || display_name.length > 60) {
     status("profileStatus", "Nama tampilan harus berisi 1–60 karakter.", true);
     return;
   }
+
   $("saveProfileBtn").disabled = true;
+
   try {
     const { data, error } = await supabase
       .from("profiles")
@@ -511,7 +615,9 @@ $("saveProfileBtn").addEventListener("click", async () => {
       .eq("id", currentUser.id)
       .select("id, username, display_name")
       .single();
+
     if (error) throw error;
+
     currentProfile = data;
     $("myName").textContent = data.display_name;
     status("profileStatus", "Profil berhasil disimpan.");
@@ -525,19 +631,26 @@ $("saveProfileBtn").addEventListener("click", async () => {
 document.querySelectorAll(".game-more").forEach(button => {
   button.addEventListener("click", () => {
     showPage("gamesPage");
-    status("appStatus", "Kategori " + button.dataset.game + " masih berupa slot desain. Game belum tersedia untuk dimainkan.");
+    status(
+      "appStatus",
+      "Kategori " + button.dataset.game +
+      " masih berupa slot desain. Game belum tersedia untuk dimainkan."
+    );
   });
 });
 
-supabase.auth.onAuthStateChange((event) => {
+supabase.auth.onAuthStateChange(event => {
   if (event === "SIGNED_OUT") {
     currentUser = null;
     currentProfile = null;
+    activeChat = null;
     showAuth();
   }
 });
 
-const { data: initialSession, error: sessionError } = await supabase.auth.getSession();
+const { data: initialSession, error: sessionError } =
+  await supabase.auth.getSession();
+
 if (sessionError) {
   showAuth();
   status("authStatus", "Gagal memeriksa sesi: " + sessionError.message, true);
@@ -549,3 +662,4 @@ if (sessionError) {
 </script>
 </body>
 </html>
+```
