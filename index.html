@@ -1,74 +1,857 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10152b"><title>NEKORA Pendidikan</title>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10152b">
+<title>NEKORA Pendidikan</title>
 <style>
-:root{--bg:#0b1020;--panel:#141b30;--line:#293451;--text:#f4f6ff;--muted:#a8b2cc;--accent:#9b8cff;--good:#65ddb0;--bad:#ff9cae}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#24204b 0,transparent 40%),var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}header{max-width:1100px;margin:auto;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}header h1{margin:0;letter-spacing:3px}header small{color:var(--muted)}main{max-width:1100px;margin:auto;padding:0 16px 100px}.card{background:#141b30ee;border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0;min-width:0}h2,h3{margin:0 0 12px}h2{font-size:clamp(22px,4vw,32px)}p,.muted{color:var(--muted);line-height:1.55}label{display:block;color:#d6dcf1;font-size:13px;margin:10px 0 5px}input,select,textarea{width:100%;padding:12px;border-radius:11px;border:1px solid #34415f;background:#0b1122;color:var(--text);font:inherit;margin-bottom:8px}textarea{min-height:90px;resize:vertical}button{border:0;border-radius:11px;padding:11px 14px;background:var(--accent);color:#130f2c;font-weight:800;cursor:pointer}button.secondary{background:#252e49;color:var(--text);border:1px solid #3b496b}button.danger{background:#52293b;color:#ffe3eb}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.row>*{flex:1;min-width:120px}.hidden{display:none!important}.status{padding:10px 0;color:var(--accent);white-space:pre-wrap;overflow-wrap:anywhere}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.pill{display:inline-block;background:#292449;color:#d9d0ff;border:1px solid #4b407d;padding:4px 9px;border-radius:99px;font-size:11px}.item{padding:13px;border:1px solid var(--line);border-radius:13px;margin:9px 0;background:#10172a}.item h3{margin-bottom:5px}.item small{color:var(--muted)}.profile{display:flex;gap:14px;align-items:center}.avatar{width:70px;height:70px;border-radius:50%;object-fit:cover;background:#333b58;display:grid;place-items:center;font-size:24px;font-weight:900;flex-shrink:0}.nav{display:flex;gap:7px;overflow:auto;position:sticky;top:0;background:#0b1020ee;padding:10px 0;z-index:3}.nav button{white-space:nowrap}.question{padding:12px;border:1px solid var(--line);border-radius:12px;margin:10px 0}.question input{margin-top:7px}.filelink{overflow-wrap:anywhere}.right{margin-left:auto}@media(max-width:680px){.grid{grid-template-columns:1fr}header{padding:16px}main{padding:0 11px 95px}.card{padding:14px}.nav{bottom:0;top:auto;position:fixed;left:0;right:0;padding:8px;background:#10152bf5;border-top:1px solid var(--line);justify-content:flex-start}.nav button{padding:10px;font-size:12px}.profile .avatar{width:58px;height:58px}}
-</style></head><body>
-<header><div><h1>NEKORA</h1><small>RUANG BELAJAR PRIVAT · TUGAS · NILAI</small></div><button id="logout" class="secondary hidden">Keluar</button></header><main>
-<section id="auth" class="card"><h2>Masuk atau daftar</h2><p>Daftar akun siswa atau ajukan akun guru/staf. Jabatan khusus baru aktif setelah diverifikasi oleh pengelola sekolah.</p><label>Nama lengkap</label><input id="name" maxlength="100" placeholder="Nama lengkap"><label>Email</label><input id="email" type="email" autocomplete="email" placeholder="nama@email.com"><label>Password (minimal 8 karakter)</label><input id="password" type="password" minlength="8" autocomplete="current-password"><label>Jenis akun yang diajukan</label><select id="requested"><option value="student">Siswa</option><option value="teacher">Guru mata pelajaran</option><option value="homeroom">Wali kelas</option><option value="moderator">Moderator</option><option value="principal">Kepala sekolah</option></select><div class="row"><button id="signup">Daftar</button><button id="login" class="secondary">Masuk</button></div><div id="authStatus" class="status"></div></section>
-<section id="app" class="hidden"><nav class="nav"><button data-tab="dashboard">Beranda</button><button data-tab="school">Sekolah & kelas</button><button data-tab="tasks">Tugas</button><button data-tab="grades">Daftar nilai</button><button data-tab="profile">Profil</button></nav><div id="globalStatus" class="status"></div>
-<section id="dashboard" class="tab"><div class="card"><div class="profile"><img id="avatar" class="avatar" alt="Foto profil" src="" onerror="this.style.display='none'"><div><h2 id="welcome">Profil NEKORA</h2><div id="roleline" class="muted"></div><span id="idcode" class="pill"></span></div></div><p id="verificationNote"></p></div><div class="grid"><div class="card"><h3>Ruangan saya</h3><div id="myClasses" class="muted">Belum ada kelas.</div></div><div class="card"><h3>Tugas terbaru</h3><div id="recentTasks" class="muted">Belum ada tugas.</div></div></div></section>
-<section id="school" class="tab hidden"><div class="card"><h2>Sekolah</h2><label>Nama sekolah</label><input id="schoolName" placeholder="Nama sekolah"><label>Jenjang</label><select id="schoolLevel"><option>SD</option><option>SMP</option><option>SMA</option><option>SMK</option><option>Lainnya</option></select><button id="createSchool">Buat sekolah (khusus kepala sekolah terverifikasi)</button><div class="muted">Akun pertama kepala sekolah harus diverifikasi dahulu di SQL Supabase. Setelah sekolah dibuat, tambahkan anggota melalui pengelola sekolah.</div><div id="schoolsList"></div></div><div class="card"><h3>Buat kelas</h3><label>Sekolah</label><select id="classSchool"></select><div class="row"><div><label>Tingkat kelas</label><select id="grade"></select></div><div><label>Rombel</label><select id="section"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div></div><label>Wali kelas (opsional, UUID akun)</label><input id="homeroom" placeholder="ID akun guru, jika sudah ada"><button id="createClass">Buat kelas</button><div id="classesList"></div></div><div class="card"><h3>Gabung kelas dengan kode</h3><label>Kode kelas dari guru</label><input id="joinCode" placeholder="Contoh: A1B2C3D4" maxlength="12"><button id="joinClass">Minta bergabung</button><p class="muted">Permintaan siswa menunggu persetujuan guru. Kode kelas bukan pengganti persetujuan.</p></div></section>
-<section id="tasks" class="tab hidden"><div class="card" id="createTaskCard"><h2>Buat dan bagikan tugas</h2><label>Kelas</label><select id="taskClass"></select><label>Mata pelajaran</label><input id="subject" placeholder="Matematika, IPA, Bahasa Indonesia..."><label>Judul tugas</label><input id="taskTitle" placeholder="Latihan Bab 1"><label>Instruksi</label><textarea id="instructions" placeholder="Petunjuk pengerjaan"></textarea><label>File soal (PDF, DOCX, JPG, PNG, TXT; maks 20 MB)</label><input id="taskFile" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"><label>Soal terstruktur (JSON) untuk dijawab langsung</label><textarea id="questions" placeholder='Contoh: [{"question":"2 + 2 = ?","type":"text","points":10}]'></textarea><label>Kunci jawaban (JSON, urutan sama dengan soal; tidak ditampilkan ke siswa)</label><textarea id="keys" placeholder='Contoh: [{"answer":"4"}]'></textarea><label>Batas pengumpulan (opsional)</label><input id="due" type="datetime-local"><button id="publishTask">Terbitkan tugas</button><p class="muted">Soal pilihan ganda juga dapat ditulis sebagai JSON dengan options, sedangkan kunci jawaban disimpan di tabel privat terpisah.</p></div><div class="card"><h2>Tugas kelas</h2><div id="taskList">Pilih kelas yang kamu ikuti atau ajar.</div></div></section>
-<section id="grades" class="tab hidden"><div class="card"><h2>Daftar nilai</h2><p class="muted">Siswa hanya melihat nilai sendiri. Guru melihat pengumpulan dan nilai tugas pada kelas yang diajarnya.</p><div id="gradeList">Belum ada nilai.</div></div></section>
-<section id="profile" class="tab hidden"><div class="card"><h2>Profil rapi</h2><label>Nama lengkap</label><input id="profileName" maxlength="100"><label>URL foto profil (opsional)</label><input id="photoUrl" type="url" placeholder="https://..."><button id="saveProfile">Simpan profil</button><div id="profileDetails" class="item"></div><p class="muted">Nomor identitas resmi tidak diminta. ID NEKORA dibuat otomatis dan tidak dapat diganti dari profil.</p></div></section>
-</section></main>
+:root{--bg:#0b1020;--panel:#141b30;--line:#293451;--text:#f4f6ff;--muted:#a8b2cc;--accent:#9b8cff;--good:#65ddb0;--bad:#ff9cae}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#24204b 0,transparent 40%),var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{max-width:1100px;margin:auto;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header h1{margin:0;letter-spacing:3px}
+header small{color:var(--muted)}
+main{max-width:1100px;margin:auto;padding:0 16px 100px}
+.card{background:#141b30ee;border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0;min-width:0}
+h2,h3{margin:0 0 12px}
+h2{font-size:clamp(22px,4vw,32px)}
+p,.muted{color:var(--muted);line-height:1.55}
+label{display:block;color:#d6dcf1;font-size:13px;margin:10px 0 5px}
+input,select,textarea{width:100%;padding:12px;border-radius:11px;border:1px solid #34415f;background:#0b1122;color:var(--text);font:inherit;margin-bottom:8px}
+textarea{min-height:90px;resize:vertical}
+button{border:0;border-radius:11px;padding:11px 14px;background:var(--accent);color:#130f2c;font-weight:800;cursor:pointer}
+button:disabled{opacity:.5;cursor:wait}
+button.secondary{background:#252e49;color:var(--text);border:1px solid #3b496b}
+button.danger{background:#52293b;color:#ffe3eb}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.row>*{flex:1;min-width:120px}
+.hidden{display:none!important}
+.status{padding:10px 0;color:var(--accent);white-space:pre-wrap;overflow-wrap:anywhere}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pill{display:inline-block;background:#292449;color:#d9d0ff;border:1px solid #4b407d;padding:4px 9px;border-radius:99px;font-size:11px}
+.item{padding:13px;border:1px solid var(--line);border-radius:13px;margin:9px 0;background:#10172a}
+.item h3{margin-bottom:5px}
+.item small{color:var(--muted)}
+.profile{display:flex;gap:14px;align-items:center}
+.avatar{width:70px;height:70px;border-radius:50%;object-fit:cover;background:#333b58;display:grid;place-items:center;font-size:24px;font-weight:900;flex-shrink:0}
+.nav{display:flex;gap:7px;overflow:auto;position:sticky;top:0;background:#0b1020ee;padding:10px 0;z-index:3}
+.nav button{white-space:nowrap}
+.question{padding:12px;border:1px solid var(--line);border-radius:12px;margin:10px 0}
+.question input{margin-top:7px}
+.filelink{overflow-wrap:anywhere}
+.right{margin-left:auto}
+@media(max-width:680px){
+.grid{grid-template-columns:1fr}
+header{padding:16px}
+main{padding:0 11px 95px}
+.card{padding:14px}
+.nav{bottom:0;top:auto;position:fixed;left:0;right:0;padding:8px;background:#10152bf5;border-top:1px solid var(--line);justify-content:flex-start}
+.nav button{padding:10px;font-size:12px}
+.profile .avatar{width:58px;height:58px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>NEKORA</h1>
+    <small>RUANG BELAJAR PRIVAT · TUGAS · NILAI</small>
+  </div>
+  <button id="logout" class="secondary hidden">Keluar</button>
+</header>
+<main>
+<section id="auth" class="card">
+  <h2>Masuk atau daftar</h2>
+  <p>Daftar akun siswa atau ajukan akun guru/staf. Jabatan khusus baru aktif setelah diverifikasi oleh pengelola sekolah.</p>
+  <label>Nama lengkap</label>
+  <input id="name" maxlength="100" placeholder="Nama lengkap">
+  <label>Email</label>
+  <input id="email" type="email" autocomplete="email" placeholder="nama@email.com">
+  <label>Password (minimal 8 karakter)</label>
+  <input id="password" type="password" minlength="8" autocomplete="current-password">
+  <label>Jenis akun yang diajukan</label>
+  <select id="requested">
+    <option value="student">Siswa</option>
+    <option value="teacher">Guru mata pelajaran</option>
+    <option value="homeroom">Wali kelas</option>
+    <option value="moderator">Moderator</option>
+    <option value="principal">Kepala sekolah</option>
+  </select>
+  <div class="row">
+    <button id="signup">Daftar</button>
+    <button id="login" class="secondary">Masuk</button>
+  </div>
+  <div id="authStatus" class="status"></div>
+</section>
+
+<section id="app" class="hidden">
+<nav class="nav">
+  <button data-tab="dashboard">Beranda</button>
+  <button data-tab="school">Sekolah & kelas</button>
+  <button data-tab="tasks">Tugas</button>
+  <button data-tab="grades">Daftar nilai</button>
+  <button data-tab="profile">Profil</button>
+</nav>
+<div id="globalStatus" class="status"></div>
+
+<section id="dashboard" class="tab">
+  <div class="card">
+    <div class="profile">
+      <img id="avatar" class="avatar" alt="Foto profil" src="" onerror="this.style.display='none'">
+      <div>
+        <h2 id="welcome">Profil NEKORA</h2>
+        <div id="roleline" class="muted"></div>
+        <span id="idcode" class="pill"></span>
+      </div>
+    </div>
+    <p id="verificationNote"></p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Ruangan saya</h3>
+      <div id="myClasses" class="muted">Belum ada kelas.</div>
+    </div>
+    <div class="card">
+      <h3>Tugas terbaru</h3>
+      <div id="recentTasks" class="muted">Belum ada tugas.</div>
+    </div>
+  </div>
+</section>
+
+<section id="school" class="tab hidden">
+  <div class="card">
+    <h2>Sekolah</h2>
+    <label>Nama sekolah</label>
+    <input id="schoolName" placeholder="Nama sekolah">
+    <label>Jenjang</label>
+    <select id="schoolLevel">
+      <option>SD</option><option>SMP</option><option>SMA</option><option>SMK</option><option>Lainnya</option>
+    </select>
+    <button id="createSchool">Buat sekolah (khusus kepala sekolah terverifikasi)</button>
+    <div class="muted">Akun pertama kepala sekolah harus diverifikasi dahulu di SQL Supabase. Setelah sekolah dibuat, tambahkan anggota melalui pengelola sekolah.</div>
+    <div id="schoolsList"></div>
+  </div>
+
+  <div class="card">
+    <h3>Buat kelas</h3>
+    <label>Sekolah</label>
+    <select id="classSchool"></select>
+    <div class="row">
+      <div>
+        <label>Tingkat kelas</label>
+        <select id="grade"></select>
+      </div>
+      <div>
+        <label>Rombel</label>
+        <select id="section">
+          <option>A</option><option>B</option><option>C</option><option>D</option>
+          <option>E</option><option>F</option><option>G</option><option>H</option>
+        </select>
+      </div>
+    </div>
+    <label>Wali kelas (opsional, UUID akun)</label>
+    <input id="homeroom" placeholder="ID akun guru, jika sudah ada">
+    <button id="createClass">Buat kelas</button>
+    <div id="classesList"></div>
+  </div>
+
+  <div class="card">
+    <h3>Gabung kelas dengan kode</h3>
+    <label>Kode kelas dari guru</label>
+    <input id="joinCode" placeholder="Contoh: A1B2C3D4" maxlength="12">
+    <button id="joinClass">Minta bergabung</button>
+    <p class="muted">Permintaan siswa menunggu persetujuan guru. Kode kelas bukan pengganti persetujuan.</p>
+  </div>
+</section>
+
+<section id="tasks" class="tab hidden">
+  <div class="card" id="createTaskCard">
+    <h2>Buat dan bagikan tugas</h2>
+    <label>Kelas</label>
+    <select id="taskClass"></select>
+    <label>Mata pelajaran</label>
+    <input id="subject" placeholder="Matematika, IPA, Bahasa Indonesia...">
+    <label>Judul tugas</label>
+    <input id="taskTitle" placeholder="Latihan Bab 1">
+    <label>Instruksi</label>
+    <textarea id="instructions" placeholder="Petunjuk pengerjaan"></textarea>
+    <label>File soal (PDF, DOCX, JPG, PNG, TXT; maks 20 MB)</label>
+    <input id="taskFile" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt">
+    <label>Soal terstruktur (JSON) untuk dijawab langsung</label>
+    <textarea id="questions" placeholder='Contoh: [{"question":"2 + 2 = ?","type":"text","points":10}]'></textarea>
+    <label>Kunci jawaban (JSON, urutan sama dengan soal; tidak ditampilkan ke siswa)</label>
+    <textarea id="keys" placeholder='Contoh: [{"answer":"4"}]'></textarea>
+    <label>Batas pengumpulan (opsional)</label>
+    <input id="due" type="datetime-local">
+    <button id="publishTask">Terbitkan tugas</button>
+    <p class="muted">Soal pilihan ganda juga dapat ditulis sebagai JSON dengan options, sedangkan kunci jawaban disimpan di tabel privat terpisah.</p>
+  </div>
+  <div class="card">
+    <h2>Tugas kelas</h2>
+    <div id="taskList">Pilih kelas yang kamu ikuti atau ajar.</div>
+  </div>
+</section>
+
+<section id="grades" class="tab hidden">
+  <div class="card">
+    <h2>Daftar nilai</h2>
+    <p class="muted">Siswa hanya melihat nilai sendiri. Guru melihat pengumpulan dan nilai tugas pada kelas yang diajarnya.</p>
+    <div id="gradeList">Belum ada nilai.</div>
+  </div>
+</section>
+
+<section id="profile" class="tab hidden">
+  <div class="card">
+    <h2>Profil rapi</h2>
+    <label>Nama lengkap</label>
+    <input id="profileName" maxlength="100">
+    <label>URL foto profil (opsional)</label>
+    <input id="photoUrl" type="url" placeholder="https://...">
+    <button id="saveProfile">Simpan profil</button>
+    <div id="profileDetails" class="item"></div>
+    <p class="muted">Nomor identitas resmi tidak diminta. ID NEKORA dibuat otomatis dan tidak dapat diganti dari profil.</p>
+  </div>
+</section>
+</section>
+</main>
+
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
 const SUPABASE_URL='https://ibtjoqellbexcsspncqc.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_OkE0tiMSLNfxnkNf5XnmKQ__hMk0AWv';
 const supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-const $=id=>document.getElementById(id);let user=null,profile=null,classes=[],assignments=[];
-function msg(id,text,error=false){$(id).textContent=text;$(id).style.color=error?'var(--bad)':'var(--accent)'}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function tab(id){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('hidden',x.id!==id));document.querySelectorAll('[data-tab]').forEach(b=>b.style.opacity=b.dataset.tab===id?'1':'.72');if(id==='tasks')loadTasks();if(id==='grades')loadGrades()}
+
+const $=id=>document.getElementById(id);
+let user=null,profile=null,classes=[],assignments=[];
+
+function msg(id,text,error=false){
+  $(id).textContent=text;
+  $(id).style.color=error?'var(--bad)':'var(--accent)';
+}
+
+function esc(s){
+  return String(s??'').replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+function tab(id){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('hidden',x.id!==id));
+  document.querySelectorAll('[data-tab]').forEach(b=>b.style.opacity=b.dataset.tab===id?'1':'.72');
+  if(id==='tasks')loadTasks();
+  if(id==='grades')loadGrades();
+}
+
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
-async function refreshProfile(){const {data,error}=await supabase.from('edu_profiles').select('*').eq('id',user.id).single();if(error)throw error;profile=data;renderProfile()}
-function renderProfile(){ $('welcome').textContent=profile.display_name||'Pengguna NEKORA';$('roleline').textContent=(profile.requested_role||'student').toUpperCase()+(profile.verified?' · TERVERIFIKASI':' · MENUNGGU VERIFIKASI');$('idcode').textContent=profile.id_code||'ID sedang disiapkan';$('verificationNote').textContent=profile.verified?'Status akun sudah diverifikasi. Akses tetap mengikuti keanggotaan kelas.':'Akun aktif, tetapi jabatan guru/staf belum terverifikasi. Akses khusus belum aktif.';$('profileName').value=profile.display_name||'';$('photoUrl').value=profile.photo_url||'';$('profileDetails').textContent=`ID: ${profile.id_code||'-'} | Jenis akun: ${profile.account_type} | Peran diajukan: ${profile.requested_role} | Verifikasi: ${profile.verified?'Ya':'Belum'}`;if(profile.photo_url){$('avatar').style.display='block';$('avatar').src=profile.photo_url}else{$('avatar').style.display='none'}}
 
-async function enterApp(u) {
-  user = u;
+async function refreshProfile(){
+  const {data,error}=await supabase.from('edu_profiles').select('*').eq('id',user.id).single();
+  if(error)throw error;
+  profile=data;
+  renderProfile();
+}
 
-  // Tampilkan aplikasi agar error tidak tersembunyi.
+function renderProfile(){
+  $('welcome').textContent=profile.display_name||'Pengguna NEKORA';
+  $('roleline').textContent=(profile.requested_role||'student').toUpperCase()+(profile.verified?' · TERVERIFIKASI':' · MENUNGGU VERIFIKASI');
+  $('idcode').textContent=profile.id_code||'ID sedang disiapkan';
+  $('verificationNote').textContent=profile.verified?'Status akun sudah diverifikasi. Akses tetap mengikuti keanggotaan kelas.':'Akun aktif, tetapi jabatan guru/staf belum terverifikasi. Akses khusus belum aktif.';
+  $('profileName').value=profile.display_name||'';
+  $('photoUrl').value=profile.photo_url||'';
+  $('profileDetails').textContent=`ID: ${profile.id_code||'-'} | Jenis akun: ${profile.account_type} | Peran diajukan: ${profile.requested_role} | Verifikasi: ${profile.verified?'Ya':'Belum'}`;
+  if(profile.photo_url){
+    $('avatar').style.display='block';
+    $('avatar').src=profile.photo_url;
+  }else{
+    $('avatar').style.display='none';
+  }
+}
+
+async function enterApp(u){
+  user=u;
   $('auth').classList.add('hidden');
   $('app').classList.remove('hidden');
   $('logout').classList.remove('hidden');
-  msg('globalStatus', 'Memuat profil NEKORA...');
+  msg('globalStatus','Memuat profil NEKORA...');
 
-  try {
-    const timeout = (promise, ms = 15000) =>
-      Promise.race([
-        promise,
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error(
-            'Permintaan terlalu lama. Periksa koneksi dan konfigurasi Supabase.'
-          )), ms)
-        )
-      ]);
+  const withTimeout=(promise,ms=15000)=>Promise.race([
+    promise,
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error('Permintaan terlalu lama. Periksa koneksi dan konfigurasi Supabase.')),ms))
+  ]);
 
-    await timeout(refreshProfile());
+  try{
+    await withTimeout(refreshProfile());
+    msg('globalStatus','Profil berhasil dimuat.');
+    await withTimeout(loadSchoolsAndClasses());
+    await withTimeout(loadTasks());
+  }catch(e){
+    msg('globalStatus','Gagal memuat akun: '+(e?.message||e),true);
+    msg('authStatus','Sesi login ada, tetapi data akun gagal dimuat: '+(e?.message||e),true);
+  }
+}
 
-    msg('globalStatus', 'Profil berhasil dimuat.');
+$('signup').onclick=async()=>{
+  const name=$('name').value.trim();
+  const email=$('email').value.trim();
+  const password=$('password').value;
+  const requested_role=$('requested').value;
+
+  if(!name||!email||password.length<8){
+    msg('authStatus','Isi nama, email, dan password minimal 8 karakter.',true);
+    return;
+  }
+
+  const btn=$('signup');
+  btn.disabled=true;
+
+  try{
+    msg('authStatus','Mendaftarkan akun...');
+    const {data,error}=await supabase.auth.signUp({
+      email,
+      password,
+      options:{data:{display_name:name,requested_role}}
+    });
+
+    if(error)throw error;
+
+    if(data.session&&data.user){
+      await enterApp(data.user);
+    }else{
+      msg('authStatus','Akun dibuat. Buka email untuk konfirmasi, lalu login. Jika konfirmasi email aktif, sesi baru tersedia setelah konfirmasi.');
+    }
+  }catch(e){
+    msg('authStatus','Pendaftaran gagal: '+e.message,true);
+  }finally{
+    btn.disabled=false;
+  }
+};
+
+$('login').onclick=async()=>{
+  const email=$('email').value.trim();
+  const password=$('password').value;
+
+  if(!email||!password){
+    msg('authStatus','Isi email dan password terlebih dahulu.',true);
+    return;
+  }
+
+  const btn=$('login');
+  btn.disabled=true;
+
+  const timer=setTimeout(()=>{
+    msg('authStatus','Server belum merespons. Periksa koneksi atau URL/anon key Supabase lalu coba lagi.',true);
+  },15000);
+
+  try{
+    msg('authStatus','Sedang masuk...');
+
+    const result=await Promise.race([
+      supabase.auth.signInWithPassword({email,password}),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('Login melewati batas waktu 20 detik. Periksa koneksi dan konfigurasi Supabase.')),20000))
+    ]);
+
+    if(result.error)throw result.error;
+    if(!result.data?.user)throw new Error('Supabase tidak mengembalikan data pengguna.');
+
+    clearTimeout(timer);
+    msg('authStatus','Login berhasil. Memuat profil...');
+    await enterApp(result.data.user);
+  }catch(e){
+    msg('authStatus','Login gagal: '+(e?.message||e),true);
+  }finally{
+    clearTimeout(timer);
+    btn.disabled=false;
+  }
+};
+
+$('logout').onclick=async()=>{
+  try{
+    const {error}=await supabase.auth.signOut();
+    if(error)throw error;
+    user=null;
+    profile=null;
+    classes=[];
+    assignments=[];
+    $('app').classList.add('hidden');
+    $('auth').classList.remove('hidden');
+    $('logout').classList.add('hidden');
+    msg('authStatus','Kamu sudah keluar.');
+  }catch(e){
+    msg('globalStatus','Gagal keluar: '+e.message,true);
+  }
+};
+
+async function loadSchoolsAndClasses(){
+  const {data:mem,error}=await supabase.from('edu_school_members')
+    .select('school_id,role,approved,edu_schools(id,name,level)')
+    .eq('user_id',user.id);
+
+  if(error)throw error;
+
+  const schools=(mem||[])
+    .filter(m=>m.approved&&m.edu_schools)
+    .map(m=>m.edu_schools);
+
+  $('schoolsList').innerHTML=schools.length
+    ?schools.map(s=>`<div class="item">${esc(s.name)} <small>· ${esc(s.level)}</small></div>`).join('')
+    :'<p class="muted">Belum ada sekolah terhubung.</p>';
+
+  $('classSchool').innerHTML=schools.map(s=>
+    `<option value="${s.id}">${esc(s.name)}</option>`
+  ).join('');
+
+  const {data:cm,error:ce}=await supabase.from('edu_class_members')
+    .select('class_id,role,subject,approved,edu_classes(id,school_id,grade,section,join_code,edu_schools(name))')
+    .eq('user_id',user.id);
+
+  if(ce)throw ce;
+
+  classes=(cm||[])
+    .filter(m=>m.approved&&m.edu_classes)
+    .map(m=>({...m.edu_classes,my_role:m.role,subject:m.subject}));
+
+  $('myClasses').innerHTML=classes.length
+    ?classes.map(c=>`<div class="item"><b>${esc(c.grade+c.section)}</b> · ${esc(c.edu_schools?.name||'Sekolah')}<br><small>${esc(c.my_role)}${c.subject?' · '+esc(c.subject):''}</small></div>`).join('')
+    :'Belum ada kelas disetujui.';
+
+  $('taskClass').innerHTML=classes.map(c=>
+    `<option value="${c.id}">${esc(c.grade+c.section)} — ${esc(c.edu_schools?.name||'Sekolah')}</option>`
+  ).join('');
+
+  const gradeSel=$('grade');
+  gradeSel.innerHTML='';
+
+  for(let i=1;i<=12;i++){
+    const o=document.createElement('option');
+    o.value=i;
+    o.textContent=i;
+    gradeSel.append(o);
+  }
+
+  $('classesList').innerHTML='';
+  const ownSchoolClasses=[];
+
+  for(const s of schools){
+    const {data,error:classError}=await supabase.from('edu_classes')
+      .select('id,grade,section,join_code')
+      .eq('school_id',s.id)
+      .order('grade')
+      .order('section');
+
+    if(classError)throw classError;
+
+    for(const c of data||[]){
+      ownSchoolClasses.push({...c,school:s.name});
+    }
+  }
+
+  $('classesList').innerHTML=ownSchoolClasses.map(c=>
+    `<div class="item"><b>${esc(c.grade+c.section)}</b> · ${esc(c.school)}<br>Kode: <strong>${esc(c.join_code)}</strong></div>`
+  ).join('');
+
+  const classIds=classes.map(c=>c.id);
+
+  if(classIds.length){
+    const {data:pending,error:pendingError}=await supabase.from('edu_class_members')
+      .select('id,user_id,class_id,edu_profiles(display_name,id_code),edu_classes(grade,section)')
+      .eq('approved',false)
+      .in('class_id',classIds);
+
+    if(pendingError)throw pendingError;
+
+    if(pending?.length){
+      $('classesList').insertAdjacentHTML('beforeend',
+        '<h3>Permintaan siswa</h3>'+
+        pending.map(m=>`<div class="item">${esc(m.edu_profiles?.display_name||'Siswa')} · ${esc(m.edu_profiles?.id_code||'')} — kelas ${esc(String(m.edu_classes?.grade||'')+String(m.edu_classes?.section||''))}<br><button data-approve-member="${m.id}">Setujui siswa</button></div>`).join('')
+      );
+
+      document.querySelectorAll('[data-approve-member]').forEach(b=>{
+        b.onclick=async()=>{
+          const {error:ae}=await supabase.from('edu_class_members')
+            .update({approved:true})
+            .eq('id',b.dataset.approveMember);
+
+          if(ae){
+            msg('globalStatus','Gagal menyetujui: '+ae.message,true);
+          }else{
+            msg('globalStatus','Siswa disetujui masuk kelas.');
+            await loadSchoolsAndClasses();
+          }
+        };
+      });
+    }
+  }
+}
+
+$('createSchool').onclick=async()=>{
+  try{
+    const name=$('schoolName').value.trim();
+    const level=$('schoolLevel').value;
+    if(!name)throw Error('Isi nama sekolah.');
+
+    const {data,error}=await supabase.from('edu_schools')
+      .insert({name,level,created_by:user.id})
+      .select()
+      .single();
+
+    if(error)throw error;
+
+    msg('globalStatus','Sekolah dibuat. Akun pembuat otomatis menjadi kepala sekolah.');
     await loadSchoolsAndClasses();
+  }catch(e){
+    msg('globalStatus','Gagal membuat sekolah: '+e.message+' Pastikan akun kepala sekolah sudah diverifikasi.',true);
+  }
+};
+
+$('createClass').onclick=async()=>{
+  try{
+    const school_id=$('classSchool').value;
+    const grade=Number($('grade').value);
+    const section=$('section').value;
+    const homeroom_teacher=$('homeroom').value.trim()||null;
+
+    if(!school_id)throw Error('Pilih sekolah yang sudah disetujui.');
+
+    const {data,error}=await supabase.from('edu_classes')
+      .insert({school_id,grade,section,created_by:user.id,homeroom_teacher})
+      .select()
+      .single();
+
+    if(error)throw error;
+
+    msg('globalStatus',`Kelas dibuat. Kode bergabung: ${data.join_code}`);
+    await loadSchoolsAndClasses();
+  }catch(e){
+    msg('globalStatus','Gagal membuat kelas: '+e.message,true);
+  }
+};
+
+$('joinClass').onclick=async()=>{
+  try{
+    const code=$('joinCode').value.trim().toUpperCase();
+    if(!code)throw Error('Masukkan kode kelas.');
+
+    const {data:c,error}=await supabase.rpc('edu_request_join',{p_code:code});
+    if(error)throw error;
+
+    msg('globalStatus','Permintaan bergabung terkirim. Guru perlu menyetujuinya.');
+  }catch(e){
+    msg('globalStatus','Gagal meminta bergabung: '+e.message,true);
+  }
+};
+
+$('publishTask').onclick=async()=>{
+  try{
+    const class_id=$('taskClass').value;
+    const subject=$('subject').value.trim();
+    const title=$('taskTitle').value.trim();
+    const instructions=$('instructions').value.trim();
+
+    if(!class_id||!subject||!title){
+      throw Error('Pilih kelas dan isi mata pelajaran serta judul tugas.');
+    }
+
+    let questions=[];
+    let keys=[];
+
+    try{
+      questions=$('questions').value.trim()?JSON.parse($('questions').value):[];
+      keys=$('keys').value.trim()?JSON.parse($('keys').value):[];
+    }catch{
+      throw Error('Format soal/kunci harus JSON yang valid.');
+    }
+
+    if(!Array.isArray(questions)||!Array.isArray(keys)){
+      throw Error('Soal dan kunci jawaban harus berupa array JSON.');
+    }
+
+    if(questions.length!==keys.length&&keys.length){
+      throw Error('Jumlah kunci jawaban harus sama dengan jumlah soal.');
+    }
+
+    let attachment_path=null;
+    const file=$('taskFile').files[0];
+
+    if(file){
+      if(file.size>20*1024*1024)throw Error('Ukuran file maksimal 20 MB.');
+
+      const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+      attachment_path=`${user.id}/${crypto.randomUUID()}-${safe}`;
+
+      const {error:up}=await supabase.storage.from('nekora-files')
+        .upload(attachment_path,file,{
+          upsert:false,
+          contentType:file.type||'application/octet-stream'
+        });
+
+      if(up)throw up;
+    }
+
+    const {data:a,error}=await supabase.from('edu_assignments').insert({
+      class_id,
+      teacher_id:user.id,
+      subject,
+      title,
+      instructions,
+      attachment_path,
+      questions,
+      due_at:$('due').value?new Date($('due').value).toISOString():null,
+      published:true
+    }).select().single();
+
+    if(error)throw error;
+
+    if(keys.length){
+      const {error:ke}=await supabase.from('edu_answer_keys')
+        .insert({assignment_id:a.id,teacher_id:user.id,answers:keys});
+      if(ke)throw ke;
+    }
+
+    msg('globalStatus','Tugas berhasil diterbitkan untuk kelas terpilih.');
+    $('taskTitle').value='';
+    $('instructions').value='';
+    $('questions').value='';
+    $('keys').value='';
+    $('taskFile').value='';
     await loadTasks();
-  } catch (e) {
-    msg('globalStatus', 'Gagal memuat akun: ' + e.message, true);
-    msg(
-      'authStatus',
-      'Akun berhasil masuk, tetapi profil belum berhasil dimuat: ' + e.message,
-      true
-    );
+  }catch(e){
+    msg('globalStatus','Gagal menerbitkan tugas: '+e.message,true);
   }
+};
+
+async function loadTasks(){
+  if(!user)return;
+
+  try{
+    const ids=classes.map(c=>c.id);
+
+    let q=supabase.from('edu_assignments')
+      .select('id,class_id,teacher_id,subject,title,instructions,attachment_path,questions,due_at,created_at')
+      .order('created_at',{ascending:false})
+      .limit(100);
+
+    if(ids.length)q=q.in('class_id',ids);
+    else q=q.eq('teacher_id',user.id);
+
+    const {data,error}=await q;
+    if(error)throw error;
+
+    assignments=data||[];
+
+    $('recentTasks').innerHTML=assignments.slice(0,4)
+      .map(a=>`<div class="item">${esc(a.title)}<br><small>${esc(a.subject)}</small></div>`)
+      .join('')||'Belum ada tugas.';
+
+    $('taskList').innerHTML=assignments.map(a=>`
+      <article class="item">
+        <h3>${esc(a.title)}</h3>
+        <small>${esc(a.subject)} · ${new Date(a.created_at).toLocaleDateString('id-ID')}</small>
+        <p>${esc(a.instructions||'Tidak ada instruksi tambahan.')}</p>
+        ${a.attachment_path?`<button class="secondary" data-file="${esc(a.id)}">Buka file soal</button>`:''}
+        ${a.questions?.length?a.questions.map((q,i)=>`
+          <div class="question">
+            <b>${i+1}. ${esc(q.question)}</b>
+            <small>(${Number(q.points)||0} poin)</small>
+            ${q.options?.length?q.options.map(opt=>`
+              <label><input type="radio" name="ans-${a.id}-${i}" value="${esc(opt)}" style="width:auto"> ${esc(opt)}</label>
+            `).join(''):''}
+            <input data-answer="${a.id}" data-index="${i}" placeholder="Jawaban soal ${i+1}">
+          </div>
+        `).join(''):`<p class="muted">Tugas menggunakan lampiran/lembar jawaban.</p><textarea id="free-${a.id}" placeholder="Tulis jawaban di sini jika diminta guru"></textarea>`}
+        <button data-submit="${a.id}">Kumpulkan jawaban</button>
+        <div id="taskstatus-${a.id}" class="status"></div>
+      </article>
+    `).join('')||'<p class="muted">Belum ada tugas untuk kelasmu. Gabung kelas dengan kode dari guru.</p>';
+
+    document.querySelectorAll('[data-submit]').forEach(b=>{
+      b.onclick=()=>submitAssignment(b.dataset.submit);
+    });
+
+    document.querySelectorAll('[data-file]').forEach(b=>{
+      b.onclick=()=>openFile(b.dataset.file);
+    });
+  }catch(e){
+    $('taskList').textContent='Gagal memuat tugas: '+e.message;
   }
-  async function loadSchoolsAndClasses(){const {data:mem,error}=await supabase.from('edu_school_members').select('school_id,role,approved,edu_schools(id,name,level)').eq('user_id',user.id);if(error)throw error;const schools=(mem||[]).filter(m=>m.approved&&m.edu_schools).map(m=>m.edu_schools);$('schoolsList').innerHTML=schools.length?schools.map(s=>`<div class="item">${esc(s.name)} <small>· ${esc(s.level)}</small></div>`).join(''):'<p class="muted">Belum ada sekolah terhubung.</p>';$('classSchool').innerHTML=schools.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');const {data:cm,error:ce}=await supabase.from('edu_class_members').select('class_id,role,subject,approved,edu_classes(id,school_id,grade,section,join_code,edu_schools(name))').eq('user_id',user.id);if(ce)throw ce;classes=(cm||[]).filter(m=>m.approved&&m.edu_classes).map(m=>({...m.edu_classes,my_role:m.role,subject:m.subject}));$('myClasses').innerHTML=classes.length?classes.map(c=>`<div class="item"><b>${esc(c.grade+c.section)}</b> · ${esc(c.edu_schools?.name||'Sekolah')}<br><small>${esc(c.my_role)}${c.subject?' · '+esc(c.subject):''}</small></div>`).join(''):'Belum ada kelas disetujui.';$('taskClass').innerHTML=classes.map(c=>`<option value="${c.id}">${esc(c.grade+c.section)} — ${esc(c.edu_schools?.name||'Sekolah')}</option>`).join('');const gradeSel=$('grade');gradeSel.innerHTML='';const max=schools.some(s=>s.level==='SD')?6:12;for(let i=1;i<=12;i++){const o=document.createElement('option');o.value=i;o.textContent=i;gradeSel.append(o)}$('classesList').innerHTML='';const ownSchoolClasses=[];for(const s of schools){const {data}=await supabase.from('edu_classes').select('id,grade,section,join_code').eq('school_id',s.id).order('grade').order('section');for(const c of data||[])ownSchoolClasses.push({...c,school:s.name})}$('classesList').innerHTML=ownSchoolClasses.map(c=>`<div class="item"><b>${esc(c.grade+c.section)}</b> · ${esc(c.school)}<br>Kode: <strong>${esc(c.join_code)}</strong></div>`).join('');const classIds=classes.map(c=>c.id);if(classIds.length){const {data:pending}=await supabase.from('edu_class_members').select('id,user_id,class_id,edu_profiles(display_name,id_code),edu_classes(grade,section)').eq('approved',false).in('class_id',classIds);if(pending?.length){$('classesList').insertAdjacentHTML('beforeend','<h3>Permintaan siswa</h3>'+pending.map(m=>`<div class="item">${esc(m.edu_profiles?.display_name||'Siswa')} · ${esc(m.edu_profiles?.id_code||'')} — kelas ${esc(String(m.edu_classes?.grade||'')+String(m.edu_classes?.section||''))}<br><button data-approve-member="${m.id}">Setujui siswa</button></div>`).join(''));document.querySelectorAll('[data-approve-member]').forEach(b=>b.onclick=async()=>{const {error:ae}=await supabase.from('edu_class_members').update({approved:true}).eq('id',b.dataset.approveMember);if(ae)msg('globalStatus','Gagal menyetujui: '+ae.message,true);else{msg('globalStatus','Siswa disetujui masuk kelas.');await loadSchoolsAndClasses()}})}}}
-$('createSchool').onclick=async()=>{try{const name=$('schoolName').value.trim(),level=$('schoolLevel').value;if(!name)throw Error('Isi nama sekolah.');const {data,error}=await supabase.from('edu_schools').insert({name,level,created_by:user.id}).select().single();if(error)throw error;msg('globalStatus','Sekolah dibuat. Akun pembuat otomatis menjadi kepala sekolah.');await loadSchoolsAndClasses()}catch(e){msg('globalStatus','Gagal membuat sekolah: '+e.message+' Pastikan akun kepala sekolah sudah diverifikasi.',true)}};
-$('createClass').onclick=async()=>{try{const school_id=$('classSchool').value,grade=Number($('grade').value),section=$('section').value,homeroom_teacher=$('homeroom').value.trim()||null;if(!school_id)throw Error('Pilih sekolah yang sudah disetujui.');const {data,error}=await supabase.from('edu_classes').insert({school_id,grade,section,created_by:user.id,homeroom_teacher}).select().single();if(error)throw error;msg('globalStatus',`Kelas dibuat. Kode bergabung: ${data.join_code}`);await loadSchoolsAndClasses()}catch(e){msg('globalStatus','Gagal membuat kelas: '+e.message,true)}};
-$('joinClass').onclick=async()=>{try{const code=$('joinCode').value.trim().toUpperCase();if(!code)throw Error('Masukkan kode kelas.');const {data:c,error}=await supabase.rpc('edu_request_join',{p_code:code});if(error)throw error;msg('globalStatus','Permintaan bergabung terkirim. Guru perlu menyetujuinya.')}catch(e){msg('globalStatus','Gagal meminta bergabung: '+e.message,true)}};
-$('publishTask').onclick=async()=>{try{const class_id=$('taskClass').value,subject=$('subject').value.trim(),title=$('taskTitle').value.trim(),instructions=$('instructions').value.trim();if(!class_id||!subject||!title)throw Error('Pilih kelas dan isi mata pelajaran serta judul tugas.');let questions=[];let keys=[];try{questions=$('questions').value.trim()?JSON.parse($('questions').value):[];keys=$('keys').value.trim()?JSON.parse($('keys').value):[]}catch{throw Error('Format soal/kunci harus JSON yang valid.')}if(!Array.isArray(questions)||!Array.isArray(keys))throw Error('Soal dan kunci jawaban harus berupa array JSON.');if(questions.length!==keys.length&&keys.length)throw Error('Jumlah kunci jawaban harus sama dengan jumlah soal.');let attachment_path=null;const file=$('taskFile').files[0];if(file){if(file.size>20*1024*1024)throw Error('Ukuran file maksimal 20 MB.');const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');attachment_path=`${user.id}/${crypto.randomUUID()}-${safe}`;const {error:up}=await supabase.storage.from('nekora-files').upload(attachment_path,file,{upsert:false,contentType:file.type||'application/octet-stream'});if(up)throw up}const {data:a,error}=await supabase.from('edu_assignments').insert({class_id,teacher_id:user.id,subject,title,instructions,attachment_path,questions,due_at:$('due').value?new Date($('due').value).toISOString():null,published:true}).select().single();if(error)throw error;if(keys.length){const {error:ke}=await supabase.from('edu_answer_keys').insert({assignment_id:a.id,teacher_id:user.id,answers:keys});if(ke)throw ke}msg('globalStatus','Tugas berhasil diterbitkan untuk kelas terpilih.');$('taskTitle').value='';$('instructions').value='';$('questions').value='';$('keys').value='';$('taskFile').value='';await loadTasks()}catch(e){msg('globalStatus','Gagal menerbitkan tugas: '+e.message,true)}};
-async function loadTasks(){if(!user)return;try{const ids=classes.map(c=>c.id);let q=supabase.from('edu_assignments').select('id,class_id,teacher_id,subject,title,instructions,attachment_path,questions,due_at,created_at').order('created_at',{ascending:false}).limit(100);if(ids.length)q=q.in('class_id',ids);else q=q.eq('teacher_id',user.id);const {data,error}=await q;if(error)throw error;assignments=data||[];$('recentTasks').innerHTML=assignments.slice(0,4).map(a=>`<div class="item">${esc(a.title)}<br><small>${esc(a.subject)}</small></div>`).join('')||'Belum ada tugas.';$('taskList').innerHTML=assignments.map(a=>`<article class="item"><h3>${esc(a.title)}</h3><small>${esc(a.subject)} · ${new Date(a.created_at).toLocaleDateString('id-ID')}</small><p>${esc(a.instructions||'Tidak ada instruksi tambahan.')}</p>${a.attachment_path?`<button class="secondary" data-file="${esc(a.id)}">Buka file soal</button>`:''}${a.questions?.length? a.questions.map((q,i)=>`<div class="question"><b>${i+1}. ${esc(q.question)}</b> <small>(${Number(q.points)||0} poin)</small>${q.options?.length?q.options.map(opt=>`<label><input type="radio" name="ans-${a.id}-${i}" value="${esc(opt)}" style="width:auto"> ${esc(opt)}</label>`).join(''):''}<input data-answer="${a.id}" data-index="${i}" placeholder="Jawaban soal ${i+1}"></div>`).join(''):`<p class="muted">Tugas menggunakan lampiran/lembar jawaban.</p><textarea id="free-${a.id}" placeholder="Tulis jawaban di sini jika diminta guru"></textarea>`}<button data-submit="${a.id}">Kumpulkan jawaban</button><div id="taskstatus-${a.id}" class="status"></div></article>`).join('')||'<p class="muted">Belum ada tugas untuk kelasmu. Gabung kelas dengan kode dari guru.</p>';document.querySelectorAll('[data-submit]').forEach(b=>b.onclick=()=>submitAssignment(b.dataset.submit));document.querySelectorAll('[data-file]').forEach(b=>b.onclick=()=>openFile(b.dataset.file))}catch(e){$('taskList').textContent='Gagal memuat tugas: '+e.message}}
-async function openFile(id){try{const a=assignments.find(x=>x.id===id);const {data,error}=await supabase.storage.from('nekora-files').createSignedUrl(a.attachment_path,300);if(error)throw error;window.open(data.signedUrl,'_blank','noopener')}catch(e){msg('globalStatus','File belum bisa dibuka: '+e.message,true)}}
-async function submitAssignment(id){try{const a=assignments.find(x=>x.id===id);let answers=[];if(a.questions?.length){answers=a.questions.map((q,i)=>{const radio=document.querySelector(`input[name="ans-${id}-${i}"]:checked`);const input=document.querySelector(`[data-answer="${id}"][data-index="${i}"]`);return {answer:radio?radio.value:(input?.value||'').trim()}})}else{answers=[{answer:$('free-'+id)?.value||''}]}const {data:sub,error}=await supabase.from('edu_submissions').upsert({assignment_id:id,student_id:user.id,answers},{onConflict:'assignment_id,student_id'}).select().single();if(error)throw error;if(a.questions?.length){const {data:grade,error:ge}=await supabase.rpc('edu_auto_grade',{p_submission:sub.id});if(ge)console.warn('Penilaian otomatis tidak tersedia:',ge.message);msg('taskstatus-'+id,grade!==null&&grade!==undefined?'Jawaban terkumpul. Nilai otomatis: '+grade:'Jawaban terkumpul. Menunggu koreksi guru.')}else msg('taskstatus-'+id,'Jawaban terkumpul. Menunggu koreksi guru.');await loadGrades()}catch(e){msg('taskstatus-'+id,'Gagal mengumpulkan: '+e.message,true)}}
-async function loadGrades(){if(!user)return;try{const {data:subs,error}=await supabase.from('edu_submissions').select('id,assignment_id,student_id,grade,feedback,submitted_at,edu_profiles(display_name,id_code),edu_assignments(title,subject,teacher_id,class_id)').order('submitted_at',{ascending:false}).limit(200);if(error)throw error;const rows=subs||[];$('gradeList').innerHTML=rows.length?rows.map(s=>`<div class="item"><b>${esc(s.edu_assignments?.title||'Tugas')}</b><br><small>${esc(s.edu_assignments?.subject||'')} · ${esc(s.edu_profiles?.display_name||'Siswa')} · ${esc(s.edu_profiles?.id_code||'')} · ${new Date(s.submitted_at).toLocaleDateString('id-ID')}</small><p>Nilai: <strong>${s.grade===null?'Belum dinilai':Number(s.grade).toLocaleString('id-ID')}</strong></p>${s.feedback?`<p>${esc(s.feedback)}</p>`:''}${s.student_id===user.id?'':`<button class="secondary" data-grade="${s.id}">Beri nilai</button>`}</div>`).join(''):'Belum ada pengumpulan/nilai.';document.querySelectorAll('[data-grade]').forEach(b=>b.onclick=async()=>{const val=prompt('Masukkan nilai 0–100:');if(val===null)return;const n=Number(val);if(!Number.isFinite(n)||n<0||n>100){msg('globalStatus','Nilai harus 0 sampai 100.',true);return}const feedback=prompt('Komentar guru (opsional):')||'';const {error:ge}=await supabase.from('edu_submissions').update({grade:n,feedback,graded_by:user.id,graded_at:new Date().toISOString()}).eq('id',b.dataset.grade);if(ge)msg('globalStatus','Gagal memberi nilai: '+ge.message,true);else{msg('globalStatus','Nilai disimpan.');loadGrades()}})}catch(e){$('gradeList').textContent='Gagal memuat nilai: '+e.message}}
-$('saveProfile').onclick=async()=>{try{const display_name=$('profileName').value.trim(),photo_url=$('photoUrl').value.trim()||null;if(!display_name)throw Error('Nama wajib diisi.');const {data,error}=await supabase.from('edu_profiles').update({display_name,photo_url}).eq('id',user.id).select().single();if(error)throw error;profile=data;renderProfile();msg('globalStatus','Profil disimpan.')}catch(e){msg('globalStatus','Gagal menyimpan profil: '+e.message,true)}};
-supabase.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){user=null;$('app').classList.add('hidden');$('auth').classList.remove('hidden')}});
-const {data:{session},error}=await supabase.auth.getSession();if(error)msg('authStatus',error.message,true);else if(session?.user)await enterApp(session.user);
-</script></body></html>
+}
+
+async function openFile(id){
+  try{
+    const a=assignments.find(x=>x.id===id);
+    if(!a?.attachment_path)throw Error('Lampiran tidak ditemukan.');
+
+    const {data,error}=await supabase.storage.from('nekora-files')
+      .createSignedUrl(a.attachment_path,300);
+
+    if(error)throw error;
+    window.open(data.signedUrl,'_blank','noopener');
+  }catch(e){
+    msg('globalStatus','File belum bisa dibuka: '+e.message,true);
+  }
+}
+
+async function submitAssignment(id){
+  try{
+    const a=assignments.find(x=>x.id===id);
+    if(!a)throw Error('Tugas tidak ditemukan.');
+
+    let answers=[];
+
+    if(a.questions?.length){
+      answers=a.questions.map((q,i)=>{
+        const radio=document.querySelector(`input[name="ans-${id}-${i}"]:checked`);
+        const input=document.querySelector(`[data-answer="${id}"][data-index="${i}"]`);
+        return {answer:radio?radio.value:(input?.value||'').trim()};
+      });
+    }else{
+      answers=[{answer:$('free-'+id)?.value||''}];
+    }
+
+    const {data:sub,error}=await supabase.from('edu_submissions')
+      .upsert({assignment_id:id,student_id:user.id,answers},{onConflict:'assignment_id,student_id'})
+      .select()
+      .single();
+
+    if(error)throw error;
+
+    if(a.questions?.length){
+      const {data:grade,error:ge}=await supabase.rpc('edu_auto_grade',{p_submission:sub.id});
+
+      if(ge)console.warn('Penilaian otomatis tidak tersedia:',ge.message);
+
+      msg('taskstatus-'+id,
+        grade!==null&&grade!==undefined
+          ?'Jawaban terkumpul. Nilai otomatis: '+grade
+          :'Jawaban terkumpul. Menunggu koreksi guru.'
+      );
+    }else{
+      msg('taskstatus-'+id,'Jawaban terkumpul. Menunggu koreksi guru.');
+    }
+
+    await loadGrades();
+  }catch(e){
+    msg('taskstatus-'+id,'Gagal mengumpulkan: '+e.message,true);
+  }
+}
+
+async function loadGrades(){
+  if(!user)return;
+
+  try{
+    const {data:subs,error}=await supabase.from('edu_submissions')
+      .select('id,assignment_id,student_id,grade,feedback,submitted_at,edu_profiles(display_name,id_code),edu_assignments(title,subject,teacher_id,class_id)')
+      .order('submitted_at',{ascending:false})
+      .limit(200);
+
+    if(error)throw error;
+
+    const rows=subs||[];
+
+    $('gradeList').innerHTML=rows.length?rows.map(s=>`
+      <div class="item">
+        <b>${esc(s.edu_assignments?.title||'Tugas')}</b><br>
+        <small>${esc(s.edu_assignments?.subject||'')} · ${esc(s.edu_profiles?.display_name||'Siswa')} · ${esc(s.edu_profiles?.id_code||'')} · ${new Date(s.submitted_at).toLocaleDateString('id-ID')}</small>
+        <p>Nilai: <strong>${s.grade===null?'Belum dinilai':Number(s.grade).toLocaleString('id-ID')}</strong></p>
+        ${s.feedback?`<p>${esc(s.feedback)}</p>`:''}
+        ${s.student_id===user.id?'':`<button class="secondary" data-grade="${s.id}">Beri nilai</button>`}
+      </div>
+    `).join(''):'Belum ada pengumpulan/nilai.';
+
+    document.querySelectorAll('[data-grade]').forEach(b=>{
+      b.onclick=async()=>{
+        const val=prompt('Masukkan nilai 0–100:');
+        if(val===null)return;
+
+        const n=Number(val);
+        if(!Number.isFinite(n)||n<0||n>100){
+          msg('globalStatus','Nilai harus 0 sampai 100.',true);
+          return;
+        }
+
+        const feedback=prompt('Komentar guru (opsional):')||'';
+
+        const {error:ge}=await supabase.from('edu_submissions')
+          .update({
+            grade:n,
+            feedback,
+            graded_by:user.id,
+            graded_at:new Date().toISOString()
+          })
+          .eq('id',b.dataset.grade);
+
+        if(ge){
+          msg('globalStatus','Gagal memberi nilai: '+ge.message,true);
+        }else{
+          msg('globalStatus','Nilai disimpan.');
+          loadGrades();
+        }
+      };
+    });
+  }catch(e){
+    $('gradeList').textContent='Gagal memuat nilai: '+e.message;
+  }
+}
+
+$('saveProfile').onclick=async()=>{
+  try{
+    const display_name=$('profileName').value.trim();
+    const photo_url=$('photoUrl').value.trim()||null;
+
+    if(!display_name)throw Error('Nama wajib diisi.');
+
+    const {data,error}=await supabase.from('edu_profiles')
+      .update({display_name,photo_url})
+      .eq('id',user.id)
+      .select()
+      .single();
+
+    if(error)throw error;
+
+    profile=data;
+    renderProfile();
+    msg('globalStatus','Profil disimpan.');
+  }catch(e){
+    msg('globalStatus','Gagal menyimpan profil: '+e.message,true);
+  }
+};
+
+supabase.auth.onAuthStateChange((event,session)=>{
+  if(event==='SIGNED_OUT'){
+    user=null;
+    profile=null;
+    classes=[];
+    assignments=[];
+    $('app').classList.add('hidden');
+    $('auth').classList.remove('hidden');
+    $('logout').classList.add('hidden');
+  }
+});
+
+(async()=>{
+  try{
+    msg('authStatus','Memeriksa sesi tersimpan...');
+
+    const result=await Promise.race([
+      supabase.auth.getSession(),
+      new Promise((_,reject)=>setTimeout(
+        ()=>reject(new Error('Pemeriksaan sesi terlalu lama. Muat ulang halaman dan periksa koneksi Supabase.')),
+        15000
+      ))
+    ]);
+
+    if(result.error)throw result.error;
+
+    if(result.data?.session?.user){
+      await enterApp(result.data.session.user);
+    }else{
+      msg('authStatus','Silakan masuk atau daftar.');
+    }
+  }catch(e){
+    msg('authStatus','Tidak dapat memeriksa sesi: '+(e?.message||e),true);
+  }
+})();
+</script>
+</body>
+</html>
