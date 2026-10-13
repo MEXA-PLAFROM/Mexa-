@@ -4,1066 +4,116 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#050b1b">
-<title>MEXA — Social Universe</title>
-
+<title>NEXORA Indonesia</title>
 <style>
-:root {
-  --bg:#050b1b;
-  --panel:#0a162c;
-  --panel2:#0e1d36;
-  --line:#1b3557;
-  --text:#f4f7ff;
-  --muted:#91a7c9;
-  --cyan:#27e4e5;
-  --purple:#9b62ff;
-  --pink:#ff4eaa;
-}
-* { box-sizing:border-box; }
-html { scroll-behavior:smooth; scroll-padding-top:85px; }
-body {
-  margin:0;
-  color:var(--text);
-  background:radial-gradient(ellipse at top,#192653,var(--bg) 55%);
-  font:14px Arial,sans-serif;
-}
-button,input,textarea { font:inherit; }
-button { cursor:pointer; }
-button:focus-visible,input:focus-visible,textarea:focus-visible {
-  outline:2px solid var(--cyan);
-}
-
-/* HEADER + LOGO NEON MEXA */
-.topbar {
-  height:68px;
-  position:sticky;
-  top:0;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:20px;
-  padding:0 22px;
-  background:#050b1bf5;
-  border-bottom:1px solid var(--line);
-  box-shadow:0 5px 25px #0003;
-}
-.brand {
-  width:110px;
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-}
-.brand-logo {
-  display:flex;
-  align-items:center;
-  gap:2px;
-  font-size:27px;
-  font-weight:900;
-  letter-spacing:1px;
-  color:#f4f7ff;
-  text-shadow:0 0 12px #27e4e566;
-}
-.brand-logo .x {
-  color:var(--cyan);
-  text-shadow:0 0 15px #27e4e5aa;
-}
-.logo-e {
-  width:17px;
-  height:23px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  padding:1px 0;
-}
-.logo-e i {
-  display:block;
-  height:5px;
-  width:17px;
-  border-radius:2px;
-  background:#f4f7ff;
-  box-shadow:0 0 7px #27e4e544;
-}
-.search { flex:1; max-width:620px; }
-.search input {
-  width:100%;
-  padding:12px 15px;
-  color:white;
-  background:var(--panel);
-  border:1px solid #3b3876;
-  border-radius:13px;
-}
-.search input:focus {
-  border-color:var(--cyan);
-  outline:none;
-  box-shadow:0 0 0 3px #27e4e51c;
-}
-.top-actions { margin-left:auto; display:flex; gap:9px; }
-.primary {
-  border:0;
-  padding:12px 16px;
-  border-radius:12px;
-  color:#061326;
-  font-weight:bold;
-  background:linear-gradient(110deg,var(--cyan),var(--purple));
-}
-.primary:hover { filter:brightness(1.1); }
-.icon-btn {
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:9px 12px;
-  color:white;
-  background:var(--panel);
-}
-
-/* LAYOUT */
-.layout {
-  max-width:1600px;
-  margin:auto;
-  padding:20px;
-  display:grid;
-  grid-template-columns:220px minmax(0,1fr) 270px;
-  gap:20px;
-}
-.sidebar,.rightbar {
-  position:sticky;
-  top:85px;
-  align-self:start;
-}
-.nav button {
-  width:100%;
-  padding:13px;
-  margin-bottom:5px;
-  text-align:left;
-  color:#c9d7ef;
-  background:transparent;
-  border:1px solid transparent;
-  border-radius:12px;
-}
-.nav button:hover,.nav button.active {
-  color:var(--cyan);
-  background:#0c2540;
-  border-color:#17506b;
-}
-.creator {
-  margin-top:25px;
-  padding:17px;
-  border:1px solid #55418c;
-  border-radius:16px;
-  background:linear-gradient(140deg,#172450,#241442);
-}
-.creator h3 { margin:0 0 8px; }
-.creator p { color:#bac8e4; font-size:12px; line-height:1.7; }
-
-.panel {
-  min-width:0;
-  margin-bottom:15px;
-  padding:16px;
-  border:1px solid var(--line);
-  border-radius:16px;
-  background:linear-gradient(145deg,var(--panel),#071126);
-}
-.muted { color:var(--muted); font-size:12px; }
-.section-title {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:13px;
-}
-.section-title h2 { font-size:15px; margin:0; }
-.link { border:0; background:none; color:var(--cyan); }
-
-/* CERITA LANGSUNG DI ATAS HOME */
-#stories { scroll-margin-top:85px; }
-.stories { display:flex; gap:13px; overflow:auto; }
-.story {
-  flex:0 0 67px;
-  text-align:center;
-  border:0;
-  background:none;
-  color:white;
-}
-.ring {
-  width:61px;
-  height:61px;
-  margin:0 auto 7px;
-  padding:3px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink));
-}
-.avatar {
-  width:100%;
-  height:100%;
-  display:grid;
-  place-items:center;
-  border:3px solid var(--panel);
-  border-radius:50%;
-  background:linear-gradient(135deg,#246b8a,#7549a7);
-  font-size:19px;
-  font-weight:bold;
-}
-.story-name { font-size:11px; }
-
-/* BUAT POSTINGAN */
-.compose-row { display:flex; align-items:center; gap:12px; }
-.user-avatar {
-  width:43px;
-  height:43px;
-  flex-shrink:0;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  color:#071329;
-  font-weight:bold;
-  background:linear-gradient(135deg,var(--cyan),var(--purple));
-}
-.compose-trigger {
-  flex:1;
-  padding:13px;
-  text-align:left;
-  color:var(--muted);
-  border:1px solid var(--line);
-  border-radius:13px;
-  background:#071126;
-}
-.tools { display:flex; gap:8px; flex-wrap:wrap; margin-top:13px; }
-.tool {
-  flex:1;
-  min-width:80px;
-  padding:10px 5px;
-  color:#d5e1f7;
-  border:1px solid transparent;
-  border-radius:10px;
-  background:transparent;
-}
-.tool:hover { background:var(--panel2); color:var(--cyan); }
-
-/* POSTINGAN */
-.post-head { display:flex; align-items:center; gap:10px; }
-.post-info { flex:1; min-width:0; }
-.post-info strong { display:block; }
-.post-info small { color:var(--muted); font-size:11px; }
-.more { border:0; background:none; color:white; font-size:22px; }
-.post-text {
-  line-height:1.7;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-}
-.post-media {
-  display:block;
-  width:100%;
-  max-height:420px;
-  object-fit:contain;
-  border-radius:12px;
-  background:#030816;
-}
-.post-actions {
-  display:flex;
-  gap:5px;
-  border-top:1px solid var(--line);
-  padding-top:9px;
-  margin-top:10px;
-}
-.post-action {
-  flex:1;
-  padding:9px 4px;
-  border:0;
-  border-radius:9px;
-  color:#a8bedf;
-  background:transparent;
-}
-.post-action:hover,.post-action.liked {
-  color:var(--cyan);
-  background:#102743;
-}
-
-/* REKOMENDASI TEMAN */
-.friend {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px 0;
-  border-bottom:1px solid #172b49;
-}
-.friend:last-child { border-bottom:0; }
-.small-avatar,.game-cover {
-  width:43px;
-  height:43px;
-  flex-shrink:0;
-  display:grid;
-  place-items:center;
-  border-radius:12px;
-  font-weight:bold;
-  background:linear-gradient(135deg,#2ddadd,#8d55ed);
-  color:#061326;
-}
-.friend-info,.game-info { flex:1; min-width:0; }
-.friend-info strong,.game-info strong { font-size:12px; }
-.friend-info small,.game-info small {
-  display:block;
-  margin-top:4px;
-  color:var(--muted);
-  font-size:10px;
-}
-.follow,.play {
-  padding:7px 10px;
-  border:1px solid var(--cyan);
-  border-radius:20px;
-  color:var(--cyan);
-  background:#07182b;
-  font-size:11px;
-  flex-shrink:0;
-}
-
-/* REKOMENDASI GAME */
-.game {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px 0;
-  border-bottom:1px solid #172b49;
-}
-.game:last-child { border-bottom:0; }
-.game-cover {
-  width:48px;
-  height:48px;
-  border-radius:13px;
-  font-size:22px;
-}
-.tag {
-  display:inline-block;
-  margin:4px 3px;
-  padding:8px 10px;
-  border:1px solid #25466b;
-  border-radius:20px;
-  color:#c5d7f1;
-  font-size:11px;
-}
-
-/* MODAL POSTINGAN */
-.modal {
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:30;
-  padding:18px;
-  align-items:center;
-  justify-content:center;
-  background:#020611d9;
-}
-.modal.open { display:flex; }
-.modal-box {
-  width:100%;
-  max-width:550px;
-  max-height:90vh;
-  overflow:auto;
-  padding:20px;
-  border:1px solid #31577d;
-  border-radius:18px;
-  background:#09162c;
-}
-.modal-head { display:flex; justify-content:space-between; align-items:center; }
-.modal-head h2 { font-size:18px; }
-.field {
-  display:block;
-  width:100%;
-  margin:12px 0;
-  padding:13px;
-  border:1px solid var(--line);
-  border-radius:12px;
-  color:white;
-  background:#050d1d;
-}
-textarea.field { min-height:130px; resize:vertical; }
-.preview { max-width:100%; max-height:250px; margin:8px 0; }
-#feedStatus { font-size:12px; color:var(--muted); line-height:1.6; }
-.mobile-nav { display:none; }
-.toast {
-  position:fixed;
-  z-index:50;
-  right:15px;
-  bottom:15px;
-  max-width:calc(100% - 30px);
-  padding:13px 16px;
-  border:1px solid #276582;
-  border-radius:12px;
-  color:white;
-  background:#102742;
-}
-
-/* RESPONSIVE */
-@media(max-width:1150px) {
-  .layout {
-    grid-template-columns:65px minmax(0,1fr) 245px;
-    gap:12px;
-    padding:13px;
-  }
-  .nav button { text-align:center; padding:13px 3px; font-size:18px; }
-  .nav button .label,.creator { display:none; }
-}
-@media(max-width:850px) {
-  .layout { grid-template-columns:60px minmax(0,1fr); }
-  .rightbar { display:none; }
-}
-@media(max-width:600px) {
-  .topbar { height:58px; padding:0 10px; gap:10px; }
-  .brand { width:76px; }
-  .brand-logo { font-size:23px; }
-  .logo-e { width:14px; height:20px; }
-  .logo-e i { width:14px; height:4px; }
-  .search input { font-size:11px; padding:10px; }
-  .top-actions .primary { display:none; }
-  .layout { display:block; padding:13px 10px 82px; }
-  .sidebar { display:none; }
-  .panel { padding:13px; }
-  .rightbar { display:block; position:static; }
-  .mobile-nav {
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    z-index:20;
-    display:flex;
-    justify-content:space-around;
-    padding:8px 2px calc(8px + env(safe-area-inset-bottom));
-    border-top:1px solid var(--line);
-    background:#050b1bf5;
-  }
-    .mobile-nav button,
-  .mobile-nav a.mx-nav-item {
-    flex: 1;
-    min-width: 0;
-    color: #9cb2d2;
-    background: none;
-    border: 0;
-    text-decoration: none;
-    text-align: center;
-    font-size: 10px;
-    font-family: inherit;
-    cursor: pointer;
-    padding: 0 2px;
-  }
-
-  .mobile-nav button span,
-  .mobile-nav a.mx-nav-item .mx-nav-icon {
-    display: block;
-    font-size: 19px;
-    line-height: 1.2;
-    margin-bottom: 3px;
-  }
-
-  .mobile-nav button.active,
-  .mobile-nav a.mx-nav-item.active {
-    color: var(--cyan);
-  }
-
-  .mobile-nav a.mx-nav-item:focus-visible,
-  .mobile-nav button:focus-visible {
-    outline: 2px solid var(--cyan);
-    outline-offset: 2px;
-    border-radius: 6px;
-  }
+*{box-sizing:border-box}
+body{margin:0;background:#08111f;color:#eef6ff;
+font-family:Arial,sans-serif}
+header{padding:22px;background:#101f35;
+border-bottom:1px solid #263c58}
+h1{margin:0;color:#55e6d0}
+small{color:#a9bdd4}
+main{max-width:650px;margin:auto;padding:18px}
+.card{background:#101f35;border:1px solid #263c58;
+border-radius:16px;padding:16px;margin-bottom:16px}
+input,textarea,button{font:inherit;padding:12px;
+border-radius:10px;width:100%;margin-top:8px}
+input,textarea{background:#08111f;color:white;
+border:1px solid #344b67}
+button{background:#55e6d0;color:#07131d;
+border:0;font-weight:bold;cursor:pointer}
+#messages{height:250px;overflow:auto;
+background:#08111f;padding:12px;border-radius:10px}
+.msg{padding:9px;margin:7px 0;background:#18334a;
+border-radius:10px;overflow-wrap:anywhere}
 </style>
 </head>
-
 <body>
-
-<header class="topbar">
-  <a class="brand" href="./mx-space.html" aria-label="MEXA Home">
-    <span class="brand-logo" aria-label="MEXA">
-      <span>M</span>
-      <span class="logo-e" aria-label="E">
-        <i></i><i></i><i></i>
-      </span>
-      <span class="x">X</span>
-      <span>A</span>
-    </span>
-  </a>
-
-  <div class="search">
-    <input id="globalSearch" type="search"
-      placeholder="Cari teman, postingan, game...">
-  </div>
-
-  <div class="top-actions">
-    <button class="primary" id="openComposer">＋ Buat Postingan</button>
-    <button class="icon-btn" id="notifications" aria-label="Notifikasi">♧</button>
-    <button class="icon-btn" id="account" aria-label="Profil">◉</button>
-  </div>
+<header>
+<h1>NEXORA</h1>
+<small>Indonesia • Communication Project 2027</small>
 </header>
+<main>
+<section class="card">
+<h3>Profil pengguna</h3>
+<input id="name" placeholder="Nama kamu">
+<button onclick="saveName()">Simpan nama</button>
+<p id="profile">Selamat datang!</p>
+</section>
 
-<div class="layout">
-  <aside class="sidebar">
-    <nav class="nav">
-      <button class="active" data-section="home">⌂ <span class="label">Home</span></button>
-      <button data-section="Messages.html">▱ <span class="label">Messenger</span></button>
-      <button data-section="friends">♧ <span class="label">Teman</span></button>
-      <button data-section="games">🎮 <span class="label">Game</span></button>
-      <button data-section="notifications">♧ <span class="label">Notifikasi</span></button>
-      <button data-section="profile">◉ <span class="label">Profil</span></button>
-      <button data-section="settings">⚙ <span class="label">Pengaturan</span></button>
-    </nav>
+<section class="card">
+<h3>Chat lokal</h3>
+<small>Prototipe pesan yang tersimpan di browser ini.
+Belum terkirim ke HP lain.</small>
+<div id="messages"></div>
+<textarea id="message" placeholder="Tulis pesan..."></textarea>
+<button onclick="sendMessage()">Kirim pesan</button>
+<button onclick="clearMessages()">Hapus riwayat</button>
+</section>
 
-    <div class="creator">
-      <h3>✦ Kreator MEXA</h3>
-      <p>Tempat berbagi karya, membangun komunitas, dan mengembangkan kreativitas.</p>
-      <button class="follow" id="creatorInfo">Pelajari</button>
-    </div>
-  </aside>
-
-  <main id="home">
-
-    <!-- CERITA LANGSUNG MUNCUL DI ATAS -->
-    <section class="panel" id="stories">
-      <div class="section-title">
-        <h2>◉ Cerita</h2>
-        <button class="link" id="allStories">Lihat Semua →</button>
-      </div>
-
-      <div class="stories">
-        <button class="story" data-story="mine">
-          <div class="ring"><div class="avatar">＋</div></div>
-          <span class="story-name">Cerita Saya</span>
-        </button>
-        <button class="story" data-story="Arip Rahman">
-          <div class="ring"><div class="avatar">A</div></div>
-          <span class="story-name">Arip Rahman</span>
-        </button>
-        <button class="story" data-story="Siti Nur">
-          <div class="ring"><div class="avatar">S</div></div>
-          <span class="story-name">Siti Nur</span>
-        </button>
-        <button class="story" data-story="Dimas">
-          <div class="ring"><div class="avatar">D</div></div>
-          <span class="story-name">Dimas</span>
-        </button>
-        <button class="story" data-story="Rina">
-          <div class="ring"><div class="avatar">R</div></div>
-          <span class="story-name">Rina</span>
-        </button>
-        <button class="story" data-story="Fajar">
-          <div class="ring"><div class="avatar">F</div></div>
-          <span class="story-name">Fajar</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- BUAT POSTINGAN -->
-    <section class="panel" id="composerSection">
-      <div class="compose-row">
-        <div class="user-avatar" id="myAvatar">M</div>
-        <button class="compose-trigger" id="composerTrigger">
-          Apa yang ingin kamu bagikan?
-        </button>
-      </div>
-      <div class="tools">
-        <button class="tool" id="photoButton">▧ Foto</button>
-        <button class="tool" id="videoButton">▷ Video</button>
-        <button class="tool" id="storyButton">◉ Cerita</button>
-        <button class="tool" id="feelingButton">☺ Aktivitas</button>
-      </div>
-    </section>
-
-    <!-- FEED -->
-    <div class="section-title">
-      <h2>Postingan untuk kamu</h2>
-      <button class="link" id="refreshFeed">↻ Muat ulang</button>
-    </div>
-
-    <section id="feedList">
-      <article class="panel post">
-        <div class="post-head">
-          <div class="user-avatar">A</div>
-          <div class="post-info">
-            <strong>Arip Rahman</strong>
-            <small>Contoh postingan · Publik</small>
-          </div>
-          <button class="more" aria-label="Menu postingan">⋯</button>
-        </div>
-        <p class="post-text">Selamat datang di MEXA! ✨
-Mari berbagi cerita, karya, dan inspirasi bersama komunitas.</p>
-        <div class="post-actions">
-          <button class="post-action" data-like>♡ Suka</button>
-          <button class="post-action" data-comment>▢ Komentar</button>
-          <button class="post-action" data-share>↗ Bagikan</button>
-        </div>
-      </article>
-    </section>
-
-    <p id="feedStatus">Tampilan awal aktif. Database belum disambungkan pada halaman ini.</p>
-
-    <!-- REKOMENDASI TEMAN DI TENGAH FEED DAN GAME -->
-    <section class="panel" id="friends">
-      <div class="section-title">
-        <h2>♧ Rekomendasi Teman</h2>
-        <button class="link" data-nav="friends">Lihat Semua →</button>
-      </div>
-      <p class="muted">Temukan orang baru untuk terhubung di MEXA.</p>
-
-      <div class="friend">
-        <div class="small-avatar">R</div>
-        <div class="friend-info">
-          <strong>Raka Pratama</strong>
-          <small>Teman yang mungkin kamu kenal</small>
-        </div>
-        <button class="follow">Ikuti</button>
-      </div>
-
-      <div class="friend">
-        <div class="small-avatar">N</div>
-        <div class="friend-info">
-          <strong>Nadia Putri</strong>
-          <small>Komunitas kreator</small>
-        </div>
-        <button class="follow">Ikuti</button>
-      </div>
-
-      <div class="friend">
-        <div class="small-avatar">D</div>
-        <div class="friend-info">
-          <strong>Dimas Saputra</strong>
-          <small>Suka game dan teknologi</small>
-        </div>
-        <button class="follow">Ikuti</button>
-      </div>
-    </section>
-
-    <!-- REKOMENDASI GAME -->
-    <section class="panel" id="games">
-      <div class="section-title">
-        <h2>🎮 Rekomendasi Game</h2>
-        <button class="link" data-nav="games">Lihat Semua →</button>
-      </div>
-      <p class="muted">Pilihan game untuk menemani waktu luangmu.</p>
-
-      <div class="game">
-        <div class="game-cover">⚔️</div>
-        <div class="game-info">
-          <strong>Mobile Legends</strong>
-          <small>MOBA · Pertarungan tim 5v5</small>
-        </div>
-        <button class="play" data-game="Mobile Legends">Lihat</button>
-      </div>
-
-      <div class="game">
-        <div class="game-cover">🔥</div>
-        <div class="game-info">
-          <strong>Free Fire</strong>
-          <small>Battle Royale</small>
-        </div>
-        <button class="play" data-game="Free Fire">Lihat</button>
-      </div>
-
-      <div class="game">
-        <div class="game-cover">✨</div>
-        <div class="game-info">
-          <strong>Genshin Impact</strong>
-          <small>RPG · Open World</small>
-        </div>
-        <button class="play" data-game="Genshin Impact">Lihat</button>
-      </div>
-    </section>
-  </main>
-
-  <aside class="rightbar">
-    <section class="panel">
-      <div class="section-title"><h2>🔥 Sedang Ramai</h2></div>
-      <span class="tag">#MEXACommunity</span>
-      <span class="tag">#Gaming</span>
-      <span class="tag">#Kreativitas</span>
-      <span class="tag">#CeritaHariIni</span>
-    </section>
-
-    <section class="panel">
-      <div class="section-title"><h2>✦ Jelajahi MEXA</h2></div>
-      <p class="muted">Bagikan cerita, temukan teman, dan jelajahi komunitas favoritmu.</p>
-      <button class="primary" id="rightCreate">＋ Buat Postingan</button>
-    </section>
-  </aside>
-</div>
-
-<!-- NAVIGASI MOBILE: CERITA DIGANTI MESSENGER -->
-<nav class="mobile-nav">
-  <button class="active" data-section="home"><span>⌂</span>Home</button>
-
-<button type="button" data-section="messages">
-  ▱ <span class="label">Messenger</span>
-</button>
-  
-
-  <button id="mobileCreate"><span>＋</span>Buat</button>
-  <button data-section="games"><span>🎮</span>Game</button>
-  <button data-section="profile"><span>◉</span>Profil</button>
-</nav>
-
-<!-- MODAL POSTINGAN -->
-<div class="modal" id="composerModal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h2 id="modalTitle">Buat Postingan</h2>
-      <button class="icon-btn" id="closeModal">×</button>
-    </div>
-
-    <form id="postForm">
-      <textarea id="postText" class="field" maxlength="5000"
-        placeholder="Apa yang ingin kamu bagikan?"></textarea>
-
-      <label class="muted" for="mediaInput">Foto atau video</label>
-      <input id="mediaInput" class="field" type="file" accept="image/*,video/*">
-      <div id="mediaPreview"></div>
-
-      <button class="primary" type="submit">Terbitkan</button>
-      <p class="muted" id="composeStatus">Mode tampilan lokal.</p>
-    </form>
-  </div>
-</div>
-
-<input id="photoInput" type="file" accept="image/*" hidden>
-<input id="videoInput" type="file" accept="video/*" hidden>
-
+<section class="card">
+<h3>Rencana fitur</h3>
+<p>✓ Antarmuka chat</p>
+<p>✓ Penyimpanan pesan lokal</p>
+<p>○ Chat antarperangkat</p>
+<p>○ Foto dan video</p>
+<p>○ Panggilan suara</p>
+<p>○ Integrasi satelit</p>
+</section>
+</main>
 <script>
-(() => {
-  "use strict";
-
-  const $ = s => document.querySelector(s);
-  const $$ = s => document.querySelectorAll(s);
-  const modal = $("#composerModal");
-  const text = $("#postText");
-  const media = $("#mediaInput");
-  const preview = $("#mediaPreview");
-
-  let selectedFile = null;
-  let selectedUrl = null;
-
-  function toast(message) {
-    const old = $(".toast");
-    if (old) old.remove();
-
-    const el = document.createElement("div");
-    el.className = "toast";
-    el.textContent = message;
-    document.body.append(el);
-
-    setTimeout(() => {
-      if (el.isConnected) el.remove();
-    }, 2600);
-  }
-
-  function openComposer(mode = "post") {
-    modal.classList.add("open");
-    $("#modalTitle").textContent =
-      mode === "story" ? "Buat Cerita" : "Buat Postingan";
-    text.focus();
-  }
-
-  function closeComposer() {
-    modal.classList.remove("open");
-  }
-
-  $("#openComposer").onclick = () => openComposer();
-  $("#rightCreate").onclick = () => openComposer();
-  $("#composerTrigger").onclick = () => openComposer();
-  $("#mobileCreate").onclick = () => openComposer();
-  $("#storyButton").onclick = () => openComposer("story");
-  $("#closeModal").onclick = closeComposer;
-
-  modal.addEventListener("click", e => {
-    if (e.target === modal) closeComposer();
-  });
-
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeComposer();
-
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-      e.preventDefault();
-      $("#globalSearch").focus();
-    }
-  });
-
-  function setFile(file) {
-    if (!file) return;
-
-    if (!file.type.startsWith("image/") &&
-        !file.type.startsWith("video/")) {
-      toast("Pilih foto atau video yang valid.");
-      return;
-    }
-
-    selectedFile = file;
-
-    if (selectedUrl) URL.revokeObjectURL(selectedUrl);
-    selectedUrl = URL.createObjectURL(file);
-
-    preview.replaceChildren();
-
-    const element = document.createElement(
-      file.type.startsWith("video/") ? "video" : "img"
-    );
-
-    element.src = selectedUrl;
-    element.className = "preview";
-
-    if (element.tagName === "VIDEO") {
-      element.controls = true;
-    } else {
-      element.alt = "Pratinjau media";
-    }
-
-    preview.append(element);
-  }
-
-  $("#photoButton").onclick = () => $("#photoInput").click();
-  $("#videoButton").onclick = () => $("#videoInput").click();
-
-  $("#photoInput").onchange = e => {
-    if (e.target.files[0]) {
-      setFile(e.target.files[0]);
-      openComposer();
-    }
-  };
-
-  $("#videoInput").onchange = e => {
-    if (e.target.files[0]) {
-      setFile(e.target.files[0]);
-      openComposer();
-    }
-  };
-
-  media.onchange = e => setFile(e.target.files[0]);
-
-  $("#feelingButton").onclick = () => {
-    openComposer();
-    text.value += "😊 ";
-    text.focus();
-  };
-
-  $("#postForm").onsubmit = e => {
-    e.preventDefault();
-
-    const value = text.value.trim();
-    const file = media.files[0] || selectedFile;
-
-    if (!value && !file) {
-      toast("Tulis sesuatu atau pilih foto/video dulu.");
-      return;
-    }
-
-    const card = document.createElement("article");
-    card.className = "panel post";
-
-    const head = document.createElement("div");
-    head.className = "post-head";
-
-    const avatar = document.createElement("div");
-    avatar.className = "user-avatar";
-    avatar.textContent = "M";
-
-    const info = document.createElement("div");
-    info.className = "post-info";
-
-    const name = document.createElement("strong");
-    name.textContent = "Pengguna MEXA";
-
-    const time = document.createElement("small");
-    time.textContent = "Baru saja · Lokal";
-
-    info.append(name, time);
-    head.append(avatar, info);
-    card.append(head);
-
-    if (value) {
-      const paragraph = document.createElement("p");
-      paragraph.className = "post-text";
-      paragraph.textContent = value;
-      card.append(paragraph);
-    }
-
-    if (file) {
-      const url = URL.createObjectURL(file);
-      const element = document.createElement(
-        file.type.startsWith("video/") ? "video" : "img"
-      );
-
-      element.src = url;
-      element.className = "post-media";
-
-      if (element.tagName === "VIDEO") {
-        element.controls = true;
-      } else {
-        element.alt = "Media postingan";
-      }
-
-      card.append(element);
-    }
-
-    const actions = document.createElement("div");
-    actions.className = "post-actions";
-
-    [
-      ["♡ Suka", "like"],
-      ["▢ Komentar", "comment"],
-      ["↗ Bagikan", "share"]
-    ].forEach(([label, action]) => {
-      const button = document.createElement("button");
-      button.className = "post-action";
-      button.textContent = label;
-
-      button.onclick = () => {
-        if (action === "like") {
-          button.classList.toggle("liked");
-          button.textContent = button.classList.contains("liked")
-            ? "♥ Disukai" : "♡ Suka";
-        } else {
-          toast(action === "comment"
-            ? "Komentar belum tersambung ke database."
-            : "Fitur bagikan belum tersambung ke database.");
-        }
-      };
-
-      actions.append(button);
-    });
-
-    card.append(actions);
-    $("#feedList").prepend(card);
-
-    text.value = "";
-    media.value = "";
-    $("#photoInput").value = "";
-    $("#videoInput").value = "";
-    preview.replaceChildren();
-    selectedFile = null;
-
-    if (selectedUrl) URL.revokeObjectURL(selectedUrl);
-    selectedUrl = null;
-
-    closeComposer();
-
-    $("#feedStatus").textContent =
-      "Postingan ini hanya tampil di browser dan belum tersimpan ke database.";
-
-    toast("Postingan ditambahkan ke tampilan lokal.");
-  };
-
-  function attachLike(button) {
-    button.onclick = () => {
-      button.classList.toggle("liked");
-      button.textContent = button.classList.contains("liked")
-        ? "♥ Disukai" : "♡ Suka";
-    };
-  }
-
-  $$("[data-like]").forEach(attachLike);
-
-  $$("[data-comment]").forEach(button => {
-    button.onclick = () => toast("Komentar belum tersambung ke database.");
-  });
-
-  $$("[data-share]").forEach(button => {
-    button.onclick = () => toast("Bagikan belum tersambung ke database.");
-  });
-
-  $$(".follow").forEach(button => {
-    button.onclick = () => {
-      const followed = button.dataset.followed === "true";
-      button.dataset.followed = String(!followed);
-      button.textContent = followed ? "Ikuti" : "✓ Diikuti";
-    };
-  });
-
-  $$(".story").forEach(button => {
-    button.onclick = () => {
-      const person = button.dataset.story;
-
-      if (person === "mine") {
-        openComposer("story");
-      } else {
-        toast("Cerita " + person + " masih berupa contoh.");
-      }
-    };
-  });
-
-  $$("[data-game]").forEach(button => {
-    button.onclick = () => {
-      toast("Halaman game " + button.dataset.game + " belum ditautkan.");
-    };
-  });
-
-  $("#notifications").onclick =
-    () => toast("Notifikasi belum tersambung ke backend.");
-
-  $("#account").onclick =
-    () => navigate("profile");
-
-  $("#creatorInfo").onclick =
-    () => toast("Modul kreator akan dibuat terpisah.");
-
-  $("#allStories").onclick =
-    () => toast("Modul Cerita belum tersambung.");
-
-  $("#refreshFeed").onclick =
-    () => toast("Feed database belum disambungkan.");
-
-  $("#globalSearch").addEventListener("input", e => {
-    const query = e.target.value.trim().toLowerCase();
-    let count = 0;
-
-    $$("#feedList .post").forEach(post => {
-      const match = !query ||
-        post.textContent.toLowerCase().includes(query);
-
-      post.style.display = match ? "" : "none";
-      if (match) count++;
-    });
-
-    $$("#friends .friend").forEach(friend => {
-      friend.style.display =
-        !query || friend.textContent.toLowerCase().includes(query)
-          ? "" : "none";
-    });
-
-    $$("#games .game").forEach(game => {
-      game.style.display =
-        !query || game.textContent.toLowerCase().includes(query)
-          ? "" : "none";
-    });
-
-    $("#feedStatus").textContent = query
-      ? count + " postingan cocok di feed. Rekomendasi teman dan game juga difilter."
-      : "Tampilan awal aktif. Database belum disambungkan pada halaman ini.";
-  });
-
-  function navigate(section) {
-    if (section === "messages") {
-      window.location.href = "./Messenger.html";
-      return;
-    }
-
-    const target = document.getElementById(section);
-
-    if (target) {
-      target.scrollIntoView({ behavior:"smooth", block:"start" });
-    } else {
-      toast("Modul " + section + " belum ditautkan.");
-    }
-
-    $$("[data-section]").forEach(button => {
-      button.classList.toggle(
-        "active",
-        button.dataset.section === section
-      );
-    });
-  }
-
-  $$("[data-section]").forEach(button => {
-    button.onclick = () => navigate(button.dataset.section);
-  });
-
-  $$("[data-nav]").forEach(button => {
-    button.onclick = () => navigate(button.dataset.nav);
-  });
-})();
+const $ = id => document.getElementById(id);
+
+function saveName(){
+ const name=$("name").value.trim();
+ if(!name)return alert("Masukkan nama dahulu.");
+ localStorage.setItem("nexora_name",name);
+ $("profile").textContent="Halo, "+name+"!";
+}
+
+function render(){
+ const data=JSON.parse(
+ localStorage.getItem("nexora_messages")||"[]"
+ );
+ $("messages").replaceChildren();
+ data.forEach(item=>{
+  const div=document.createElement("div");
+  div.className="msg";
+  div.textContent=item.name+": "+item.text;
+  $("messages").appendChild(div);
+ });
+ $("messages").scrollTop=$("messages").scrollHeight;
+}
+
+function sendMessage(){
+ const text=$("message").value.trim();
+ if(!text)return;
+ const data=JSON.parse(
+ localStorage.getItem("nexora_messages")||"[]"
+ );
+ data.push({
+  name:localStorage.getItem("nexora_name")||"Pengguna",
+  text,
+  time:Date.now()
+ });
+ localStorage.setItem("nexora_messages",JSON.stringify(data));
+ $("message").value="";
+ render();
+}
+
+function clearMessages(){
+ if(confirm("Hapus semua pesan lokal?")){
+  localStorage.removeItem("nexora_messages");
+  render();
+ }
+}
+
+const saved=localStorage.getItem("nexora_name");
+if(saved){
+ $("name").value=saved;
+ $("profile").textContent="Halo, "+saved+"!";
+}
+render();
 </script>
 </body>
 </html>
