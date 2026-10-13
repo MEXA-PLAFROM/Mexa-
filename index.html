@@ -2,377 +2,371 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Petualangan Sang Penjelajah</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mini Roblox</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-        min-height: 100vh;
+        background: #1a1a2e;
+        overflow: hidden;
         font-family: 'Segoe UI', system-ui, sans-serif;
-        color: #e2e8f0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
+        color: white;
+        touch-action: none;
     }
-    #game {
-        background: rgba(15, 23, 42, 0.95);
-        border: 2px solid #6366f1;
-        border-radius: 16px;
-        width: 100%;
-        max-width: 680px;
-        padding: 28px;
-        box-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
-    }
-    h1 {
-        text-align: center;
-        color: #a5b4fc;
-        margin-bottom: 8px;
-        font-size: 1.8rem;
-    }
-    #episode {
-        text-align: center;
-        color: #818cf8;
-        font-size: 0.95rem;
-        margin-bottom: 16px;
-        letter-spacing: 1px;
-    }
-    #stats {
+    #ui {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 12px 16px;
+        background: rgba(0,0,0,0.6);
         display: flex;
         justify-content: space-between;
-        background: #1e1b4b;
-        padding: 12px 16px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        font-size: 0.95rem;
+        align-items: center;
+        z-index: 10;
+        font-size: 15px;
     }
-    #story {
-        background: #0f172a;
-        border-left: 4px solid #6366f1;
-        padding: 18px;
-        border-radius: 0 10px 10px 0;
-        min-height: 160px;
-        line-height: 1.7;
-        margin-bottom: 20px;
-        white-space: pre-line;
-    }
-    #choices {
+    #controls {
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        right: 0;
         display: flex;
-        flex-direction: column;
-        gap: 10px;
+        justify-content: center;
+        gap: 12px;
+        z-index: 10;
+        flex-wrap: wrap;
+        padding: 0 10px;
     }
-    .choice-btn {
-        background: #312e81;
-        border: 1px solid #6366f1;
-        color: #e0e7ff;
-        padding: 14px 18px;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 1rem;
-        text-align: left;
-        transition: all 0.2s;
-    }
-    .choice-btn:hover {
-        background: #4338ca;
-        transform: translateX(6px);
-    }
-    #inventory {
-        margin-top: 18px;
-        font-size: 0.9rem;
-        color: #94a3b8;
-    }
-    .hidden { display: none; }
-    #start-screen, #ending-screen {
-        text-align: center;
-    }
-    #start-screen h1 { font-size: 2.2rem; margin-bottom: 12px; }
-    #start-screen p { color: #94a3b8; margin-bottom: 28px; line-height: 1.6; }
-    .big-btn {
-        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    button {
+        background: #4f46e5;
         border: none;
         color: white;
-        padding: 14px 36px;
-        font-size: 1.1rem;
-        border-radius: 12px;
-        cursor: pointer;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-size: 15px;
         font-weight: 600;
-        transition: transform 0.2s;
+        cursor: pointer;
+        box-shadow: 0 4px 0 #312e81;
     }
-    .big-btn:hover { transform: scale(1.05); }
-    #ending-title {
-        font-size: 1.8rem;
-        margin-bottom: 12px;
+    button:active {
+        transform: translateY(3px);
+        box-shadow: 0 1px 0 #312e81;
     }
-    .good { color: #4ade80; }
-    .neutral { color: #facc15; }
-    .bad { color: #f87171; }
+    #mode-btn {
+        background: #059669;
+        box-shadow: 0 4px 0 #047857;
+    }
+    canvas {
+        display: block;
+        background: #87CEEB;
+    }
+    #info {
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.7);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        z-index: 10;
+        text-align: center;
+    }
 </style>
 </head>
 <body>
-<div id="game">
-    <!-- START SCREEN -->
-    <div id="start-screen">
-        <h1>⚔️ Petualangan Sang Penjelajah</h1>
-        <p>
-            Kamu adalah seorang penjelajah muda yang mendengar legenda tentang<br>
-            <strong>Kristal Cahaya</strong> yang tersembunyi di ujung dunia.<br><br>
-            Perjalananmu akan penuh bahaya, pilihan, dan konsekuensi.<br>
-            Siapkah kamu?
-        </p>
-        <button class="big-btn" onclick="startGame()">Mulai Petualangan</button>
-    </div>
+<div id="ui">
+    <div>🧱 Block: <span id="block-count">0</span></div>
+    <div>💰 Coin: <span id="coin-count">0</span></div>
+    <div id="mode-text">Mode: Jalan</div>
+</div>
 
-    <!-- GAME SCREEN -->
-    <div id="game-screen" class="hidden">
-        <h1>⚔️ Petualangan Sang Penjelajah</h1>
-        <div id="episode">Episode 1 dari 5</div>
-        <div id="stats">
-            <div>❤️ HP: <span id="hp">100</span></div>
-            <div>⭐ Skor: <span id="score">0</span></div>
-        </div>
-        <div id="story"></div>
-        <div id="choices"></div>
-        <div id="inventory">Tas: <span id="inv-list">Kosong</span></div>
-    </div>
+<canvas id="game"></canvas>
 
-    <!-- ENDING SCREEN -->
-    <div id="ending-screen" class="hidden">
-        <div id="ending-title"></div>
-        <div id="ending-text" style="margin: 20px 0; line-height: 1.7;"></div>
-        <div style="margin-bottom: 20px;">Skor Akhir: <strong id="final-score"></strong></div>
-        <button class="big-btn" onclick="location.reload()">Main Lagi</button>
-    </div>
+<div id="info">
+    WASD / Panah = Gerak | Klik = Pasang/Hapus Block | Spasi = Ganti Mode
+</div>
+
+<div id="controls">
+    <button onclick="setMode('walk')">🚶 Jalan</button>
+    <button id="mode-btn" onclick="setMode('build')">🧱 Build</button>
+    <button onclick="setMode('remove')">🗑️ Hapus</button>
 </div>
 
 <script>
-const story = {
-    // ========== EPISODE 1 ==========
-    start: {
-        episode: "Episode 1 dari 5 — Hutan Misterius",
-        text: "Kamu memasuki hutan lebat yang konon menjadi gerbang menuju Kristal Cahaya.\n\nUdara dingin dan gelap. Tiba-tiba kamu mendengar suara gemerisik dari semak-semak di sebelah kanan.",
-        choices: [
-            { text: "🔍 Menyelidiki suara tersebut", next: "e1_investigate", hp: 0, score: 5 },
-            { text: "⚔️ Menghunus pedang dan bersiap bertarung", next: "e1_fight", hp: -10, score: 10 },
-            { text: "🏃 Berlari menjauh secepat mungkin", next: "e1_run", hp: 0, score: 0 }
-        ]
-    },
-    e1_investigate: {
-        episode: "Episode 1 dari 5 — Hutan Misterius",
-        text: "Ternyata hanya seekor rubah kecil yang ketakutan. Rubah itu menatapmu lama, lalu menjatuhkan sebuah batu bercahaya di depanmu sebelum berlari pergi.\n\nKamu mendapatkan: Batu Cahaya.",
-        choices: [
-            { text: "Ambil batu itu dan lanjutkan perjalanan", next: "e2", item: "Batu Cahaya", score: 15 }
-        ]
-    },
-    e1_fight: {
-        episode: "Episode 1 dari 5 — Hutan Misterius",
-        text: "Seekor serigala keluar dari semak! Kamu berhasil mengalahkannya, tapi terluka sedikit.\n\nDari tubuh serigala, kamu menemukan sebuah belati lama.",
-        choices: [
-            { text: "Ambil belati dan lanjutkan", next: "e2", item: "Belati Lama", score: 20 }
-        ]
-    },
-    e1_run: {
-        episode: "Episode 1 dari 5 — Hutan Misterius",
-        text: "Kamu berlari begitu cepat hingga tersandung akar pohon. Kamu tidak mendapatkan apa-apa, tapi setidaknya aman.",
-        choices: [
-            { text: "Bangkit dan terus berjalan", next: "e2", score: 5 }
-        ]
-    },
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
 
-    // ========== EPISODE 2 ==========
-    e2: {
-        episode: "Episode 2 dari 5 — Desa yang Hilang",
-        text: "Setelah keluar dari hutan, kamu menemukan sebuah desa yang terlihat ditinggalkan. Rumah-rumah kosong, tapi ada asap mengepul dari salah satu cerobong.\n\nDi tengah desa ada sumur tua dan sebuah rumah yang pintunya sedikit terbuka.",
-        choices: [
-            { text: "🏠 Masuk ke rumah yang berasap", next: "e2_house", score: 10 },
-            { text: "🕳️ Memeriksa sumur tua", next: "e2_well", score: 15 },
-            { text: "📢 Berteriak memanggil penduduk", next: "e2_shout", hp: -5, score: 5 }
-        ]
-    },
-    e2_house: {
-        episode: "Episode 2 dari 5 — Desa yang Hilang",
-        text: "Di dalam rumah ada seorang wanita tua yang sedang memasak. Ia menatapmu dengan lembut.\n\n\"Anak muda... kau mencari Kristal Cahaya, bukan? Ambillah ini.\"\n\nIa memberimu Ramuan Penyembuh.",
-        choices: [
-            { text: "Terima kasih dan pergi", next: "e3", item: "Ramuan Penyembuh", score: 20 }
-        ]
-    },
-    e2_well: {
-        episode: "Episode 2 dari 5 — Desa yang Hilang",
-        text: "Kamu mengintip ke dalam sumur. Di dasarnya ada kilauan emas! Kamu menurunkan tali dan berhasil mengambil sebuah kalung kuno.\n\nTapi tiba-tiba tanah di sekitarmu retak...",
-        choices: [
-            { text: "Cepat lari dari situ!", next: "e3", item: "Kalung Kuno", score: 25 }
-        ]
-    },
-    e2_shout: {
-        episode: "Episode 2 dari 5 — Desa yang Hilang",
-        text: "Suaramu menggema. Tiba-tiba sekelompok makhluk bayangan muncul dari rumah-rumah kosong! Kamu harus melarikan diri dengan tergesa-gesa dan sedikit terluka.",
-        choices: [
-            { text: "Kabur ke arah gunung", next: "e3", score: 5 }
-        ]
-    },
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
 
-    // ========== EPISODE 3 ==========
-    e3: {
-        episode: "Episode 3 dari 5 — Gua Naga",
-        text: "Kamu tiba di mulut sebuah gua besar. Dari dalam terdengar dengkuran berat. Ini pasti sarang Naga Penjaga Kristal.\n\nDi depan gua ada tiga jalan: kiri gelap, kanan bercahaya, dan lurus penuh jebakan batu.",
-        choices: [
-            { text: "⬅️ Masuk lewat jalan kiri (gelap)", next: "e3_left", score: 10 },
-            { text: "➡️ Masuk lewat jalan kanan (bercahaya)", next: "e3_right", score: 15 },
-            { text: "⬆️ Maju lurus melewati jebakan", next: "e3_straight", hp: -20, score: 25 }
-        ]
-    },
-    e3_left: {
-        episode: "Episode 3 dari 5 — Gua Naga",
-        text: "Jalan gelap ternyata aman. Kamu menemukan sebuah perisai tua yang masih kuat di dinding gua.",
-        choices: [
-            { text: "Ambil perisai dan terus masuk", next: "e4", item: "Perisai Tua", score: 20 }
-        ]
-    },
-    e3_right: {
-        episode: "Episode 3 dari 5 — Gua Naga",
-        text: "Jalan bercahaya dipenuhi kristal kecil. Kamu mengumpulkan beberapa Kristal Kecil yang berkilau indah.",
-        choices: [
-            { text: "Kumpulkan kristal dan lanjutkan", next: "e4", item: "Kristal Kecil", score: 25 }
-        ]
-    },
-    e3_straight: {
-        episode: "Episode 3 dari 5 — Gua Naga",
-        text: "Kamu berhasil melewati jebakan dengan luka-luka, tapi menemukan Pedang Naga yang tertancap di batu!",
-        choices: [
-            { text: "Cabut pedang tersebut!", next: "e4", item: "Pedang Naga", score: 40 }
-        ]
-    },
+// Game settings
+const TILE = 40;
+const MAP_W = 40;
+const MAP_H = 30;
 
-    // ========== EPISODE 4 ==========
-    e4: {
-        episode: "Episode 4 dari 5 — Pertemuan dengan Naga",
-        text: "Kamu memasuki ruangan besar. Seekor naga merah raksasa membuka matanya.\n\n\"Manusia... kau berani datang ke sini?\" suaranya mengguncang gua.\n\n\"Hanya mereka yang berhati murni atau cukup kuat yang boleh mengambil Kristal Cahaya.\"",
-        choices: [
-            { text: "💬 \"Aku datang dengan damai. Aku hanya ingin melindungi dunia.\"", next: "e4_peace", score: 30 },
-            { text: "⚔️ \"Aku akan mengalahkanmu dan mengambil kristal itu!\"", next: "e4_fight", score: 20 },
-            { text: "🎁 Menawarkan semua barang di tasmu", next: "e4_offer", score: 25 }
-        ]
-    },
-    e4_peace: {
-        episode: "Episode 4 dari 5 — Pertemuan dengan Naga",
-        text: "Naga itu menatapmu lama, lalu mengangguk pelan.\n\n\"Hatimu bersih. Ambillah Kristal Cahaya. Gunakan dengan bijak.\"",
-        choices: [
-            { text: "Menerima Kristal Cahaya dengan hormat", next: "e5", item: "Kristal Cahaya", score: 50 }
-        ]
-    },
-    e4_fight: {
-        episode: "Episode 4 dari 5 — Pertemuan dengan Naga",
-        text: "Naga menghembuskan api! Kamu bertarung mati-matian.\n\nSetelah pertarungan sengit, naga itu akhirnya mengalah dan memberimu Kristal Cahaya karena menghormati keberanianmu.",
-        choices: [
-            { text: "Mengambil Kristal Cahaya", next: "e5", item: "Kristal Cahaya", hp: -30, score: 45 }
-        ]
-    },
-    e4_offer: {
-        episode: "Episode 4 dari 5 — Pertemuan dengan Naga",
-        text: "Naga tertawa rendah.\n\n\"Kau menawarkan barang-barangmu? Menarik... Aku terima. Sebagai gantinya, ambil Kristal ini.\"",
-        choices: [
-            { text: "Menyerahkan semua barang dan menerima kristal", next: "e5", item: "Kristal Cahaya", clearInv: true, score: 35 }
-        ]
-    },
-
-    // ========== EPISODE 5 ==========
-    e5: {
-        episode: "Episode 5 dari 5 — Keputusan Akhir",
-        text: "Kamu berdiri di puncak gunung dengan Kristal Cahaya di tangan. Cahayanya begitu indah.\n\nDi kejauhan, kamu melihat kerajaanmu yang sedang dilanda kegelapan.\n\nApa yang akan kamu lakukan?",
-        choices: [
-            { text: "🌟 Menggunakan Kristal untuk menyelamatkan kerajaan", next: "ending_good" },
-            { text: "💎 Menyimpan Kristal untuk dirimu sendiri", next: "ending_neutral" },
-            { text: "🔥 Menghancurkan Kristal agar tidak ada yang menyalahgunakannya", next: "ending_bad" }
-        ]
+// World
+let map = [];
+for (let y = 0; y < MAP_H; y++) {
+    map[y] = [];
+    for (let x = 0; x < MAP_W; x++) {
+        // Ground
+        if (y > MAP_H - 8) map[y][x] = 1; // tanah
+        else map[y][x] = 0; // udara
     }
-};
-
-let state = {
-    hp: 100,
-    score: 0,
-    inventory: [],
-    current: "start"
-};
-
-function startGame() {
-    document.getElementById("start-screen").classList.add("hidden");
-    document.getElementById("game-screen").classList.remove("hidden");
-    showScene("start");
 }
 
-function showScene(key) {
-    const scene = story[key];
-    if (!scene) return;
+// Tambah beberapa block awal biar menarik
+for (let i = 0; i < 60; i++) {
+    const x = Math.floor(Math.random() * MAP_W);
+    const y = Math.floor(Math.random() * (MAP_H - 10)) + 5;
+    if (map[y][x] === 0) map[y][x] = Math.random() > 0.7 ? 2 : 3;
+}
 
-    // Ending
-    if (key.startsWith("ending_")) {
-        showEnding(key);
-        return;
-    }
-
-    state.current = key;
-    document.getElementById("episode").textContent = scene.episode;
-    document.getElementById("story").textContent = scene.text;
-    document.getElementById("hp").textContent = state.hp;
-    document.getElementById("score").textContent = state.score;
-    document.getElementById("inv-list").textContent = state.inventory.length ? state.inventory.join(", ") : "Kosong";
-
-    const choicesDiv = document.getElementById("choices");
-    choicesDiv.innerHTML = "";
-
-    scene.choices.forEach(choice => {
-        const btn = document.createElement("button");
-        btn.className = "choice-btn";
-        btn.textContent = choice.text;
-        btn.onclick = () => makeChoice(choice);
-        choicesDiv.appendChild(btn);
+// Coins
+let coins = [];
+for (let i = 0; i < 25; i++) {
+    coins.push({
+        x: Math.floor(Math.random() * MAP_W),
+        y: Math.floor(Math.random() * (MAP_H - 10)) + 3
     });
 }
 
-function makeChoice(choice) {
-    if (choice.hp) state.hp += choice.hp;
-    if (choice.score) state.score += choice.score;
-    if (choice.item) state.inventory.push(choice.item);
-    if (choice.clearInv) state.inventory = ["Kristal Cahaya"];
+// Player
+const player = {
+    x: 10,
+    y: 10,
+    w: 28,
+    h: 28,
+    speed: 3.2,
+    color: '#ef4444'
+};
 
-    if (state.hp <= 0) {
-        state.hp = 0;
-        showEnding("ending_dead");
-        return;
+let keys = {};
+let mode = 'walk'; // walk, build, remove
+let blockCount = 0;
+let coinCount = 0;
+let cameraX = 0;
+let cameraY = 0;
+
+// Warna block
+const colors = {
+    0: null,
+    1: '#4ade80',   // rumput/tanah
+    2: '#a3a3a3',   // batu
+    3: '#f59e0b',   // kayu
+    4: '#3b82f6',   // air (tidak dipakai)
+    5: '#ec4899'    // block spesial
+};
+
+// Input
+window.addEventListener('keydown', e => {
+    keys[e.key.toLowerCase()] = true;
+    if (e.key === ' ') {
+        e.preventDefault();
+        cycleMode();
     }
+});
+window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
-    showScene(choice.next);
+canvas.addEventListener('click', e => {
+    if (mode === 'walk') return;
+
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left + cameraX;
+    const my = e.clientY - rect.top + cameraY;
+
+    const tx = Math.floor(mx / TILE);
+    const ty = Math.floor(my / TILE);
+
+    if (tx < 0 || tx >= MAP_W || ty < 0 || ty >= MAP_H) return;
+
+    if (mode === 'build' && map[ty][tx] === 0) {
+        map[ty][tx] = 2; // default batu
+        blockCount++;
+        updateUI();
+    }
+    if (mode === 'remove' && map[ty][tx] !== 0 && map[ty][tx] !== 1) {
+        map[ty][tx] = 0;
+        blockCount = Math.max(0, blockCount - 1);
+        updateUI();
+    }
+});
+
+// Touch support sederhana
+canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const mx = touch.clientX - rect.left + cameraX;
+    const my = touch.clientY - rect.top + cameraY;
+    const tx = Math.floor(mx / TILE);
+    const ty = Math.floor(my / TILE);
+
+    if (mode === 'build' && map[ty] && map[ty][tx] === 0) {
+        map[ty][tx] = 2;
+        blockCount++;
+        updateUI();
+    } else if (mode === 'remove' && map[ty] && map[ty][tx] > 1) {
+        map[ty][tx] = 0;
+        blockCount = Math.max(0, blockCount - 1);
+        updateUI();
+    }
+}, {passive: false});
+
+function setMode(m) {
+    mode = m;
+    document.getElementById('mode-text').textContent = 
+        mode === 'walk' ? 'Mode: Jalan' : 
+        mode === 'build' ? 'Mode: Build (Klik untuk pasang)' : 
+        'Mode: Hapus (Klik untuk hapus)';
 }
 
-function showEnding(type) {
-    document.getElementById("game-screen").classList.add("hidden");
-    document.getElementById("ending-screen").classList.remove("hidden");
+function cycleMode() {
+    if (mode === 'walk') setMode('build');
+    else if (mode === 'build') setMode('remove');
+    else setMode('walk');
+}
 
-    const title = document.getElementById("ending-title");
-    const text = document.getElementById("ending-text");
-    const finalScore = document.getElementById("final-score");
+function updateUI() {
+    document.getElementById('block-count').textContent = blockCount;
+    document.getElementById('coin-count').textContent = coinCount;
+}
 
-    finalScore.textContent = state.score;
+function update() {
+    // Gerakan
+    let dx = 0, dy = 0;
+    if (keys['w'] || keys['arrowup']) dy = -player.speed;
+    if (keys['s'] || keys['arrowdown']) dy = player.speed;
+    if (keys['a'] || keys['arrowleft']) dx = -player.speed;
+    if (keys['d'] || keys['arrowright']) dx = player.speed;
 
-    if (type === "ending_good") {
-        title.innerHTML = `<span class="good">🌟 Ending Baik: Pahlawan Cahaya</span>`;
-        text.textContent = "Kamu menggunakan Kristal Cahaya untuk mengusir kegelapan dari kerajaan. Rakyat merayakanmu sebagai pahlawan. Namamu abadi dalam sejarah.\n\nSelamat, Penjelajah!";
-        state.score += 100;
-    } else if (type === "ending_neutral") {
-        title.innerHTML = `<span class="neutral">💎 Ending Netral: Sang Penyendiri</span>`;
-        text.textContent = "Kamu menyimpan Kristal untuk dirimu sendiri. Kekuatan besar ada di tanganmu, tapi kerajaan tetap dalam bayang-bayang. Kamu hidup tenang di pengasingan.";
-        state.score += 50;
-    } else if (type === "ending_bad") {
-        title.innerHTML = `<span class="bad">🔥 Ending Gelap: Penghancur Kristal</span>`;
-        text.textContent = "Kamu menghancurkan Kristal Cahaya. Dunia terbebas dari godaan kekuatan tersebut, tapi juga kehilangan harapan terakhirnya. Kegelapan perlahan menyelimuti segalanya.";
-        state.score += 30;
-    } else if (type === "ending_dead") {
-        title.innerHTML = `<span class="bad">💀 Game Over</span>`;
-        text.textContent = "HP-mu habis. Perjalananmu berakhir di sini...\n\nTapi legenda mengatakan bahwa mereka yang gagal akan bangkit kembali.";
+    // Coba gerak X
+    player.x += dx;
+    if (collides()) player.x -= dx;
+
+    // Coba gerak Y
+    player.y += dy;
+    if (collides()) player.y -= dy;
+
+    // Batas map
+    player.x = Math.max(0, Math.min(player.x, MAP_W * TILE - player.w));
+    player.y = Math.max(0, Math.min(player.y, MAP_H * TILE - player.h));
+
+    // Camera follow
+    cameraX = player.x - canvas.width / 2 + player.w / 2;
+    cameraY = player.y - canvas.height / 2 + player.h / 2;
+    cameraX = Math.max(0, Math.min(cameraX, MAP_W * TILE - canvas.width));
+    cameraY = Math.max(0, Math.min(cameraY, MAP_H * TILE - canvas.height));
+
+    // Ambil coin
+    for (let i = coins.length - 1; i >= 0; i--) {
+        const c = coins[i];
+        const cx = c.x * TILE + TILE / 2;
+        const cy = c.y * TILE + TILE / 2;
+        if (Math.abs(player.x + player.w/2 - cx) < 25 && Math.abs(player.y + player.h/2 - cy) < 25) {
+            coins.splice(i, 1);
+            coinCount++;
+            updateUI();
+        }
+    }
+}
+
+function collides() {
+    const corners = [
+        {x: player.x + 4, y: player.y + 4},
+        {x: player.x + player.w - 4, y: player.y + 4},
+        {x: player.x + 4, y: player.y + player.h - 4},
+        {x: player.x + player.w - 4, y: player.y + player.h - 4}
+    ];
+    for (const p of corners) {
+        const tx = Math.floor(p.x / TILE);
+        const ty = Math.floor(p.y / TILE);
+        if (tx < 0 || ty < 0 || tx >= MAP_W || ty >= MAP_H) return true;
+        if (map[ty][tx] > 0) return true;
+    }
+    return false;
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Langit
+    ctx.fillStyle = '#87CEEB';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Gambar map
+    const startX = Math.floor(cameraX / TILE);
+    const startY = Math.floor(cameraY / TILE);
+    const endX = startX + Math.ceil(canvas.width / TILE) + 1;
+    const endY = startY + Math.ceil(canvas.height / TILE) + 1;
+
+    for (let y = startY; y < endY; y++) {
+        for (let x = startX; x < endX; x++) {
+            if (y < 0 || x < 0 || y >= MAP_H || x >= MAP_W) continue;
+            const tile = map[y][x];
+            if (tile === 0) continue;
+
+            const px = x * TILE - cameraX;
+            const py = y * TILE - cameraY;
+
+            ctx.fillStyle = colors[tile] || '#888';
+            ctx.fillRect(px, py, TILE, TILE);
+
+            // Border biar keliatan blocky
+            ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+            ctx.strokeRect(px, py, TILE, TILE);
+        }
     }
 
-    finalScore.textContent = state.score;
+    // Coins
+    coins.forEach(c => {
+        const px = c.x * TILE - cameraX + TILE/2;
+        const py = c.y * TILE - cameraY + TILE/2;
+        ctx.beginPath();
+        ctx.arc(px, py, 10, 0, Math.PI * 2);
+        ctx.fillStyle = '#facc15';
+        ctx.fill();
+        ctx.strokeStyle = '#eab308';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    });
+
+    // Player
+    const px = player.x - cameraX;
+    const py = player.y - cameraY;
+
+    // Badan
+    ctx.fillStyle = player.color;
+    ctx.fillRect(px, py, player.w, player.h);
+
+    // Kepala
+    ctx.fillStyle = '#fca5a5';
+    ctx.fillRect(px + 4, py - 12, 20, 14);
+
+    // Mata
+    ctx.fillStyle = 'white';
+    ctx.fillRect(px + 7, py - 8, 5, 5);
+    ctx.fillRect(px + 16, py - 8, 5, 5);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(px + 9, py - 6, 2, 2);
+    ctx.fillRect(px + 18, py - 6, 2, 2);
 }
+
+function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+}
+
+updateUI();
+setMode('walk');
+loop();
 </script>
 </body>
 </html>
