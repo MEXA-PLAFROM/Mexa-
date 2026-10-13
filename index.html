@@ -1,577 +1,499 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#080b16">
-<title>NEXORA — Connect Beyond Limits</title>
-
-<style>
-:root {
-  --bg: #080b16;
-  --panel: #111729;
-  --panel2: #171f35;
-  --blue: #4c8dff;
-  --cyan: #36e4ef;
-  --text: #f4f7ff;
-  --muted: #96a3bd;
-  --border: #27314a;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, sans-serif;
-}
-button, input { font: inherit; }
-button { cursor: pointer; }
-.app {
-  max-width: 600px;
-  min-height: 100vh;
-  margin: auto;
-  padding-bottom: 82px;
-}
-header {
-  padding: 22px 18px 15px;
-  background: linear-gradient(135deg,#101a35,#090d1b);
-  border-bottom: 1px solid var(--border);
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-.logo {
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  border-radius: 15px;
-  font-size: 26px;
-  font-weight: 900;
-  background: linear-gradient(135deg,var(--blue),var(--cyan));
-  color: #07101f;
-  box-shadow: 0 0 22px #398dff44;
-}
-.brand h1 { margin: 0; font-size: 20px; letter-spacing: 3px; }
-.brand p { margin: 3px 0 0; color: var(--cyan); font-size: 10px; letter-spacing: 2px; }
-main { padding: 18px; }
-.heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-h2 { font-size: 23px; margin: 0 0 5px; }
-.subtitle { color: var(--muted); font-size: 13px; margin: 0; }
-.primary {
-  border: 0;
-  border-radius: 12px;
-  padding: 11px 14px;
-  color: #07101f;
-  font-weight: 800;
-  background: linear-gradient(120deg,var(--cyan),var(--blue));
-}
-.search {
-  width: 100%;
-  margin: 20px 0 15px;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  color: var(--text);
-  padding: 14px;
-  border-radius: 13px;
-  outline: none;
-}
-.search:focus, .composer input:focus {
-  border-color: var(--blue);
-}
-.section-label {
-  color: var(--muted);
-  font-size: 11px;
-  letter-spacing: 2px;
-  margin: 18px 0 10px;
-}
-.chat-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 10px;
-  border: 1px solid transparent;
-  border-radius: 15px;
-  color: var(--text);
-  background: transparent;
-  text-align: left;
-}
-.chat-item:hover, .chat-item.active {
-  background: var(--panel);
-  border-color: var(--border);
-}
-.avatar {
-  flex: 0 0 48px;
-  height: 48px;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg,#3655a0,#26b9d0);
-  color: white;
-  font-size: 18px;
-  font-weight: 800;
-}
-.chat-info { min-width: 0; flex: 1; }
-.chat-name { font-weight: 700; font-size: 14px; }
-.preview {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.chat-time { color: var(--muted); font-size: 10px; }
-.empty {
-  padding: 30px 12px;
-  text-align: center;
-  color: var(--muted);
-  line-height: 1.7;
-}
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 600px;
-  padding: 10px 5px calc(10px + env(safe-area-inset-bottom));
-  display: flex;
-  justify-content: space-around;
-  background: #0c1120f5;
-  border-top: 1px solid var(--border);
-  backdrop-filter: blur(15px);
-}
-.nav {
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  padding: 6px 8px;
-  font-size: 10px;
-}
-.nav span { display: block; font-size: 21px; margin-bottom: 3px; }
-.nav.active { color: var(--cyan); }
-
-.screen { display: none; }
-.screen.active { display: block; }
-
-.chat-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--border);
-}
-.back {
-  border: 0;
-  background: var(--panel2);
-  color: var(--text);
-  border-radius: 10px;
-  padding: 10px;
-}
-.chat-window {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 18px 0;
-  min-height: 43vh;
-}
-.bubble {
-  max-width: 82%;
-  padding: 11px 13px;
-  border-radius: 15px;
-  background: var(--panel2);
-  overflow-wrap: anywhere;
-}
-.bubble.mine {
-  align-self: flex-end;
-  background: linear-gradient(135deg,#275cbe,#236e91);
-}
-.bubble .stamp {
-  display: block;
-  text-align: right;
-  font-size: 10px;
-  color: #c4d5ee;
-  margin-top: 6px;
-}
-.composer {
-  display: flex;
-  gap: 8px;
-  position: sticky;
-  bottom: 80px;
-  padding-top: 10px;
-  background: var(--bg);
-}
-.composer input {
-  flex: 1;
-  min-width: 0;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  padding: 13px;
-  color: var(--text);
-  background: var(--panel);
-  outline: none;
-}
-.profile-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  padding: 22px;
-  border-radius: 20px;
-  text-align: center;
-}
-.profile-avatar {
-  width: 78px;
-  height: 78px;
-  margin: 0 auto 12px;
-  border-radius: 25px;
-  display: grid;
-  place-items: center;
-  font-size: 30px;
-  background: linear-gradient(135deg,var(--blue),var(--cyan));
-  color: #07101f;
-  font-weight: 900;
-}
-.profile-card input {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-}
-.note {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.7;
-  margin-top: 18px;
-}
-</style>
-</head>
-
-<body>
-<div class="app">
-<header>
-  <div class="brand">
-    <div class="logo">N</div>
-    <div>
-      <h1>NEXORA</h1>
-      <p>CONNECT BEYOND LIMITS</p>
-    </div>
-  </div>
-</header>
-
-<main>
-<section id="listScreen" class="screen active">
-  <div class="heading">
-    <div>
-      <h2>Pesan kamu</h2>
-      <p class="subtitle">Tetap dekat, tanpa batas.</p>
-    </div>
-    <button class="primary" onclick="newChat()">＋ Chat Baru</button>
-  </div>
-
-  <input id="search" class="search" placeholder="⌕ Cari percakapan..."
-    oninput="renderChats()">
-
-  <div class="section-label">SEMUA PERCAKAPAN</div>
-  <div id="chatList"></div>
-  <p class="note">NEXORA 2027 · SATU APLIKASI, JUTA KONEKSI</p>
-</section>
-
-<section id="roomScreen" class="screen">
-  <div class="chat-header">
-    <button class="back" onclick="showList()">←</button>
-    <div class="avatar" id="roomAvatar">N</div>
-    <div class="chat-info">
-      <div class="chat-name" id="roomName">Percakapan</div>
-      <div class="preview">Percakapan di perangkat ini</div>
-    </div>
-  </div>
-
-  <div id="messages" class="chat-window"></div>
-
-  <form class="composer" id="sendForm">
-    <input id="messageInput" maxlength="2000"
-      placeholder="Tulis pesan..." autocomplete="off" required>
-    <button class="primary" type="submit">Kirim ➤</button>
-  </form>
-  <p class="note">Pesan tersimpan secara lokal. Pengiriman ke pengguna lain belum diaktifkan.</p>
-</section>
-
-<section id="profileScreen" class="screen">
-  <h2>Identitas Kamu</h2>
-  <p class="subtitle">Personalisasi akun NEXORA kamu.</p>
-  <br>
-  <div class="profile-card">
-    <div class="profile-avatar" id="profileAvatar">P</div>
-    <h3 id="profileDisplay">Pengguna NEXORA</h3>
-    <p class="subtitle" id="profileHandle">@nexora_user</p>
-    <input id="profileName" maxlength="40" placeholder="Nama kamu">
-    <input id="profileUsername" maxlength="24" placeholder="Username">
-    <br>
-    <button class="primary" onclick="saveProfile()">Simpan Profil</button>
-  </div>
-  <p class="note">Profil ini disimpan di browser perangkat kamu. Versi ini belum menggunakan akun online.</p>
-</section>
-</main>
-
-<footer>
-  <button class="nav" onclick="go('listScreen',this)"><span>⌂</span>Beranda</button>
-  <button class="nav active" onclick="go('listScreen',this)"><span>◉</span>Chat</button>
-  <button class="nav" onclick="newChat()"><span>＋</span>Baru</button>
-  <button class="nav" onclick="go('profileScreen',this)"><span>♙</span>Profil</button>
-</footer>
-</div>
-
-<script>
-const STORE = "nexora_chats_v1";
-const PROFILE = "nexora_profile_v1";
-
-function loadChats() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORE));
-    if (Array.isArray(saved)) return saved;
-  } catch (e) {}
-  return [
-    {
-      id: "welcome",
-      name: "NEXORA Assistant",
-      messages: [
-        {
-          text: "Selamat datang di NEXORA! ✨ Ini ruang chat demo kamu. Kamu bisa mengirim pesan dan melihat riwayatnya di perangkat ini.",
-          mine: false,
-          time: Date.now()
-        }
-      ]
-    },
-    {
-      id: "ideas",
-      name: "Ide & Inspirasi",
-      messages: [
-        {
-          text: "Mulai tulis ide hebatmu di sini 🚀",
-          mine: false,
-          time: Date.now()
-        }
-      ]
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d1c">
+  <title>NEXORA Indonesia</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d1c;
+      --panel: #101a2e;
+      --line: #243552;
+      --accent: #00e5ff;
+      --text: #eef5ff;
+      --muted: #9aabc5;
     }
-  ];
-}
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at top, #142444, var(--bg) 65%);
+      color: var(--text);
+      font-family: system-ui, Arial, sans-serif;
+      min-height: 100vh;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .brand { text-align: center; padding: 24px 12px 16px; }
+    .brand h1 {
+      margin: 0;
+      color: var(--accent);
+      letter-spacing: 5px;
+      font-size: clamp(27px, 6vw, 40px);
+      text-shadow: 0 0 18px #00e5ff55;
+    }
+    .brand p { color: var(--muted); font-size: 11px; letter-spacing: 3px; }
+    .wrap { max-width: 960px; margin: auto; padding: 12px; }
+    .panel {
+      background: #101a2eeb;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 12px 40px #0004;
+    }
+    h2, h3 { margin-top: 0; }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 9px;
+      border: 1px solid #344765;
+      background: #080f20;
+      color: white;
+      outline: none;
+      margin: 6px 0 12px;
+    }
+    input:focus { border-color: var(--accent); }
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 14px;
+      background: var(--accent);
+      color: #06101b;
+      font-weight: 700;
+    }
+    button.secondary {
+      background: #243550;
+      color: white;
+      border: 1px solid #344765;
+    }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hint, .muted { color: var(--muted); font-size: 13px; }
+    .status { min-height: 24px; margin: 10px 0; color: var(--accent); font-size: 13px; }
+    .hidden { display: none !important; }
+    .layout { display: grid; grid-template-columns: 260px 1fr; gap: 12px; }
+    .userbox { overflow-wrap: anywhere; }
+    .chathead {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+    .messages {
+      height: min(48vh, 440px);
+      min-height: 250px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 5px 2px 15px;
+    }
+    .bubble {
+      max-width: 85%;
+      padding: 10px 12px;
+      border-radius: 13px;
+      background: #1a2942;
+      align-self: flex-start;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+    .bubble.mine {
+      align-self: flex-end;
+      background: #07556a;
+      border: 1px solid #087f96;
+    }
+    .bubble time { display: block; font-size: 10px; color: #c0d4e9; margin-top: 6px; }
+    .sendrow { display: flex; gap: 8px; align-items: center; }
+    .sendrow input { margin: 0; min-width: 0; }
+    .user-result {
+      display: block; width: 100%; text-align: left;
+      margin-top: 8px; background: #17253d; color: white;
+      border: 1px solid var(--line); overflow-wrap: anywhere;
+    }
+    .user-result small { display: block; color: var(--muted); font-weight: normal; }
+    @media(max-width: 650px) {
+      .layout { grid-template-columns: 1fr; }
+      .messages { height: 42vh; }
+      .panel { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="brand">
+    <h1>NEXORA</h1>
+    <p>INDONESIA 2027 · CONNECT BEYOND LIMITS</p>
+  </header>
 
-let chats = loadChats();
-let currentId = null;
+  <main class="wrap">
+    <section id="authPanel" class="panel">
+      <h2>Masuk ke NEXORA</h2>
+      <p class="muted">Buat akun atau masuk untuk mulai mengirim pesan.</p>
+      <label for="displayName">Nama tampilan (untuk pendaftaran)</label>
+      <input id="displayName" maxlength="60" placeholder="Nama kamu">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="nama@email.com">
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password"
+             minlength="8" placeholder="Minimal 8 karakter">
+      <div class="actions">
+        <button id="loginBtn">Login</button>
+        <button id="signupBtn" class="secondary">Daftar akun</button>
+      </div>
+      <p class="hint">Jika konfirmasi email diaktifkan di Supabase, buka email kamu dan konfirmasikan akun sebelum login.</p>
+      <div id="authStatus" class="status" role="status"></div>
+    </section>
 
-function saveChats() {
-  try {
-    localStorage.setItem(STORE, JSON.stringify(chats));
-  } catch (e) {
-    alert("Penyimpanan penuh atau tidak tersedia di browser ini.");
-  }
-}
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  }[c]));
-}
-
-function timeLabel(time) {
-  return new Date(time).toLocaleTimeString("id-ID", {
-    hour: "2-digit", minute: "2-digit"
-  });
-}
-
-function renderChats() {
-  const query = document.getElementById("search").value
-    .trim().toLowerCase();
-
-  const list = document.getElementById("chatList");
-  const filtered = chats.filter(c => {
-    const last = c.messages[c.messages.length - 1];
-    return c.name.toLowerCase().includes(query) ||
-      (last && last.text.toLowerCase().includes(query));
-  });
-
-  if (!filtered.length) {
-    list.innerHTML = '<div class="empty">Tidak ada percakapan ditemukan.<br>Coba kata lain atau buat chat baru.</div>';
-    return;
-  }
-
-  list.innerHTML = filtered.map(c => {
-    const last = c.messages[c.messages.length - 1];
-    const initial = escapeHTML(c.name.charAt(0).toUpperCase());
-    return `
-      <button class="chat-item ${currentId === c.id ? "active" : ""}"
-        onclick="openChat('${c.id}')">
-        <div class="avatar">${initial}</div>
-        <div class="chat-info">
-          <div class="chat-name">${escapeHTML(c.name)}</div>
-          <div class="preview">${last ? escapeHTML(last.text) : "Mulai percakapan"}</div>
+    <section id="appPanel" class="hidden">
+      <div class="panel" style="margin-bottom:12px">
+        <div class="actions" style="justify-content:space-between;align-items:center">
+          <div>
+            <strong id="myName">Pengguna NEXORA</strong>
+            <div id="myUsername" class="muted"></div>
+          </div>
+          <button id="logoutBtn" class="secondary">Keluar</button>
         </div>
-        <div class="chat-time">${last ? timeLabel(last.time) : ""}</div>
-      </button>`;
-  }).join("");
-}
+        <div id="appStatus" class="status" role="status"></div>
+      </div>
 
-function go(screenId, button) {
-  document.querySelectorAll(".screen").forEach(s =>
-    s.classList.remove("active"));
-  document.getElementById(screenId).classList.add("active");
+      <div class="layout">
+        <aside class="panel">
+          <h3>Cari pengguna</h3>
+          <p class="hint">Masukkan username pengguna yang ingin kamu chat.</p>
+          <input id="searchInput" placeholder="Contoh: nx_a1b2c3..." maxlength="40">
+          <button id="searchBtn" style="width:100%">Cari pengguna</button>
+          <div id="searchResults" class="userbox"></div>
+          <hr style="border-color:var(--line);margin:18px 0">
+          <p class="hint">Pilih hasil pencarian untuk membuka percakapan.</p>
+        </aside>
 
-  document.querySelectorAll(".nav").forEach(b =>
-    b.classList.remove("active"));
-  if (button) button.classList.add("active");
-}
+        <section class="panel">
+          <div class="chathead">
+            <h3 id="chatTitle">Chat pribadi</h3>
+            <div id="chatSubtitle" class="muted">Cari pengguna untuk memulai.</div>
+          </div>
+          <div id="messages" class="messages" aria-live="polite">
+            <p class="muted">Pesan akan tampil di sini.</p>
+          </div>
+          <form id="sendForm" class="sendrow">
+            <input id="messageInput" maxlength="2000" placeholder="Tulis pesan..."
+                   autocomplete="off" disabled>
+            <button id="sendBtn" type="submit" disabled>Kirim</button>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
 
-function showList() {
-  currentId = null;
-  go("listScreen", document.querySelectorAll(".nav")[1]);
-  renderChats();
-}
+  <script type="module">
+    import { createClient } from
+      "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-function openChat(id) {
-  const chat = chats.find(c => c.id === id);
-  if (!chat) return;
+    const SUPABASE_URL = "https://hhxygoblxshqxhkwybxq.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_nOvOu3SneFk0t2eSooT6uw_VbBZHQ3J";
 
-  currentId = id;
-  document.getElementById("roomName").textContent = chat.name;
-  document.getElementById("roomAvatar").textContent =
-    chat.name.charAt(0).toUpperCase();
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  renderMessages();
-  go("roomScreen", document.querySelectorAll(".nav")[1]);
-}
+    const $ = id => document.getElementById(id);
+    let currentUser = null;
+    let currentProfile = null;
+    let activeChat = null;
+    let messageChannel = null;
+    let loadingMessages = false;
 
-function renderMessages() {
-  const chat = chats.find(c => c.id === currentId);
-  if (!chat) return;
+    function status(id, text, isError = false) {
+      $(id).textContent = text;
+      $(id).style.color = isError ? "#ff9caa" : "var(--accent)";
+    }
 
-  const box = document.getElementById("messages");
-  if (!chat.messages.length) {
-    box.innerHTML = '<div class="empty">Belum ada pesan. Sapa dulu! 👋</div>';
-    return;
-  }
+    function showAuth() {
+      $("authPanel").classList.remove("hidden");
+      $("appPanel").classList.add("hidden");
+    }
 
-  box.innerHTML = chat.messages.map(m => `
-    <div class="bubble ${m.mine ? "mine" : ""}">
-      ${escapeHTML(m.text).replace(/\n/g, "<br>")}
-      <span class="stamp">${timeLabel(m.time)}${m.mine ? " · Kamu" : ""}</span>
-    </div>
-  `).join("");
+    function showApp() {
+      $("authPanel").classList.add("hidden");
+      $("appPanel").classList.remove("hidden");
+    }
 
-  box.scrollTop = box.scrollHeight;
-}
+    async function loadProfile() {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, username, display_name")
+        .eq("id", currentUser.id)
+        .single();
 
-function newChat() {
-  const name = prompt("Masukkan nama percakapan baru:");
-  if (!name || !name.trim()) return;
+      if (error) throw error;
+      currentProfile = data;
+      $("myName").textContent = data.display_name;
+      $("myUsername").textContent = "@" + data.username;
+    }
 
-  const cleanName = name.trim().slice(0, 40);
-  const existing = chats.find(c =>
-    c.name.toLowerCase() === cleanName.toLowerCase());
+    async function enterApp(user) {
+      currentUser = user;
+      try {
+        await loadProfile();
+        showApp();
+        status("appStatus", "Kamu sudah login dan siap menggunakan NEXORA.");
+        setupRealtime();
+      } catch (error) {
+        status("authStatus", "Gagal memuat profil: " + error.message, true);
+      }
+    }
 
-  if (existing) {
-    openChat(existing.id);
-    return;
-  }
+    $("signupBtn").addEventListener("click", async () => {
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      const displayName = $("displayName").value.trim() || "Pengguna NEXORA";
 
-  const chat = {
-    id: "chat_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
-    name: cleanName,
-    messages: []
-  };
+      if (!email || password.length < 8) {
+        status("authStatus", "Isi email yang valid dan password minimal 8 karakter.", true);
+        return;
+      }
 
-  chats.unshift(chat);
-  saveChats();
-  renderChats();
-  openChat(chat.id);
-}
+      $("signupBtn").disabled = true;
+      status("authStatus", "Mendaftarkan akun...");
 
-document.getElementById("sendForm").addEventListener("submit", e => {
-  e.preventDefault();
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { display_name: displayName } }
+        });
+        if (error) throw error;
 
-  const input = document.getElementById("messageInput");
-  const text = input.value.trim();
-  const chat = chats.find(c => c.id === currentId);
+        if (data.session && data.user) {
+          await enterApp(data.user);
+        } else {
+          status("authStatus",
+            "Pendaftaran berhasil. Periksa email untuk konfirmasi, lalu login.");
+        }
+      } catch (error) {
+        status("authStatus", error.message, true);
+      } finally {
+        $("signupBtn").disabled = false;
+      }
+    });
 
-  if (!text || !chat) return;
+    $("loginBtn").addEventListener("click", async () => {
+      const email = $("email").value.trim();
+      const password = $("password").value;
 
-  chat.messages.push({
-    text,
-    mine: true,
-    time: Date.now()
-  });
+      if (!email || !password) {
+        status("authStatus", "Masukkan email dan password.", true);
+        return;
+      }
 
-  saveChats();
-  input.value = "";
-  renderMessages();
-  renderChats();
-});
+      $("loginBtn").disabled = true;
+      status("authStatus", "Sedang login...");
 
-function loadProfile() {
-  let profile = {};
-  try {
-    profile = JSON.parse(localStorage.getItem(PROFILE)) || {};
-  } catch (e) {}
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email, password
+        });
+        if (error) throw error;
+        await enterApp(data.user);
+      } catch (error) {
+        status("authStatus", error.message, true);
+      } finally {
+        $("loginBtn").disabled = false;
+      }
+    });
 
-  document.getElementById("profileName").value =
-    profile.name || "Pengguna NEXORA";
-  document.getElementById("profileUsername").value =
-    profile.username || "nexora_user";
-  updateProfileView();
-}
+    $("logoutBtn").addEventListener("click", async () => {
+      if (messageChannel) {
+        await supabase.removeChannel(messageChannel);
+        messageChannel = null;
+      }
+      await supabase.auth.signOut();
+      currentUser = null;
+      currentProfile = null;
+      activeChat = null;
+      $("messages").replaceChildren();
+      showAuth();
+      status("authStatus", "Kamu sudah keluar.");
+    });
 
-function updateProfileView() {
-  const name = document.getElementById("profileName").value.trim()
-    || "Pengguna NEXORA";
-  let username = document.getElementById("profileUsername").value.trim()
-    || "nexora_user";
-  username = username.replace(/^@+/, "");
+    $("searchBtn").addEventListener("click", async () => {
+      const query = $("searchInput").value.trim().replace(/^@/, "");
+      const results = $("searchResults");
+      results.replaceChildren();
 
-  document.getElementById("profileDisplay").textContent = name;
-  document.getElementById("profileHandle").textContent = "@" + username;
-  document.getElementById("profileAvatar").textContent =
-    name.charAt(0).toUpperCase();
-}
+      if (query.length < 3) {
+        status("appStatus", "Masukkan username minimal 3 karakter.", true);
+        return;
+      }
 
-function saveProfile() {
-  const name = document.getElementById("profileName").value.trim()
-    .slice(0, 40) || "Pengguna NEXORA";
-  const username = document.getElementById("profileUsername").value
-    .trim().replace(/^@+/, "").slice(0, 24) || "nexora_user";
+      status("appStatus", "Mencari pengguna...");
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("id, username, display_name")
+          .ilike("username", query)
+          .neq("id", currentUser.id)
+          .limit(10);
 
-  try {
-    localStorage.setItem(PROFILE, JSON.stringify({name, username}));
-  } catch (e) {
-    alert("Profil tidak dapat disimpan di browser ini.");
-    return;
-  }
+        if (error) throw error;
 
-  document.getElementById("profileName").value = name;
-  document.getElementById("profileUsername").value = username;
-  updateProfileView();
-  alert("Profil berhasil disimpan di perangkat ini.");
-}
+        if (!data.length) {
+          status("appStatus", "Pengguna tidak ditemukan.");
+          return;
+        }
 
-document.getElementById("profileName").addEventListener("input", updateProfileView);
-document.getElementById("profileUsername").addEventListener("input", updateProfileView);
+        for (const profile of data) {
+          const button = document.createElement("button");
+          button.className = "user-result";
+          button.textContent = profile.display_name;
+          const detail = document.createElement("small");
+          detail.textContent = "@" + profile.username;
+          button.appendChild(detail);
+          button.addEventListener("click", () => openChat(profile));
+          results.appendChild(button);
+        }
+        status("appStatus", "Hasil pencarian: " + data.length + " pengguna.");
+      } catch (error) {
+        status("appStatus", "Pencarian gagal: " + error.message, true);
+      }
+    });
 
-renderChats();
-loadProfile();
-</script>
+    async function openChat(profile) {
+      activeChat = profile;
+      $("chatTitle").textContent = profile.display_name;
+      $("chatSubtitle").textContent = "@" + profile.username;
+      $("messageInput").disabled = false;
+      $("sendBtn").disabled = false;
+      await loadMessages();
+    }
+
+    function formatTime(value) {
+      return new Date(value).toLocaleString("id-ID", {
+        hour: "2-digit", minute: "2-digit",
+        day: "2-digit", month: "short"
+      });
+    }
+
+    function renderMessages(rows) {
+      const container = $("messages");
+      container.replaceChildren();
+
+      if (!rows.length) {
+        const empty = document.createElement("p");
+        empty.className = "muted";
+        empty.textContent = "Belum ada pesan. Mulai percakapan!";
+        container.appendChild(empty);
+        return;
+      }
+
+      for (const row of rows) {
+        const bubble = document.createElement("div");
+        bubble.className = "bubble" +
+          (row.sender_id === currentUser.id ? " mine" : "");
+        bubble.appendChild(document.createTextNode(row.body));
+
+        const time = document.createElement("time");
+        time.textContent = formatTime(row.created_at);
+        bubble.appendChild(time);
+        container.appendChild(bubble);
+      }
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function loadMessages() {
+      if (!activeChat || loadingMessages) return;
+      loadingMessages = true;
+
+      try {
+        const otherId = activeChat.id;
+        const { data, error } = await supabase
+          .from("messages")
+          .select("id, sender_id, receiver_id, body, created_at")
+          .or(
+            `and(sender_id.eq.${currentUser.id},receiver_id.eq.${otherId}),` +
+            `and(sender_id.eq.${otherId},receiver_id.eq.${currentUser.id})`
+          )
+          .order("created_at", { ascending: true })
+          .limit(200);
+
+        if (error) throw error;
+        renderMessages(data || []);
+      } catch (error) {
+        status("appStatus", "Gagal memuat pesan: " + error.message, true);
+      } finally {
+        loadingMessages = false;
+      }
+    }
+
+    $("sendForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const body = $("messageInput").value.trim();
+
+      if (!currentUser || !activeChat || !body) return;
+      if (body.length > 2000) {
+        status("appStatus", "Pesan maksimal 2000 karakter.", true);
+        return;
+      }
+
+      $("sendBtn").disabled = true;
+      try {
+        const { error } = await supabase.from("messages").insert({
+          sender_id: currentUser.id,
+          receiver_id: activeChat.id,
+          body
+        });
+
+        if (error) throw error;
+        $("messageInput").value = "";
+        await loadMessages();
+        status("appStatus", "Pesan terkirim.");
+      } catch (error) {
+        status("appStatus", "Pesan gagal dikirim: " + error.message, true);
+      } finally {
+        $("sendBtn").disabled = !activeChat;
+      }
+    });
+
+    function setupRealtime() {
+      if (messageChannel) {
+        supabase.removeChannel(messageChannel);
+      }
+
+      messageChannel = supabase
+        .channel("nexora-messages-" + currentUser.id)
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "messages" },
+          payload => {
+            const message = payload.new;
+            if (
+              activeChat &&
+              (
+                (message.sender_id === currentUser.id &&
+                 message.receiver_id === activeChat.id) ||
+                (message.sender_id === activeChat.id &&
+                 message.receiver_id === currentUser.id)
+              )
+            ) {
+              loadMessages();
+            }
+          }
+        )
+        .subscribe();
+    }
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        currentUser = null;
+        currentProfile = null;
+        showAuth();
+      }
+    });
+
+    const { data: initialSession } = await supabase.auth.getSession();
+    if (initialSession.session?.user) {
+      await enterApp(initialSession.session.user);
+    } else {
+      showAuth();
+    }
+  </script>
 </body>
 </html>
