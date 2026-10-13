@@ -259,7 +259,7 @@ let loadingMessages = false;
 
 function status(id, text, isError = false) {
   $(id).textContent = text;
-  $(id).style.color = isError = isError ? "#ff7b96" : "var(--accent)";
+  $(id).style.color = isError ? "#ff7b96" : "var(--accent)";
 }
 
 function showAuth() {
@@ -274,7 +274,7 @@ function showApp() {
 
 async function loadProfile() {
   const { data, error } = await supabase.from("profiles")
-    .select("id, username, display_name, share_profile, avatar_url")
+    .select("id, username, display_name, share_profile")
     .eq("id", currentUser.id).single();
 
   if (error) throw error;
@@ -283,12 +283,14 @@ async function loadProfile() {
   $("myUsername").textContent = "@" + data.username;
   $("profileDisplayName").value = data.display_name || "";
   $("profileUsername").value = data.username || "";
-  $("profileAvatarUrl").value = data.avatar_url || "";
   $("shareProfileToggle").checked = data.share_profile !== false;
   
-  if(data.avatar_url) {
-    $("profileAvatarPreview").src = data.avatar_url;
-    $("myHeaderAvatar").src = data.avatar_url;
+  // Ambil avatar dari localStorage perangkat
+  const savedAvatar = localStorage.getItem("nexora-avatar-" + currentUser.id) || "";
+  $("profileAvatarUrl").value = savedAvatar;
+  if(savedAvatar) {
+    $("profileAvatarPreview").src = savedAvatar;
+    $("myHeaderAvatar").src = savedAvatar;
   }
 }
 
@@ -409,7 +411,7 @@ $("searchBtn").addEventListener("click", async () => {
   status("appStatus", "Mencari pengguna...");
   try {
     let request = supabase.from("profiles")
-      .select("id, username, display_name, share_profile, avatar_url")
+      .select("id, username, display_name, share_profile")
       .ilike("username", query)
       .neq("id", currentUser.id)
       .limit(10);
@@ -432,9 +434,10 @@ $("searchBtn").addEventListener("click", async () => {
       header.style.alignItems = "center";
       header.style.gap = "10px";
       
+      const partnerAvatar = localStorage.getItem("nexora-avatar-" + profile.id) || "";
       const av = document.createElement("img");
       av.className = "avatar-small";
-      av.src = profile.avatar_url || "";
+      av.src = partnerAvatar;
       av.onerror = () => { av.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="%23132244"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300f0ff" font-size="15">👤</text></svg>'; };
       
       const info = document.createElement("div");
@@ -504,7 +507,7 @@ async function loadChatHistory() {
     }
 
     const { data: profiles, error: pErr } = await supabase.from("profiles")
-      .select("id, username, display_name, avatar_url")
+      .select("id, username, display_name")
       .in("id", Array.from(partnerIds));
 
     if (pErr) throw pErr;
@@ -516,9 +519,10 @@ async function loadChatHistory() {
       const item = document.createElement("div");
       item.className = "chat-history-item";
       
+      const partnerAvatar = localStorage.getItem("nexora-avatar-" + p.id) || "";
       const av = document.createElement("img");
       av.className = "avatar-small";
-      av.src = p.avatar_url || "";
+      av.src = partnerAvatar;
       av.onerror = () => { av.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="%23132244"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300f0ff" font-size="15">👤</text></svg>'; };
       
       const details = document.createElement("div");
@@ -636,8 +640,9 @@ function showPage(pageId) {
   if (pageId === "profilePage" && currentProfile) {
     $("profileDisplayName").value = currentProfile.display_name || "";
     $("profileUsername").value = currentProfile.username || "";
-    $("profileAvatarUrl").value = currentProfile.avatar_url || "";
-    $("profileAvatarPreview").src = currentProfile.avatar_url || "";
+    const savedAvatar = localStorage.getItem("nexora-avatar-" + currentUser.id) || "";
+    $("profileAvatarUrl").value = savedAvatar;
+    $("profileAvatarPreview").src = savedAvatar;
     $("shareProfileToggle").checked = currentProfile.share_profile !== false;
   }
   if (pageId === "chatPage") {
@@ -688,17 +693,23 @@ $("saveProfileBtn").addEventListener("click", async () => {
   $("saveProfileBtn").disabled = true;
   try {
     const { data, error } = await supabase.from("profiles")
-      .update({ display_name, avatar_url, share_profile })
+      .update({ display_name, share_profile })
       .eq("id", currentUser.id)
-      .select("id, username, display_name, share_profile, avatar_url").single();
+      .select("id, username, display_name, share_profile").single();
     if (error) throw error;
+    
     currentProfile = data;
+    // Simpan foto profil ke localStorage perangkat
+    if(avatar_url) {
+      localStorage.setItem("nexora-avatar-" + currentUser.id, avatar_url);
+      $("profileAvatarPreview").src = avatar_url;
+      $("myHeaderAvatar").src = avatar_url;
+    } else {
+      localStorage.removeItem("nexora-avatar-" + currentUser.id);
+    }
+
     $("myName").textContent = data.display_name;
     $("myUsername").textContent = "@" + data.username;
-    if(data.avatar_url) {
-      $("profileAvatarPreview").src = data.avatar_url;
-      $("myHeaderAvatar").src = data.avatar_url;
-    }
     status("profileStatus", "Profil & foto berhasil disimpan!");
   } catch (error) {
     status("profileStatus", "Gagal menyimpan profil: " + error.message, true);
