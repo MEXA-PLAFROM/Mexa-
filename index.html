@@ -1,13 +1,298 @@
-
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NEXORA Edukasi</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXORA - Ruang Guru per Kelas</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      height: 100vh;
+      display: flex;
+    }
+    #sidebar {
+      width: 280px;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    #sidebar h1 {
+      font-size: 1.5rem;
+      color: #818cf8;
+      margin-bottom: 6px;
+    }
+    .user-info {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 24px;
+    }
+    .class-item {
+      margin-bottom: 18px;
+    }
+    .class-name {
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      background: transparent;
+    }
+    .class-name.active {
+      background: #1e293b;
+    }
+    .class-name:hover {
+      background: #1e293b;
+    }
+    .sub-menu {
+      margin-left: 14px;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+    .sub-item {
+      padding: 7px 0;
+      color: #cbd5e1;
+      cursor: pointer;
+    }
+    .teacher-room-btn {
+      color: #fbbf24 !important;
+      font-weight: 600;
+    }
+    #main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .btn-green { background: #22c55e; color: white; }
+    .btn-red { background: #ef4444; color: white; }
+    .btn-gray { background: #e2e8f0; color: #1e293b; }
+    .role-switch {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #334155;
+    }
+    .role-switch button {
+      display: block;
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #1e293b;
+      color: white;
+      cursor: pointer;
+    }
+    .badge {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <h1>NEXORA</h1>
+    <div class="user-info">
+      Login sebagai: <strong id="user-name">Bu Sari</strong><br>
+      <span id="user-role">wali_kelas</span>
+    </div>
+
+    <div id="class-list"></div>
+
+    <div class="role-switch">
+      <p style="font-size:13px; color:#94a3b8; margin-bottom:10px;">Ganti Role (Testing)</p>
+      <button onclick="gantiRole('wali_kelas')">Wali Kelas (Bu Sari)</button>
+      <button onclick="gantiRole('guru_mapel')">Guru Mapel (Pak Dimas)</button>
+      <button onclick="gantiRole('siswa')">Siswa (Andi)</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="main">
+    <div id="content">
+      <h2>Pilih kelas di sebelah kiri</h2>
+    </div>
+  </div>
+
+<script>
+  // ========== DATA ==========
+  const users = {
+    wali_kelas: { id: "guru-001", name: "Bu Sari", role: "wali_kelas" },
+    guru_mapel: { id: "guru-002", name: "Pak Dimas", role: "guru_mapel" },
+    siswa: { id: "siswa-001", name: "Andi", role: "siswa" }
+  };
+
+  let currentUser = users.wali_kelas;
+
+  const classes = [
+    { id: "kelas-7a", name: "Kelas 7A", waliKelasId: "guru-001", guruMapelIds: ["guru-002"] },
+    { id: "kelas-7b", name: "Kelas 7B", waliKelasId: "guru-003", guruMapelIds: ["guru-002"] }
+  ];
+
+  const teacherRooms = {
+    "tr-7a": {
+      id: "tr-7a",
+      classRoomId: "kelas-7a",
+      name: "Ruang Guru 7A",
+      antrian: [
+        { id: 1, siswa: "Andi", isi: "Tugas Matematika halaman 45" },
+        { id: 2, siswa: "Budi", isi: "Link TikTok (melanggar aturan)" }
+      ],
+      absen: [
+        { siswa: "Andi", status: "hadir", sikap: "Aktif" },
+        { siswa: "Siti", status: "hadir", sikap: "Sopan" },
+        { siswa: "Budi", status: "izin", sikap: "-" }
+      ],
+      aturan: ["Link TikTok dilarang", "Jam malam mulai pukul 21.00"]
+    },
+    "tr-7b": {
+      id: "tr-7b",
+      classRoomId: "kelas-7b",
+      name: "Ruang Guru 7B",
+      antrian: [],
+      absen: [],
+      aturan: []
+    }
+  };
+
+  // ========== LOGIKA ROLE ==========
+  function bisaLihatRuangGuru(kelas) {
+    if (currentUser.role === "siswa") return false;
+    if (currentUser.role === "wali_kelas") return kelas.waliKelasId === currentUser.id;
+    if (currentUser.role === "guru_mapel") return kelas.guruMapelIds.includes(currentUser.id);
+    return false;
+  }
+
+  // ========== RENDER SIDEBAR ==========
+  function renderSidebar() {
+    document.getElementById("user-name").textContent = currentUser.name;
+    document.getElementById("user-role").textContent = currentUser.role;
+
+    const list = document.getElementById("class-list");
+    list.innerHTML = "";
+
+    classes.forEach(kelas => {
+      const boleh = bisaLihatRuangGuru(kelas);
+      const div = document.createElement("div");
+      div.className = "class-item";
+      div.innerHTML = `
+        <div class="class-name" onclick="bukaKelas('${kelas.id}')">
+          📚 ${kelas.name}
+        </div>
+        <div class="sub-menu">
+          <div class="sub-item" onclick="bukaKelas('${kelas.id}')">💬 Chat Kelas</div>
+          <div class="sub-item" onclick="bukaKelas('${kelas.id}')">📚 Tugas & Materi</div>
+          \( {boleh ? `<div class="sub-item teacher-room-btn" onclick="bukaRuangGuru('tr- \){kelas.id.split('-')[1]}')">🔒 Ruang Guru ${kelas.name.split(' ')[1]}</div>` : ''}
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  // ========== HALAMAN KELAS ==========
+  function bukaKelas(id) {
+    const kelas = classes.find(c => c.id === id);
+    document.getElementById("content").innerHTML = `
+      <h1 style="margin-bottom:10px">${kelas.name}</h1>
+      <p style="color:#64748b;margin-bottom:30px">Ini adalah halaman Chat & Tugas kelas.</p>
+      
+      <div class="card">
+        <h3>💬 Chat Kelas</h3>
+        <p style="color:#94a3b8;margin-top:10px">Belum ada pesan.</p>
+      </div>
+
+      <div class="card">
+        <h3>📚 Tugas & Materi</h3>
+        <p style="color:#94a3b8;margin-top:10px">Belum ada tugas.</p>
+      </div>
+    `;
+  }
+
+  // ========== HALAMAN RUANG GURU ==========
+  function bukaRuangGuru(id) {
+    const room = teacherRooms[id];
+    if (!room) return;
+
+    let antrianHTML = room.antrian.length === 0 
+      ? `<p style="color:#94a3b8">Tidak ada antrian</p>`
+      : room.antrian.map(a => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #e2e8f0">
+            <div>
+              <strong>${a.siswa}</strong>
+              <div style="font-size:14px;color:#475569">${a.isi}</div>
+            </div>
+            <div>
+              <button class="btn btn-green" onclick="alert('Disetujui (demo)')">Approve</button>
+              <button class="btn btn-red" onclick="alert('Ditolak (demo)')">Tolak</button>
+            </div>
+          </div>
+        `).join("");
+
+    let absenHTML = room.absen.map(a => `
+      <div style="padding:8px 0;border-bottom:1px solid #f1f5f9">
+        \( {a.siswa} — <strong> \){a.status}</strong> ${a.sikap !== "-" ? `| Sikap: ${a.sikap}` : ""}
+      </div>
+    `).join("");
+
+    let aturanHTML = room.aturan.map(a => `<li style="margin-bottom:6px">${a}</li>`).join("");
+
+    document.getElementById("content").innerHTML = `
+      <button class="btn btn-gray" onclick="bukaKelas('${room.classRoomId}')" style="margin-bottom:20px">← Kembali</button>
+      
+      <h1 style="margin-bottom:6px">🔒 ${room.name}</h1>
+      <p style="color:#64748b;margin-bottom:30px">Hanya terlihat oleh guru kelas ini</p>
+
+      <div class="card">
+        <h3>📋 Antrian <span class="badge">${room.antrian.length}</span></h3>
+        <div style="margin-top:16px">${antrianHTML}</div>
+      </div>
+
+      <div class="card">
+        <h3>✅ Absen Hari Ini</h3>
+        <div style="margin-top:12px">${absenHTML || "<p style='color:#94a3b8'>Belum ada data</p>"}</div>
+      </div>
+
+      <div class="card">
+        <h3>⚙️ Aturan Kelas</h3>
+        <ul style="margin-top:12px;padding-left:20px">${aturanHTML || "<li style='color:#94a3b8'>Belum ada aturan</li>"}</ul>
+      </div>
+    `;
+  }
+
+  // ========== GANTI ROLE ==========
+  function gantiRole(role) {
+    currentUser = users[role];
+    renderSidebar();
+    document.getElementById("content").innerHTML = `<h2>Role diganti. Pilih kelas di sebelah kiri.</h2>`;
+  }
+
+  // Jalankan pertama kali
+  renderSidebar();
+  bukaKelas("kelas-7a");
+</script>
+</body>
 </html>
