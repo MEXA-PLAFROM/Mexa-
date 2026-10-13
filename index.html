@@ -1,541 +1,119 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0818">
-  <title>Daftar MEXA SMART</title>
-
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0b0818;
-      --panel: #151027;
-      --border: #302544;
-      --text: #f6f3ff;
-      --muted: #aaa4c2;
-      --primary: #8b5cf6;
-      --accent: #00e5ff;
-      --danger: #fb7185;
-      --success: #34d399;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      padding: 25px 14px;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(
-          ellipse at 50% 0%,
-          #392060 0%,
-          transparent 50%
-        ),
-        var(--bg);
-      color: var(--text);
-      font-family: system-ui, sans-serif;
-    }
-
-    .page {
-      width: min(100%, 440px);
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 26px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 46px;
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: 1px;
-    }
-
-    .logo-m, .logo-a { color: var(--primary); }
-    .logo-x { color: var(--accent); }
-
-    /* E terdiri dari tepat tiga strip horizontal */
-    .logo-e {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: flex-start;
-      width: 22px;
-      height: 30px;
-      margin: 0 2px;
-    }
-
-    .logo-e span {
-      display: block;
-      height: 5px;
-      background: var(--primary);
-      border-radius: 1px;
-    }
-
-    .logo-e span:nth-child(1) { width: 22px; }
-    .logo-e span:nth-child(2) { width: 13px; }
-    .logo-e span:nth-child(3) { width: 18px; }
-
-    .brand-caption {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 750;
-      letter-spacing: 4px;
-    }
-
-    .card {
-      padding: 28px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: 0 24px 75px #0005;
-    }
-
-    .eyebrow {
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    h1 {
-      margin: 10px 0;
-      font-size: 29px;
-    }
-
-    .intro {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-      margin: 0 0 25px;
-    }
-
-    .field { margin-bottom: 16px; }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: 750;
-    }
-
-    input {
-      width: 100%;
-      min-height: 47px;
-      padding: 12px;
-      background: #0d0a17;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font: inherit;
-      font-size: 14px;
-    }
-
-    input:focus {
-      outline: 2px solid var(--primary);
-      outline-offset: 1px;
-    }
-
-    input::placeholder { color: #766d89; }
-
-    .hint {
-      margin: 7px 0 0;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.6;
-    }
-
-    .submit {
-      width: 100%;
-      min-height: 48px;
-      margin-top: 5px;
-      padding: 12px;
-      border: 1px solid #a78bfa;
-      border-radius: 10px;
-      background: linear-gradient(110deg, #7c3aed, #8b5cf6);
-      color: white;
-      font-weight: 850;
-      cursor: pointer;
-    }
-
-    .submit:disabled {
-      cursor: wait;
-      opacity: .6;
-    }
-
-    .message {
-      display: none;
-      margin-top: 15px;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #0d0a17;
-      font-size: 12px;
-      line-height: 1.7;
-      overflow-wrap: anywhere;
-    }
-
-    .message.visible { display: block; }
-    .message.info { color: var(--accent); }
-    .message.success { color: var(--success); }
-    .message.error { color: var(--danger); }
-
-    .login-note {
-      margin: 22px 0 0;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .login-note a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .login-note a:hover {
-      text-decoration: underline;
-    }
-
-    .footer {
-      margin-top: 22px;
-      text-align: center;
-      color: #827996;
-      font-size: 11px;
-      line-height: 1.8;
-    }
-
-    @media (max-width: 390px) {
-      .card { padding: 22px 18px; }
-      .logo { font-size: 40px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXORA Indonesia</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#08111f;color:#eef6ff;
+font-family:Arial,sans-serif}
+header{padding:22px;background:#101f35;
+border-bottom:1px solid #263c58}
+h1{margin:0;color:#55e6d0}
+small{color:#a9bdd4}
+main{max-width:650px;margin:auto;padding:18px}
+.card{background:#101f35;border:1px solid #263c58;
+border-radius:16px;padding:16px;margin-bottom:16px}
+input,textarea,button{font:inherit;padding:12px;
+border-radius:10px;width:100%;margin-top:8px}
+input,textarea{background:#08111f;color:white;
+border:1px solid #344b67}
+button{background:#55e6d0;color:#07131d;
+border:0;font-weight:bold;cursor:pointer}
+#messages{height:250px;overflow:auto;
+background:#08111f;padding:12px;border-radius:10px}
+.msg{padding:9px;margin:7px 0;background:#18334a;
+border-radius:10px;overflow-wrap:anywhere}
+</style>
 </head>
-
 <body>
-  <main class="page">
+<header>
+<h1>NEXORA</h1>
+<small>Indonesia • Communication Project 2027</small>
+</header>
+<main>
+<section class="card">
+<h3>Profil pengguna</h3>
+<input id="name" placeholder="Nama kamu">
+<button onclick="saveName()">Simpan nama</button>
+<p id="profile">Selamat datang!</p>
+</section>
 
-    <header class="brand">
-      <div class="logo" role="img" aria-label="MEXA">
-        <span class="logo-m">M</span>
-        <span class="logo-e" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-        <span class="logo-x">X</span>
-        <span class="logo-a">A</span>
-      </div>
+<section class="card">
+<h3>Chat lokal</h3>
+<small>Prototipe pesan yang tersimpan di browser ini.
+Belum terkirim ke HP lain.</small>
+<div id="messages"></div>
+<textarea id="message" placeholder="Tulis pesan..."></textarea>
+<button onclick="sendMessage()">Kirim pesan</button>
+<button onclick="clearMessages()">Hapus riwayat</button>
+</section>
 
-      <div class="brand-caption">
-        SMART SOCIAL PLATFORM
-      </div>
-    </header>
+<section class="card">
+<h3>Rencana fitur</h3>
+<p>✓ Antarmuka chat</p>
+<p>✓ Penyimpanan pesan lokal</p>
+<p>○ Chat antarperangkat</p>
+<p>○ Foto dan video</p>
+<p>○ Panggilan suara</p>
+<p>○ Integrasi satelit</p>
+</section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
 
-    <section class="card">
-      <div class="eyebrow">PENDAFTARAN ANGGOTA</div>
+function saveName(){
+ const name=$("name").value.trim();
+ if(!name)return alert("Masukkan nama dahulu.");
+ localStorage.setItem("nexora_name",name);
+ $("profile").textContent="Halo, "+name+"!";
+}
 
-      <h1>Buat akun MEXA</h1>
+function render(){
+ const data=JSON.parse(
+ localStorage.getItem("nexora_messages")||"[]"
+ );
+ $("messages").replaceChildren();
+ data.forEach(item=>{
+  const div=document.createElement("div");
+  div.className="msg";
+  div.textContent=item.name+": "+item.text;
+  $("messages").appendChild(div);
+ });
+ $("messages").scrollTop=$("messages").scrollHeight;
+}
 
-      <p class="intro">
-        Daftarkan akunmu untuk bergabung dengan MEXA SMART.
-        Isi data dengan benar.
-      </p>
+function sendMessage(){
+ const text=$("message").value.trim();
+ if(!text)return;
+ const data=JSON.parse(
+ localStorage.getItem("nexora_messages")||"[]"
+ );
+ data.push({
+  name:localStorage.getItem("nexora_name")||"Pengguna",
+  text,
+  time:Date.now()
+ });
+ localStorage.setItem("nexora_messages",JSON.stringify(data));
+ $("message").value="";
+ render();
+}
 
-      <form id="mexaRegisterForm">
-        <div class="field">
-          <label for="displayName">Nama lengkap</label>
-          <input
-            id="displayName"
-            name="displayName"
-            type="text"
-            minlength="2"
-            maxlength="80"
-            autocomplete="name"
-            placeholder="Masukkan nama lengkap"
-            required
-          >
-        </div>
+function clearMessages(){
+ if(confirm("Hapus semua pesan lokal?")){
+  localStorage.removeItem("nexora_messages");
+  render();
+ }
+}
 
-        <div class="field">
-          <label for="username">Username</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            minlength="3"
-            maxlength="30"
-            pattern="[A-Za-z0-9_.]+"
-            autocomplete="username"
-            placeholder="Contoh: arip_rahman"
-            required
-          >
-          <p class="hint">
-            3–30 karakter: huruf, angka, titik,
-            atau garis bawah.
-          </p>
-        </div>
-
-        <div class="field">
-          <label for="email">Alamat email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            maxlength="254"
-            autocomplete="email"
-            placeholder="nama@email.com"
-            required
-          >
-        </div>
-
-        <div class="field">
-          <label for="password">Kata sandi</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            minlength="8"
-            maxlength="72"
-            autocomplete="new-password"
-            placeholder="Minimal 8 karakter"
-            required
-          >
-        </div>
-
-        <div class="field">
-          <label for="confirmPassword">
-            Konfirmasi kata sandi
-          </label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            minlength="8"
-            maxlength="72"
-            autocomplete="new-password"
-            placeholder="Ulangi kata sandi"
-            required
-          >
-        </div>
-
-        <button
-          class="submit"
-          id="registerButton"
-          type="submit"
-        >
-          Daftar Sekarang
-        </button>
-
-        <div
-          class="message"
-          id="registerMessage"
-          role="status"
-          aria-live="polite"
-        ></div>
-      </form>
-
-      <p class="login-note">
-        Sudah memiliki akun?
-        <a
-          id="loginLink"
-          href="https://mexa-plafrom.github.io/mexa/"
-        >Masuk</a>
-      </p>
-    </section>
-
-    <footer class="footer">
-      MEXA SMART · Pendaftaran akun resmi
-    </footer>
-  </main>
-
-  <!-- REGISTRY PENDAFTARAN → PENGHUBUNG 1 -->
-  <script>
-    (function (window) {
-      "use strict";
-
-      window.MEXA_HTML_REGISTRY = Object.freeze({
-        version: "1.0.0",
-
-        async registerUser(payload) {
-          const connector = window.MEXA_CONNECTOR_1;
-
-          if (
-            !connector ||
-            typeof connector.registerUser !== "function"
-          ) {
-            throw new Error(
-              "Penghubung 1 belum menyediakan registerUser(). " +
-              "Pendaftaran belum dikirim."
-            );
-          }
-
-          return connector.registerUser(payload);
-        }
-      });
-    })(window);
-  </script>
-
-  <!-- URUTAN PEMUATAN: PUSAT, LALU PENGHUBUNG 1 -->
-  <script src="./js/core/mexa-system-center.js"></script>
-  <script src="./js/core/mexa-connector-1.js"></script>
-
-  <!-- PROSES PENDAFTARAN -->
-  <script>
-    (function (window, document) {
-      "use strict";
-
-      const MX_URL =
-        "https://mexa-plafrom.github.io/mexa/";
-
-      const form =
-        document.getElementById("mexaRegisterForm");
-
-      const button =
-        document.getElementById("registerButton");
-
-      const message =
-        document.getElementById("registerMessage");
-
-      const loginLink =
-        document.getElementById("loginLink");
-
-      // Satu alamat tujuan MX yang digunakan halaman ini.
-      loginLink.href = MX_URL;
-
-      function showMessage(text, type) {
-        message.textContent = text;
-        message.className = "message visible " + type;
-      }
-
-      form.addEventListener("submit", async function (event) {
-        event.preventDefault();
-
-        if (!form.reportValidity()) {
-          return;
-        }
-
-        const displayName =
-          document.getElementById("displayName")
-            .value.trim();
-
-        const username =
-          document.getElementById("username")
-            .value.trim().toLowerCase();
-
-        const email =
-          document.getElementById("email")
-            .value.trim().toLowerCase();
-
-        const password =
-          document.getElementById("password").value;
-
-        const confirmation =
-          document.getElementById("confirmPassword").value;
-
-        if (password !== confirmation) {
-          showMessage(
-            "Kata sandi dan konfirmasi tidak sama.",
-            "error"
-          );
-          return;
-        }
-
-        if (!/^[a-z0-9_.]{3,30}$/.test(username)) {
-          showMessage(
-            "Username harus 3–30 karakter: huruf kecil, angka, titik, atau garis bawah.",
-            "error"
-          );
-          return;
-        }
-
-        button.disabled = true;
-        button.textContent = "Memproses...";
-
-        showMessage(
-          "Mengirim pendaftaran ke sistem MEXA...",
-          "info"
-        );
-
-        try {
-          const registry = window.MEXA_HTML_REGISTRY;
-
-          if (
-            !registry ||
-            typeof registry.registerUser !== "function"
-          ) {
-            throw new Error(
-              "HTML Registry belum siap."
-            );
-          }
-
-          const result = await registry.registerUser({
-            displayName: displayName,
-            username: username,
-            email: email,
-            password: password
-          });
-
-          if (
-            !result ||
-            result.accepted !== true ||
-            result.accountCreated !== true
-          ) {
-            throw new Error(
-              "System Pusat belum mengonfirmasi pembuatan akun."
-            );
-          }
-
-          form.reset();
-
-          if (result.emailConfirmationRequired === true) {
-            showMessage(
-              (result.message ||
-                "Akun berhasil dibuat.") +
-              " Periksa kotak masuk email dan folder spam. " +
-              "Setelah email dikonfirmasi, buka MX untuk masuk.",
-              "success"
-            );
-
-            return;
-          }
-
-          showMessage(
-            "Akun berhasil dibuat. Mengarahkan ke MX...",
-            "success"
-          );
-
-          window.setTimeout(function () {
-            window.location.assign(MX_URL);
-          }, 900);
-
-        } catch (error) {
-          showMessage(
-            String(error.message || error),
-            "error"
-          );
-
-          console.error(
-            "[MEXA REGISTER] Pendaftaran gagal:",
-            error
-          );
-        } finally {
-          button.disabled = false;
-          button.textContent = "Daftar Sekarang";
-        }
-      });
-    })(window, document);
-    // Arahkan ke Home MEXA setelah login berhasil
-window.location.href = "./mx-space.html";
-  </script>
+const saved=localStorage.getItem("nexora_name");
+if(saved){
+ $("name").value=saved;
+ $("profile").textContent="Halo, "+saved+"!";
+}
+render();
+</script>
 </body>
 </html>
