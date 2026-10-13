@@ -42,6 +42,12 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .status{min-height:22px;margin:8px 0;color:var(--accent-glow);font-size:13px;overflow-wrap:anywhere}
 .hidden{display:none!important}
 
+/* Default sembunyikan semua panel untuk cegah kedipan */
+#loadingPanel, #authPanel, #appPanel { display: none; }
+#loadingPanel.active, #authPanel.active, #appPanel.active { display: block; }
+
+.loading-screen{text-align:center;padding:60px 20px;font-size:15px;color:var(--accent-glow);letter-spacing:1px}
+
 /* Navigation */
 .appnav{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin-bottom:14px;border:1px solid var(--line);border-radius:16px;background:var(--bg-panel)}
 .navitem{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#202c33;color:var(--text);padding:10px 14px;border-radius:12px;transition:0.2s}
@@ -131,6 +137,10 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 </header>
 
 <main class="wrap">
+<div id="loadingPanel" class="panel loading-screen active">
+  ✦ Memuat NEXORA...
+</div>
+
 <section id="authPanel" class="panel" style="max-width:440px;margin:auto">
 <h2>Masuk ke NEXORA</h2>
 <p class="muted">Buat akun atau masuk untuk mulai terhubung.</p>
@@ -148,7 +158,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 <div id="authStatus" class="status" role="status"></div>
 </section>
 
-<section id="appPanel" class="hidden">
+<section id="appPanel">
 <nav class="appnav" aria-label="Menu utama">
 <button class="navitem active" data-page="homePage"><span class="navicon">⌂</span><span class="navlabel" data-label="home">Beranda</span></button>
 <button class="navitem" data-page="chatPage"><span class="navicon">▣</span><span class="navlabel" data-label="chat">Pesan</span></button>
@@ -291,13 +301,15 @@ function status(id, text, isError = false) {
 }
 
 function showAuth() {
-  $("authPanel").classList.remove("hidden");
-  $("appPanel").classList.add("hidden");
+  $("loadingPanel").classList.remove("active");
+  $("authPanel").classList.add("active");
+  $("appPanel").classList.remove("active");
 }
 
 function showApp() {
-  $("authPanel").classList.add("hidden");
-  $("appPanel").classList.remove("hidden");
+  $("loadingPanel").classList.remove("active");
+  $("authPanel").classList.remove("active");
+  $("appPanel").classList.add("active");
 }
 
 async function loadProfile() {
@@ -833,8 +845,10 @@ document.querySelectorAll(".game-more").forEach(button => {
   });
 });
 
-supabase.auth.onAuthStateChange(event => {
-  if (event === "SIGNED_OUT") {
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_IN" && session?.user) {
+    enterApp(session.user);
+  } else if (event === "SIGNED_OUT") {
     currentUser = null;
     currentProfile = null;
     activeChat = null;
@@ -842,16 +856,16 @@ supabase.auth.onAuthStateChange(event => {
   }
 });
 
-supabase.auth.getSession().then(({ data: initialSession, error: sessionError }) => {
-  if (sessionError) {
+async function initSession() {
+  const { data: initialSession, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError || !initialSession.session?.user) {
     showAuth();
-    status("authStatus", "Gagal memeriksa sesi: " + sessionError.message, true);
-  } else if (initialSession.session?.user) {
-    enterApp(initialSession.session.user);
   } else {
-    showAuth();
+    await enterApp(initialSession.session.user);
   }
-});
+}
+
+initSession();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
