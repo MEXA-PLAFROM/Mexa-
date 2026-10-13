@@ -217,7 +217,7 @@ async function enableNexoraNotification() {
 
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(
+    applicationServerKey: urlBase64ToUint8Array(window.NEXORA_VAPID_PUBLIC_KEY)
       window.NEXORA_VAPID_PUBLIC_KEY
     )
   });
