@@ -3,411 +3,575 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#06101f">
-<title>NEXORA 2027</title>
+<meta name="theme-color" content="#080b16">
+<title>NEXORA — Connect Beyond Limits</title>
 
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;background:#050b16;color:#f2f8ff;
- font-family:Arial,sans-serif
+:root {
+  --bg: #080b16;
+  --panel: #111729;
+  --panel2: #171f35;
+  --blue: #4c8dff;
+  --cyan: #36e4ef;
+  --text: #f4f7ff;
+  --muted: #96a3bd;
+  --border: #27314a;
 }
-.app{max-width:520px;margin:auto;padding:18px 15px 95px}
-header{display:flex;align-items:center;gap:12px;margin-bottom:25px}
-.logo{
- width:48px;height:48px;border-radius:16px;
- display:grid;place-items:center;
- background:linear-gradient(135deg,#00d9ff,#315cff,#8855ff);
- font-size:30px;font-weight:bold;
- box-shadow:0 0 20px #168cff66
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
 }
-.brand{font-size:21px;font-weight:bold;letter-spacing:3px}
-.tag{font-size:10px;color:#24e0ff;letter-spacing:1.5px;margin-top:4px}
-.page{display:none}
-.page.active{display:block}
-.hero{
- padding:25px 20px;border-radius:24px;
- border:1px solid #1764a0;
- background:linear-gradient(145deg,#12365c,#0a1729 65%,#201541);
+button, input { font: inherit; }
+button { cursor: pointer; }
+.app {
+  max-width: 600px;
+  min-height: 100vh;
+  margin: auto;
+  padding-bottom: 82px;
 }
-.eyebrow{color:#24e0ff;font-size:11px;letter-spacing:2px}
-h1{font-size:34px;line-height:1.15;margin:15px 0}
-h2{font-size:18px}
-p{color:#9bb3ce;font-size:13px;line-height:1.6}
-button,input{font:inherit}
-button{cursor:pointer}
-.primary{
- border:0;border-radius:13px;padding:13px 18px;
- color:white;font-weight:bold;
- background:linear-gradient(100deg,#00c9f5,#176fff,#7655ff)
+header {
+  padding: 22px 18px 15px;
+  background: linear-gradient(135deg,#101a35,#090d1b);
+  border-bottom: 1px solid var(--border);
 }
-.section{margin:25px 0 12px;font-weight:bold}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.tile,.card{
- background:#0b192b;border:1px solid #193957;
- border-radius:16px;padding:14px 8px
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
 }
-.tile{text-align:center;color:white;font-size:12px}
-.tile b{display:block;font-size:24px;color:#24dfff;margin-bottom:10px}
-.card{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.avatar{
- width:44px;height:44px;border-radius:50%;
- display:grid;place-items:center;flex-shrink:0;
- background:linear-gradient(135deg,#087dca,#7049dc);
- font-weight:bold
+.logo {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  font-size: 26px;
+  font-weight: 900;
+  background: linear-gradient(135deg,var(--blue),var(--cyan));
+  color: #07101f;
+  box-shadow: 0 0 22px #398dff44;
 }
-.info{flex:1;min-width:0}
-.info strong{font-size:14px}
-.info small{display:block;color:#8da6c4;margin-top:5px;font-size:11px}
-.online{color:#39e6a3!important}
-.pagehead{margin:12px 0 20px}
-.pagehead h1{font-size:29px;margin:8px 0}
-input{
- width:100%;padding:13px;border-radius:12px;
- background:#091629;color:white;border:1px solid #193957;
- outline:none;margin-bottom:12px
+.brand h1 { margin: 0; font-size: 20px; letter-spacing: 3px; }
+.brand p { margin: 3px 0 0; color: var(--cyan); font-size: 10px; letter-spacing: 2px; }
+main { padding: 18px; }
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
-.person{cursor:pointer}
-.person:hover{border-color:#168cff}
-.chatbox{border:1px solid #193957;border-radius:18px;overflow:hidden}
-.chathead{display:flex;align-items:center;gap:10px;padding:12px;background:#0b192b}
-.messages{
- height:42vh;min-height:260px;max-height:420px;
- overflow-y:auto;padding:13px;background:#071222
+h2 { font-size: 23px; margin: 0 0 5px; }
+.subtitle { color: var(--muted); font-size: 13px; margin: 0; }
+.primary {
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 14px;
+  color: #07101f;
+  font-weight: 800;
+  background: linear-gradient(120deg,var(--cyan),var(--blue));
 }
-.bubble{
- max-width:85%;padding:11px 13px;border-radius:15px;
- margin:9px 0;font-size:13px;line-height:1.5;
- overflow-wrap:anywhere
+.search {
+  width: 100%;
+  margin: 20px 0 15px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  padding: 14px;
+  border-radius: 13px;
+  outline: none;
 }
-.out{margin-left:auto;background:#075a9f}
-.in{background:#152943}
-.bubble small{display:block;text-align:right;margin-top:5px;color:#b7d4f2}
-.composer{display:flex;gap:7px;padding:10px;background:#0b192b}
-.composer input{margin:0;min-width:0}
-.composer button{border:0;border-radius:12px;background:#087dff;color:white;padding:0 16px}
-.nav{
- position:fixed;bottom:0;left:50%;transform:translateX(-50%);
- width:100%;max-width:520px;display:grid;
- grid-template-columns:repeat(5,1fr);gap:3px;
- padding:10px 6px 15px;background:#06101ff5;
- border-top:1px solid #193957
+.search:focus, .composer input:focus {
+  border-color: var(--blue);
 }
-.nav button{
- border:0;background:none;color:#829ab7;
- font-size:10px;padding:7px 0
+.section-label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin: 18px 0 10px;
 }
-.nav button b{display:block;font-size:21px;margin-bottom:4px}
-.nav button.active{color:#24e0ff}
-.notice{font-size:11px;text-align:center;color:#829ab7;margin:16px 5px}
-.setting{
- width:100%;text-align:left;color:white;
- background:#0b192b;border:1px solid #193957;
- border-radius:14px;padding:15px;margin:5px 0
+.chat-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 10px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  color: var(--text);
+  background: transparent;
+  text-align: left;
 }
-.empty{text-align:center;padding:30px 12px;color:#9bb3ce;font-size:13px}
+.chat-item:hover, .chat-item.active {
+  background: var(--panel);
+  border-color: var(--border);
+}
+.avatar {
+  flex: 0 0 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg,#3655a0,#26b9d0);
+  color: white;
+  font-size: 18px;
+  font-weight: 800;
+}
+.chat-info { min-width: 0; flex: 1; }
+.chat-name { font-weight: 700; font-size: 14px; }
+.preview {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-time { color: var(--muted); font-size: 10px; }
+.empty {
+  padding: 30px 12px;
+  text-align: center;
+  color: var(--muted);
+  line-height: 1.7;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  padding: 10px 5px calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-around;
+  background: #0c1120f5;
+  border-top: 1px solid var(--border);
+  backdrop-filter: blur(15px);
+}
+.nav {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 6px 8px;
+  font-size: 10px;
+}
+.nav span { display: block; font-size: 21px; margin-bottom: 3px; }
+.nav.active { color: var(--cyan); }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border);
+}
+.back {
+  border: 0;
+  background: var(--panel2);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px;
+}
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 0;
+  min-height: 43vh;
+}
+.bubble {
+  max-width: 82%;
+  padding: 11px 13px;
+  border-radius: 15px;
+  background: var(--panel2);
+  overflow-wrap: anywhere;
+}
+.bubble.mine {
+  align-self: flex-end;
+  background: linear-gradient(135deg,#275cbe,#236e91);
+}
+.bubble .stamp {
+  display: block;
+  text-align: right;
+  font-size: 10px;
+  color: #c4d5ee;
+  margin-top: 6px;
+}
+.composer {
+  display: flex;
+  gap: 8px;
+  position: sticky;
+  bottom: 80px;
+  padding-top: 10px;
+  background: var(--bg);
+}
+.composer input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 13px;
+  color: var(--text);
+  background: var(--panel);
+  outline: none;
+}
+.profile-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 22px;
+  border-radius: 20px;
+  text-align: center;
+}
+.profile-avatar {
+  width: 78px;
+  height: 78px;
+  margin: 0 auto 12px;
+  border-radius: 25px;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  background: linear-gradient(135deg,var(--blue),var(--cyan));
+  color: #07101f;
+  font-weight: 900;
+}
+.profile-card input {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+.note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 18px;
+}
 </style>
 </head>
 
 <body>
 <div class="app">
-
 <header>
- <div class="logo">N</div>
- <div>
-  <div class="brand">NEXORA</div>
-  <div class="tag">CONNECT BEYOND LIMITS</div>
- </div>
+  <div class="brand">
+    <div class="logo">N</div>
+    <div>
+      <h1>NEXORA</h1>
+      <p>CONNECT BEYOND LIMITS</p>
+    </div>
+  </div>
 </header>
 
-<!-- BERANDA -->
-<section class="page active" id="home">
- <div class="hero">
-  <div class="eyebrow">✦ NEXORA INDONESIA · 2027</div>
-  <h1>Terhubung tanpa <span style="color:#24dfff">batas.</span></h1>
-  <p>Ruang komunikasi generasi baru. Mulai percakapan dan tetap dekat dengan orang-orang penting.</p>
-  <button class="primary" onclick="go('chats')">Mulai Chat →</button>
- </div>
-
- <div class="section">AKSES CEPAT</div>
- <div class="grid">
-  <button class="tile" onclick="go('chats')"><b>◉</b>Pesan</button>
-  <button class="tile" onclick="go('calls')"><b>⌕</b>Panggilan</button>
-  <button class="tile" onclick="newChat()"><b>＋</b>Chat Baru</button>
-  <button class="tile" onclick="go('profile')"><b>♙</b>Profil</button>
- </div>
-
- <div class="section">IDENTITAS KAMU</div>
- <div class="card">
-  <div class="avatar" id="homeAvatar">N</div>
-  <div class="info">
-   <strong id="homeName">Pengguna NEXORA</strong>
-   <small id="homeHandle">@nexora_user</small>
-   <small class="online">● Aktif di perangkat ini</small>
-  </div>
- </div>
- <p class="notice">NEXORA 2027 · SATU APLIKASI, JUTA KONEKSI</p>
-</section>
-
-<!-- CHAT -->
-<section class="page" id="chats">
- <div class="pagehead">
-  <div class="eyebrow">RUANG KOMUNIKASI</div>
-  <h1>Pesan</h1>
-  <p>Mulai percakapanmu di NEXORA.</p>
- </div>
-
- <input id="search" placeholder="⌕ Cari percakapan..." oninput="renderChats()">
-
- <div id="chatList"></div>
-
- <div id="chatRoom" style="display:none">
-  <div class="chatbox">
-   <div class="chathead">
-    <button class="primary" style="padding:8px 12px" onclick="backChats()">‹</button>
-    <div class="avatar" id="roomAvatar">N</div>
-    <div class="info">
-     <strong id="roomName">Catatan pribadi</strong>
-     <small style="color:#39e6a3">● Lokal di perangkat ini</small>
+<main>
+<section id="listScreen" class="screen active">
+  <div class="heading">
+    <div>
+      <h2>Pesan kamu</h2>
+      <p class="subtitle">Tetap dekat, tanpa batas.</p>
     </div>
-   </div>
-   <div class="messages" id="messages"></div>
-   <form class="composer" onsubmit="sendMessage(event)">
-    <input id="messageInput" placeholder="Tulis pesan..." maxlength="1500" autocomplete="off">
-    <button type="submit">➤</button>
-   </form>
+    <button class="primary" onclick="newChat()">＋ Chat Baru</button>
   </div>
-  <p class="notice">Pesan demo hanya tersimpan di browser ini.</p>
- </div>
+
+  <input id="search" class="search" placeholder="⌕ Cari percakapan..."
+    oninput="renderChats()">
+
+  <div class="section-label">SEMUA PERCAKAPAN</div>
+  <div id="chatList"></div>
+  <p class="note">NEXORA 2027 · SATU APLIKASI, JUTA KONEKSI</p>
 </section>
 
-<!-- PANGGILAN -->
-<section class="page" id="calls">
- <div class="pagehead">
-  <div class="eyebrow">TETAP TERHUBUNG</div>
-  <h1>Panggilan</h1>
-  <p>Tempat untuk fitur panggilan NEXORA.</p>
- </div>
- <div class="hero">
-  <h2>Suara lebih dekat. ☎</h2>
-  <p>Antarmuka panggilan sudah disiapkan. Panggilan suara dan video sungguhan membutuhkan layanan komunikasi tambahan.</p>
- </div>
- <div class="section">RIWAYAT</div>
- <div class="empty">Belum ada riwayat panggilan.</div>
-</section>
-
-<!-- PROFIL -->
-<section class="page" id="profile">
- <div class="pagehead">
-  <div class="eyebrow">AKUN NEXORA</div>
-  <h1>Profil</h1>
-  <p>Atur identitas yang tampil di aplikasi.</p>
- </div>
- <div class="card">
-  <div class="avatar" id="profileAvatar">N</div>
-  <div class="info">
-   <strong id="profileName">Pengguna NEXORA</strong>
-   <small id="profileHandle">@nexora_user</small>
+<section id="roomScreen" class="screen">
+  <div class="chat-header">
+    <button class="back" onclick="showList()">←</button>
+    <div class="avatar" id="roomAvatar">N</div>
+    <div class="chat-info">
+      <div class="chat-name" id="roomName">Percakapan</div>
+      <div class="preview">Percakapan di perangkat ini</div>
+    </div>
   </div>
- </div>
- <button class="setting" onclick="editProfile()">✎ &nbsp; Edit nama pengguna</button>
- <button class="setting" onclick="aboutApp()">✧ &nbsp; Tentang NEXORA</button>
- <button class="setting" onclick="clearDemo()" style="color:#ff9ca8">Hapus data demo</button>
- <p class="notice">Jangan masukkan kata sandi atau informasi rahasia pada prototipe ini.</p>
+
+  <div id="messages" class="chat-window"></div>
+
+  <form class="composer" id="sendForm">
+    <input id="messageInput" maxlength="2000"
+      placeholder="Tulis pesan..." autocomplete="off" required>
+    <button class="primary" type="submit">Kirim ➤</button>
+  </form>
+  <p class="note">Pesan tersimpan secara lokal. Pengiriman ke pengguna lain belum diaktifkan.</p>
 </section>
 
+<section id="profileScreen" class="screen">
+  <h2>Identitas Kamu</h2>
+  <p class="subtitle">Personalisasi akun NEXORA kamu.</p>
+  <br>
+  <div class="profile-card">
+    <div class="profile-avatar" id="profileAvatar">P</div>
+    <h3 id="profileDisplay">Pengguna NEXORA</h3>
+    <p class="subtitle" id="profileHandle">@nexora_user</p>
+    <input id="profileName" maxlength="40" placeholder="Nama kamu">
+    <input id="profileUsername" maxlength="24" placeholder="Username">
+    <br>
+    <button class="primary" onclick="saveProfile()">Simpan Profil</button>
+  </div>
+  <p class="note">Profil ini disimpan di browser perangkat kamu. Versi ini belum menggunakan akun online.</p>
+</section>
+</main>
+
+<footer>
+  <button class="nav" onclick="go('listScreen',this)"><span>⌂</span>Beranda</button>
+  <button class="nav active" onclick="go('listScreen',this)"><span>◉</span>Chat</button>
+  <button class="nav" onclick="newChat()"><span>＋</span>Baru</button>
+  <button class="nav" onclick="go('profileScreen',this)"><span>♙</span>Profil</button>
+</footer>
 </div>
 
-<nav class="nav">
- <button class="active" data-page="home" onclick="go('home')"><b>⌂</b>Beranda</button>
- <button data-page="chats" onclick="go('chats')"><b>◉</b>Chat</button>
- <button onclick="newChat()"><b>＋</b>Baru</button>
- <button data-page="calls" onclick="go('calls')"><b>⌕</b>Panggilan</button>
- <button data-page="profile" onclick="go('profile')"><b>♙</b>Profil</button>
-</nav>
-
 <script>
-const $ = id => document.getElementById(id);
+const STORE = "nexora_chats_v1";
+const PROFILE = "nexora_profile_v1";
 
-function read(key, fallback) {
- try {
-  const value = localStorage.getItem(key);
-  return value ? JSON.parse(value) : fallback;
- } catch(e) { return fallback; }
-}
-function save(key, value) {
- try { localStorage.setItem(key, JSON.stringify(value)); }
- catch(e) { alert('Penyimpanan browser penuh atau tidak tersedia.'); }
-}
-
-let profile = read('nexora_profile', {
- name:'Pengguna NEXORA', handle:'nexora_user'
-});
-let chats = read('nexora_chats', []);
-let current = null;
-
-function initial(name) {
- return (name.trim()[0] || 'N').toUpperCase();
-}
-function escapeHTML(text) {
- return String(text).replace(/[&<>"']/g, c => ({
-  '&':'&amp;','<':'&lt;','>':'&gt;',
-  '"':'&quot;',"'":'&#39;'
- }[c]));
-}
-
-function updateProfile() {
- $('homeName').textContent = profile.name;
- $('profileName').textContent = profile.name;
- $('homeHandle').textContent = '@' + profile.handle;
- $('profileHandle').textContent = '@' + profile.handle;
- $('homeAvatar').textContent = initial(profile.name);
- $('profileAvatar').textContent = initial(profile.name);
+function loadChats() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE));
+    if (Array.isArray(saved)) return saved;
+  } catch (e) {}
+  return [
+    {
+      id: "welcome",
+      name: "NEXORA Assistant",
+      messages: [
+        {
+          text: "Selamat datang di NEXORA! ✨ Ini ruang chat demo kamu. Kamu bisa mengirim pesan dan melihat riwayatnya di perangkat ini.",
+          mine: false,
+          time: Date.now()
+        }
+      ]
+    },
+    {
+      id: "ideas",
+      name: "Ide & Inspirasi",
+      messages: [
+        {
+          text: "Mulai tulis ide hebatmu di sini 🚀",
+          mine: false,
+          time: Date.now()
+        }
+      ]
+    }
+  ];
 }
 
-function go(id) {
- document.querySelectorAll('.page').forEach(p =>
-  p.classList.toggle('active', p.id === id)
- );
- document.querySelectorAll('.nav button[data-page]').forEach(b =>
-  b.classList.toggle('active', b.dataset.page === id)
- );
- if (id === 'chats') {
-  $('chatRoom').style.display = current ? 'block' : 'none';
-  $('chatList').style.display = current ? 'none' : 'block';
-  renderChats();
- }
- window.scrollTo(0,0);
+let chats = loadChats();
+let currentId = null;
+
+function saveChats() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify(chats));
+  } catch (e) {
+    alert("Penyimpanan penuh atau tidak tersedia di browser ini.");
+  }
 }
 
-function newChat() {
- const name = prompt('Nama percakapan:', 'Catatan pribadi');
- if (!name || !name.trim()) return;
- go('chats');
- openChat(name.trim());
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[c]));
 }
 
-function openChat(idOrName, byId=false) {
- let chat = byId
-  ? chats.find(c => c.id === idOrName)
-  : chats.find(c => c.name === idOrName);
-
- if (!chat) {
-  chat = {
-   id:'c'+Date.now(),
-   name:idOrName,
-   messages:[]
-  };
-  chats.unshift(chat);
- }
- current = chat.id;
- save('nexora_chats', chats);
- $('roomName').textContent = chat.name;
- $('roomAvatar').textContent = initial(chat.name);
- $('chatList').style.display = 'none';
- $('chatRoom').style.display = 'block';
- renderMessages();
+function timeLabel(time) {
+  return new Date(time).toLocaleTimeString("id-ID", {
+    hour: "2-digit", minute: "2-digit"
+  });
 }
 
 function renderChats() {
- const q = $('search').value.toLowerCase().trim();
- const list = chats.filter(c => c.name.toLowerCase().includes(q));
+  const query = document.getElementById("search").value
+    .trim().toLowerCase();
 
- if (!list.length) {
-  $('chatList').innerHTML =
-   '<div class="empty">Belum ada percakapan.<br><br>'+
-   '<button class="primary" onclick="newChat()">＋ Buat chat baru</button></div>';
-  return;
- }
+  const list = document.getElementById("chatList");
+  const filtered = chats.filter(c => {
+    const last = c.messages[c.messages.length - 1];
+    return c.name.toLowerCase().includes(query) ||
+      (last && last.text.toLowerCase().includes(query));
+  });
 
- $('chatList').innerHTML = list.map(c => {
-  const last = c.messages[c.messages.length-1];
-  return `<div class="card person" onclick="openChat('${c.id}',true)">
-   <div class="avatar">${escapeHTML(initial(c.name))}</div>
-   <div class="info"><strong>${escapeHTML(c.name)}</strong>
-   <small>${escapeHTML(last ? last.text : 'Mulai percakapan')}</small></div>
-   <span>›</span>
-  </div>`;
- }).join('');
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty">Tidak ada percakapan ditemukan.<br>Coba kata lain atau buat chat baru.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(c => {
+    const last = c.messages[c.messages.length - 1];
+    const initial = escapeHTML(c.name.charAt(0).toUpperCase());
+    return `
+      <button class="chat-item ${currentId === c.id ? "active" : ""}"
+        onclick="openChat('${c.id}')">
+        <div class="avatar">${initial}</div>
+        <div class="chat-info">
+          <div class="chat-name">${escapeHTML(c.name)}</div>
+          <div class="preview">${last ? escapeHTML(last.text) : "Mulai percakapan"}</div>
+        </div>
+        <div class="chat-time">${last ? timeLabel(last.time) : ""}</div>
+      </button>`;
+  }).join("");
+}
+
+function go(screenId, button) {
+  document.querySelectorAll(".screen").forEach(s =>
+    s.classList.remove("active"));
+  document.getElementById(screenId).classList.add("active");
+
+  document.querySelectorAll(".nav").forEach(b =>
+    b.classList.remove("active"));
+  if (button) button.classList.add("active");
+}
+
+function showList() {
+  currentId = null;
+  go("listScreen", document.querySelectorAll(".nav")[1]);
+  renderChats();
+}
+
+function openChat(id) {
+  const chat = chats.find(c => c.id === id);
+  if (!chat) return;
+
+  currentId = id;
+  document.getElementById("roomName").textContent = chat.name;
+  document.getElementById("roomAvatar").textContent =
+    chat.name.charAt(0).toUpperCase();
+
+  renderMessages();
+  go("roomScreen", document.querySelectorAll(".nav")[1]);
 }
 
 function renderMessages() {
- const chat = chats.find(c => c.id === current);
- if (!chat) return;
+  const chat = chats.find(c => c.id === currentId);
+  if (!chat) return;
 
- if (!chat.messages.length) {
-  $('messages').innerHTML =
-   '<div class="empty">Ini awal percakapan.<br>Kirim catatan pertamamu di bawah.</div>';
- } else {
-  $('messages').innerHTML = chat.messages.map(m =>
-   `<div class="bubble ${m.from==='me'?'out':'in'}">
-    ${escapeHTML(m.text)}
-    <small>${escapeHTML(m.time)}</small>
-   </div>`
-  ).join('');
- }
- $('messages').scrollTop = $('messages').scrollHeight;
+  const box = document.getElementById("messages");
+  if (!chat.messages.length) {
+    box.innerHTML = '<div class="empty">Belum ada pesan. Sapa dulu! 👋</div>';
+    return;
+  }
+
+  box.innerHTML = chat.messages.map(m => `
+    <div class="bubble ${m.mine ? "mine" : ""}">
+      ${escapeHTML(m.text).replace(/\n/g, "<br>")}
+      <span class="stamp">${timeLabel(m.time)}${m.mine ? " · Kamu" : ""}</span>
+    </div>
+  `).join("");
+
+  box.scrollTop = box.scrollHeight;
 }
 
-function sendMessage(event) {
- event.preventDefault();
- const input = $('messageInput');
- const text = input.value.trim();
- if (!text || !current) return;
+function newChat() {
+  const name = prompt("Masukkan nama percakapan baru:");
+  if (!name || !name.trim()) return;
 
- const chat = chats.find(c => c.id === current);
- chat.messages.push({
-  from:'me',
-  text:text,
-  time:new Date().toLocaleTimeString('id-ID',{
-   hour:'2-digit',minute:'2-digit'
-  })
- });
- save('nexora_chats', chats);
- input.value = '';
- renderMessages();
- renderChats();
+  const cleanName = name.trim().slice(0, 40);
+  const existing = chats.find(c =>
+    c.name.toLowerCase() === cleanName.toLowerCase());
+
+  if (existing) {
+    openChat(existing.id);
+    return;
+  }
+
+  const chat = {
+    id: "chat_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
+    name: cleanName,
+    messages: []
+  };
+
+  chats.unshift(chat);
+  saveChats();
+  renderChats();
+  openChat(chat.id);
 }
 
-function backChats() {
- current = null;
- $('chatRoom').style.display = 'none';
- $('chatList').style.display = 'block';
- renderChats();
+document.getElementById("sendForm").addEventListener("submit", e => {
+  e.preventDefault();
+
+  const input = document.getElementById("messageInput");
+  const text = input.value.trim();
+  const chat = chats.find(c => c.id === currentId);
+
+  if (!text || !chat) return;
+
+  chat.messages.push({
+    text,
+    mine: true,
+    time: Date.now()
+  });
+
+  saveChats();
+  input.value = "";
+  renderMessages();
+  renderChats();
+});
+
+function loadProfile() {
+  let profile = {};
+  try {
+    profile = JSON.parse(localStorage.getItem(PROFILE)) || {};
+  } catch (e) {}
+
+  document.getElementById("profileName").value =
+    profile.name || "Pengguna NEXORA";
+  document.getElementById("profileUsername").value =
+    profile.username || "nexora_user";
+  updateProfileView();
 }
 
-function editProfile() {
- const name = prompt('Nama tampilan:', profile.name);
- if (name === null || !name.trim()) return;
+function updateProfileView() {
+  const name = document.getElementById("profileName").value.trim()
+    || "Pengguna NEXORA";
+  let username = document.getElementById("profileUsername").value.trim()
+    || "nexora_user";
+  username = username.replace(/^@+/, "");
 
- const handle = prompt('Nama pengguna:', profile.handle);
- if (handle === null) return;
-
- profile = {
-  name:name.trim(),
-  handle:handle.trim().replace(/^@/,'').replace(/[^a-zA-Z0-9_.]/g,'') || 'nexora_user'
- };
- save('nexora_profile', profile);
- updateProfile();
+  document.getElementById("profileDisplay").textContent = name;
+  document.getElementById("profileHandle").textContent = "@" + username;
+  document.getElementById("profileAvatar").textContent =
+    name.charAt(0).toUpperCase();
 }
 
-function aboutApp() {
- alert('NEXORA 2027\\nConnect Beyond Limits\\n\\nPrototipe awal aplikasi komunikasi Indonesia.');
+function saveProfile() {
+  const name = document.getElementById("profileName").value.trim()
+    .slice(0, 40) || "Pengguna NEXORA";
+  const username = document.getElementById("profileUsername").value
+    .trim().replace(/^@+/, "").slice(0, 24) || "nexora_user";
+
+  try {
+    localStorage.setItem(PROFILE, JSON.stringify({name, username}));
+  } catch (e) {
+    alert("Profil tidak dapat disimpan di browser ini.");
+    return;
+  }
+
+  document.getElementById("profileName").value = name;
+  document.getElementById("profileUsername").value = username;
+  updateProfileView();
+  alert("Profil berhasil disimpan di perangkat ini.");
 }
 
-function clearDemo() {
- if (!confirm('Hapus semua chat dan profil demo di browser ini?')) return;
- chats = [];
- current = null;
- profile = {name:'Pengguna NEXORA',handle:'nexora_user'};
- save('nexora_chats', chats);
- save('nexora_profile', profile);
- updateProfile();
- go('home');
-}
+document.getElementById("profileName").addEventListener("input", updateProfileView);
+document.getElementById("profileUsername").addEventListener("input", updateProfileView);
 
-updateProfile();
 renderChats();
+loadProfile();
 </script>
 </body>
 </html>
