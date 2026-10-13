@@ -256,7 +256,7 @@ function urlBase64ToUint8Array(base64String) {
    }
 /* GANTI dengan VAPID PUBLIC KEY hasil generate.
    Jangan pernah menaruh VAPID PRIVATE KEY atau service_role di HTML. */
-const VAPID_PUBLIC_KEY = "GANTI_DENGAN_VAPID_PUBLIC_KEY";
+const VAPID_PUBLIC_KEY = "BAeTuuBYwj1wXRDFRyBNNEVjERqhWpUfud8JCZWQEDNVYuYIrEiB8oY9aIbb5GbbxRBo9lWooEorMGISb-08QBk";
 
 const $ = id => document.getElementById(id);
 let currentUser = null;
@@ -728,22 +728,6 @@ if ("serviceWorker" in navigator) {
     }
   });
    }
-  
-<script>
-  // Public VAPID Key untuk notifikasi NEXORA
-  window.NEXORA_VAPID_PUBLIC_KEY = "BAeTuuBYwj1wXRDFRyBNNEVjERqhWpUfud8JCZWQEDNVYuYIrEiB8oY9aIbb5GbbxRBo9lWooEorMGISb-08QBk";
-
-  // Daftarkan Service Worker
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
-      try {
-        await navigator.serviceWorker.register("/service-worker.js");
-        console.log("NEXORA Service Worker berhasil didaftarkan");
-      } catch (error) {
-        console.error("Service Worker gagal:", error);
-      }
-    });
-  }
 </script>
-</body>
+  </body>
 </html>
