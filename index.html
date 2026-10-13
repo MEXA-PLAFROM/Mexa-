@@ -674,7 +674,22 @@ if ("serviceWorker" in navigator) {
     }
   });
    }
-   
+  
+<script>
+  // Public VAPID Key untuk notifikasi NEXORA
+  window.NEXORA_VAPID_PUBLIC_KEY = "GANTI_DENGAN_PUBLIC_KEY_BARU";
+
+  // Daftarkan Service Worker
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        await navigator.serviceWorker.register("/service-worker.js");
+        console.log("NEXORA Service Worker berhasil didaftarkan");
+      } catch (error) {
+        console.error("Service Worker gagal:", error);
+      }
+    });
+  }
 </script>
 </body>
 </html>
