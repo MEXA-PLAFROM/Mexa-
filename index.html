@@ -3,103 +3,123 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#060913">
+<meta name="theme-color" content="#0b141a">
 <title>NEXORA Indonesia 2027</title>
 <style>
 :root {
   color-scheme: dark;
-  --bg: #060913;
-  --panel: rgba(16, 26, 46, 0.85);
-  --line: rgba(36, 53, 82, 0.6);
-  --accent: #00f0ff;
-  --accent-secondary: #7000ff;
-  --text: #f0f6fc;
-  --muted: #8b9bb4;
+  --bg-main: #0b141a;
+  --bg-panel: #111b21;
+  --bg-chat: #0e1621;
+  --panel: rgba(17, 27, 33, 0.95);
+  --line: #222d34;
+  --accent: #00a884;
+  --accent-glow: #00e5ff;
+  --text: #e9edef;
+  --muted: #8696a0;
+  --bubble-out: #005c4b;
+  --bubble-in: #202c33;
 }
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at 50% 0%,#132247,var(--bg) 70%);color:var(--text);font-family:system-ui,-apple-system,sans-serif;min-height:100vh;padding-bottom:30px}
+body{margin:0;background:radial-gradient(circle at 50% 0%,#182c3d,var(--bg-main) 70%);color:var(--text);font-family:system-ui,-apple-system,sans-serif;min-height:100vh;padding-bottom:30px}
 button,input{font:inherit}button{cursor:pointer}
-.brand{text-align:center;padding:28px 12px 18px}
-.brand h1{margin:0;color:var(--accent);letter-spacing:6px;font-size:clamp(28px,6vw,42px);text-shadow:0 0 20px rgba(0,240,255,0.4)}
-.brand p{color:var(--muted);font-size:11px;letter-spacing:4px;margin-top:6px}
-.wrap{max-width:1000px;margin:auto;padding:14px}
-.panel{background:var(--panel);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 16px 48px rgba(0,0,0,0.5)}
+
+.brand{text-align:center;padding:24px 12px 14px}
+.brand h1{margin:0;color:var(--accent-glow);letter-spacing:6px;font-size:clamp(26px,5.5vw,38px);text-shadow:0 0 18px rgba(0,229,255,0.4)}
+.brand p{color:var(--muted);font-size:10px;letter-spacing:4px;margin-top:4px}
+
+.wrap{max-width:1100px;margin:auto;padding:12px}
+.panel{background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
 h2,h3{margin-top:0}
-input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #283d63;background:#09101f;color:white;outline:none;margin:6px 0 14px;transition:0.2s}
-input:focus{border-color:var(--accent);box-shadow:0 0 10px rgba(0,240,255,0.2)}
-button{border:0;border-radius:10px;padding:12px 16px;background:var(--accent);color:#040d1a;font-weight:700;transition:0.2s}
+input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:#222d34;color:white;outline:none;margin:6px 0 12px;transition:0.2s}
+input:focus{border-color:var(--accent);box-shadow:0 0 8px rgba(0,168,132,0.3)}
+button{border:0;border-radius:10px;padding:11px 16px;background:var(--accent);color:white;font-weight:700;transition:0.2s}
 button:hover{opacity:0.9;transform:translateY(-1px)}
-button.secondary{background:#1b2d4f;color:white;border:1px solid #2f497a}
+button.secondary{background:#202c33;color:var(--text);border:1px solid var(--line)}
 button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .actions{display:flex;flex-wrap:wrap;gap:10px}
 .hint,.muted{color:var(--muted);font-size:13px}
-.status{min-height:24px;margin:10px 0;color:var(--accent);font-size:13px;overflow-wrap:anywhere}
+.status{min-height:22px;margin:8px 0;color:var(--accent-glow);font-size:13px;overflow-wrap:anywhere}
 .hidden{display:none!important}
 
-/* Layout & Navigation */
-.appnav{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px;margin-bottom:16px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,rgba(16,26,46,0.9),rgba(20,35,65,0.9))}
-.navitem{display:flex;align-items:center;gap:8px;border:1px solid #2c436d;background:#111e38;color:#f0f6fc;padding:10px 16px;border-radius:12px;transition:0.2s}
-.navitem:hover,.navitem.active{background:linear-gradient(135deg,#00b8cc,#00f0ff);color:#040d1a;border-color:var(--accent);font-weight:700}
-.navicon{font-size:18px}
+/* Navigation */
+.appnav{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px;margin-bottom:14px;border:1px solid var(--line);border-radius:16px;background:var(--bg-panel)}
+.navitem{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#202c33;color:var(--text);padding:10px 14px;border-radius:12px;transition:0.2s}
+.navitem:hover,.navitem.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+.navicon{font-size:17px}
 .navlabel{outline:none}
 .navlabel[contenteditable=true]{border-bottom:1px dashed var(--accent);min-width:35px}
 .editnav{margin-left:auto}
 
 /* Hero Section */
-.hero{position:relative;overflow:hidden;padding:30px;background:linear-gradient(135deg,#152951,#0f1f3d 60%,#091428);border:1px solid #2a4c7a;border-radius:20px;margin-bottom:18px;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
-.hero:after{content:"✦";position:absolute;right:25px;top:10px;font-size:110px;color:rgba(0,240,255,0.06);pointer-events:none}
-.eyebrow{color:var(--accent);letter-spacing:2.5px;font-size:11px;font-weight:800}
-.hero h2{font-size:clamp(24px,4.5vw,36px);margin:10px 0;max-width:580px}
-.hero p{color:#cbd8ec;max-width:560px;line-height:1.6;font-size:14px}
+.hero{position:relative;overflow:hidden;padding:26px;background:linear-gradient(135deg,#11222c,#182c3d 60%,#0e1924);border:1px solid var(--line);border-radius:18px;margin-bottom:16px}
+.hero:after{content:"✦";position:absolute;right:25px;top:10px;font-size:100px;color:rgba(0,168,132,0.06);pointer-events:none}
+.eyebrow{color:var(--accent);letter-spacing:2px;font-size:11px;font-weight:800}
+.hero h2{font-size:clamp(22px,4vw,34px);margin:8px 0;max-width:560px}
+.hero p{color:var(--muted);max-width:540px;line-height:1.5;font-size:13.5px}
 
-/* Chat Layout & Components */
-.layout{display:grid;grid-template-columns:300px 1fr;gap:16px}
-.chathead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px;display:flex;flex-direction:column;gap:4px}
-.messages{height:min(50vh,460px);min-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:8px 4px}
-.bubble{max-width:82%;padding:12px 15px;border-radius:14px;background:#182844;align-self:flex-start;overflow-wrap:anywhere;white-space:pre-wrap;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
-.bubble.mine{align-self:flex-end;background:linear-gradient(135deg,#00839c,#005b6e);border:1px solid #00b8cc;color:#fff}
-.bubble time{display:block;font-size:10px;color:#a3c2df;margin-top:6px;text-align:right}
-.sendrow{display:flex;gap:10px;align-items:center;margin-top:10px}
-.sendrow input{margin:0;min-width:0}
+/* WhatsApp-Style Chat Layout */
+.layout{display:grid;grid-template-columns:320px 1fr;gap:14px;align-items:start}
+.chat-sidebar{background:var(--bg-panel);border:1px solid var(--line);border-radius:14px;padding:14px;height:calc(100vh - 220px);min-height:500px;display:flex;flex-direction:column}
+.chat-main{background:var(--bg-chat);border:1px solid var(--line);border-radius:14px;padding:0;height:calc(100vh - 220px);min-height:500px;display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+.chathead{background:var(--bg-panel);padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.chathead-info{flex:1;overflow:hidden}
+.chathead-info h3{margin:0;font-size:15px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Messages Area */
+.messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;background-image:radial-gradient(circle at 50% 50%, rgba(20, 35, 45, 0.3) 0%, rgba(11, 20, 26, 0.8) 100%);background-size:cover}
+.bubble{max-width:75%;padding:10px 14px;border-radius:12px;background:var(--bubble-in);color:var(--text);align-self:flex-start;overflow-wrap:anywhere;white-space:pre-wrap;font-size:13.5px;line-height:1.45;position:relative;box-shadow:0 1px 2px rgba(0,0,0,0.3)}
+.bubble.mine{align-self:flex-end;background:var(--bubble-out);border-top-right-radius:2px}
+.bubble:not(.mine){border-top-left-radius:2px}
+.bubble-footer{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:4px}
+.bubble time{font-size:10px;color:rgba(255,255,255,0.6)}
+.ticks{font-size:11px;color:#53bdeb;font-weight:bold;letter-spacing:-2px}
+
+/* Input Area */
+.sendrow{background:var(--bg-panel);padding:10px 14px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.sendrow input{margin:0;border-radius:22px;background:#2a3942;border:none;padding:12px 18px;color:#fff}
+.sendrow button{border-radius:50%;width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;background:var(--accent);flex-shrink:0}
 
 /* Avatars & Results */
-.avatar-preview{width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);background:#132244;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 0 15px rgba(0,240,255,0.3)}
-.avatar-small{width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid var(--accent);background:#132244;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.user-result{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;margin-top:8px;background:#121e36;color:white;border:1px solid var(--line);padding:12px;border-radius:12px}
+.avatar-preview{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);background:#202c33;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 0 12px rgba(0,168,132,0.3)}
+.avatar-small{width:38px;height:38px;border-radius:50%;object-fit:cover;border:1px solid var(--accent);background:#202c33;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.user-result{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;margin-top:8px;background:#182229;color:white;border:1px solid var(--line);padding:10px;border-radius:10px}
 .user-result small{color:var(--muted)}
-.user-result-actions{display:flex;gap:8px;margin-top:4px}
-.user-result-actions button{flex:1;font-size:12px;padding:9px}
+.user-result-actions{display:flex;gap:6px;margin-top:4px}
+.user-result-actions button{flex:1;font-size:11px;padding:7px}
 
-.chat-history-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#132038;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:0.2s}
-.chat-history-item:hover{border-color:var(--accent);background:#182847;transform:translateX(2px)}
+.chat-history-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#182229;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:0.2s}
+.chat-history-item:hover{background:#222d34;border-color:var(--accent)}
 
 /* Games & Features Grid */
-.section-title{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin:24px 4px 14px}
+.section-title{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin:22px 4px 12px}
 .section-title h3{margin:0 0 4px}
-.game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.game-card{padding:18px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(145deg,#12203a,#0a1324);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
-.game-art{display:flex;align-items:center;justify-content:center;height:110px;border-radius:12px;margin-bottom:14px;font-size:46px;background:radial-gradient(circle at 50% 20%,#244973,#122442 70%);border:1px solid #2d507d}
-.game-card p{color:var(--muted);font-size:13px;line-height:1.5}
-.tag{display:inline-block;border:1px solid #2f567a;border-radius:30px;padding:4px 10px;color:var(--accent);font-size:10px;font-weight:700}
-.game-card button{width:100%;margin-top:10px}
-.feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
-.feature{padding:16px;border:1px solid var(--line);border-radius:14px;background:#0d1729}
-.feature strong{display:block;margin:8px 0 4px}
+.game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.game-card{padding:16px;border-radius:14px;border:1px solid var(--line);background:#111b21}
+.game-art{display:flex;align-items:center;justify-content:center;height:100px;border-radius:10px;margin-bottom:12px;font-size:42px;background:radial-gradient(circle at 50% 20%,#1f3647,#111b21 70%);border:1px solid var(--line)}
+.game-card p{color:var(--muted);font-size:13px;line-height:1.4}
+.tag{display:inline-block;border:1px solid #223e4a;border-radius:30px;padding:3px 8px;color:var(--accent-glow);font-size:10px;font-weight:700}
+.game-card button{width:100%;margin-top:8px}
+.feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.feature{padding:14px;border:1px solid var(--line);border-radius:12px;background:#111b21}
+.feature strong{display:block;margin:6px 0 3px}
 .feature span{color:var(--muted);font-size:12px;line-height:1.4}
-.profile-card{max-width:680px;margin:auto}
-.game-note{border:1px dashed #345c7a;border-radius:12px;padding:14px;color:#c1d5ed;font-size:12px;margin-top:14px;background:rgba(0,240,255,0.02)}
-.page{animation:appear .25s ease-out}
+.profile-card{max-width:650px;margin:auto}
+.game-note{border:1px dashed var(--line);border-radius:10px;padding:12px;color:var(--muted);font-size:12px;margin-top:12px;background:rgba(0,168,132,0.02)}
+.page{animation:appear .2s ease-out}
 
-@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes appear{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
 @media(max-width:768px){
   .appnav{gap:6px;padding:10px}
-  .navitem{flex:1;justify-content:center;padding:10px 6px;font-size:13px}
+  .navitem{flex:1;justify-content:center;padding:10px 4px;font-size:12px}
   .editnav{flex:0 0 100%;margin-left:0}
   .game-grid,.feature-grid{grid-template-columns:1fr}
-  .hero{padding:20px}
+  .hero{padding:18px}
   .layout{grid-template-columns:1fr}
-  .messages{height:44vh}
+  .chat-sidebar,.chat-main{height:calc(100vh - 180px);min-height:420px}
+  .messages{height:auto}
   .panel{padding:14px}
 }
 </style>
@@ -111,7 +131,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 </header>
 
 <main class="wrap">
-<section id="authPanel" class="panel" style="max-width:480px;margin:auto">
+<section id="authPanel" class="panel" style="max-width:440px;margin:auto">
 <h2>Masuk ke NEXORA</h2>
 <p class="muted">Buat akun atau masuk untuk mulai terhubung.</p>
 <label for="displayName">Nama tampilan (untuk pendaftaran)</label>
@@ -124,7 +144,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 <button id="loginBtn" style="flex:1">Masuk</button>
 <button id="signupBtn" class="secondary" style="flex:1">Daftar akun</button>
 </div>
-<p class="hint" style="margin-top:12px">Gunakan email valid dan password minimal 8 karakter.</p>
+<p class="hint" style="margin-top:10px">Gunakan email valid dan password minimal 8 karakter.</p>
 <div id="authStatus" class="status" role="status"></div>
 </section>
 
@@ -142,7 +162,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 <div class="eyebrow">NEXORA NETWORK · 2027</div>
 <h2>Selamat datang di dunia koneksi tanpa batas.</h2>
 <p>Temukan teman, mulai percakapan pribadi secara real-time, dan jelajahi rekomendasi game pilihan dalam satu ruang digital futuristik.</p>
-<div class="actions" style="margin-top:16px">
+<div class="actions" style="margin-top:14px">
 <button id="heroChatBtn">▣ Mulai chat</button>
 <button id="heroGamesBtn" class="secondary">🎮 Jelajahi game</button>
 </div>
@@ -179,8 +199,8 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 <div class="panel profile-card">
 <div class="eyebrow">ACCOUNT CENTER</div><h2>Profil NEXORA</h2>
 <p class="muted">Informasi akun dan foto profil kamu.</p>
-<div style="display:flex;align-items:center;gap:16px;margin:16px 0">
-<img id="profileAvatarPreview" class="avatar-preview" src="" alt="Foto Profil" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'84\' height=\'84\'><rect width=\'100%\' height=\'100%\' fill=\'%23132244\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300f0ff\' font-size=\'32\'>👤</text></svg>'">
+<div style="display:flex;align-items:center;gap:14px;margin:14px 0">
+<img id="profileAvatarPreview" class="avatar-preview" src="" alt="Foto Profil" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\'><rect width=\'100%\' height=\'100%\' fill=\'%23202c33\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300a884\' font-size=\'30\'>👤</text></svg>'">
 <div style="flex:1">
 <label for="profileAvatarUrl" style="margin:0 0 4px">URL Foto Profil / Avatar</label>
 <input id="profileAvatarUrl" placeholder="https://contoh.com/foto.jpg" style="margin:0">
@@ -190,7 +210,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 <input id="profileDisplayName" maxlength="60" placeholder="Nama tampilan">
 <label for="profileUsername">Username</label>
 <input id="profileUsername" disabled>
-<label class="hint" style="display:flex;align-items:center;margin:10px 0 16px"><input id="shareProfileToggle" type="checkbox" style="width:auto;margin-right:10px">Bagikan profil ke fitur pencarian dan NEXORA</label>
+<label class="hint" style="display:flex;align-items:center;margin:10px 0 14px"><input id="shareProfileToggle" type="checkbox" style="width:auto;margin-right:10px">Bagikan profil ke fitur pencarian dan NEXORA</label>
 <div class="actions">
 <button id="saveProfileBtn">Simpan perubahan</button>
 <button id="shareProfileBtn" class="secondary">Bagikan profil</button>
@@ -202,38 +222,46 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none}
 </section>
 
 <section id="chatPage" class="page hidden">
-<div class="panel" style="margin-bottom:14px">
-<div class="actions" style="justify-content:space-between;align-items:center">
-<div style="display:flex;align-items:center;gap:12px">
-<img id="myHeaderAvatar" class="avatar-small" src="" alt="Avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'100%\' height=\'100%\' fill=\'%23132244\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300f0ff\' font-size=\'15\'>👤</text></svg>'">
-<div><strong id="myName">Pengguna NEXORA</strong><div id="myUsername" class="muted"></div></div>
+<div class="panel" style="padding:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+<div style="display:flex;align-items:center;gap:10px">
+<img id="myHeaderAvatar" class="avatar-small" src="" alt="Avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'38\' height=\'38\'><rect width=\'100%\' height=\'100%\' fill=\'%23202c33\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300a884\' font-size=\'14\'>👤</text></svg>'">
+<div><strong id="myName" style="font-size:14px">Pengguna NEXORA</strong><div id="myUsername" class="muted" style="font-size:11px"></div></div>
 </div>
 <div class="actions">
-<button id="enablePushBtn" class="secondary">🔔 Notifikasi</button>
-<button id="logoutBtn" class="secondary">Keluar</button>
+<button id="enablePushBtn" class="secondary" style="font-size:12px;padding:8px 12px">🔔 Notifikasi</button>
+<button id="logoutBtn" class="secondary" style="font-size:12px;padding:8px 12px">Keluar</button>
 </div>
 </div>
-<div id="appStatus" class="status" role="status"></div>
-</div>
+<div id="appStatus" class="status" role="status" style="margin-bottom:10px"></div>
+
 <div class="layout">
-<aside class="panel" style="display:flex;flex-direction:column">
-<h3>Pesan Tersimpan</h3>
-<p class="hint">Riwayat chat otomatis.</p>
-<div id="chatHistoryList" class="userbox" style="margin:10px 0 14px;max-height:180px;overflow-y:auto">
+<aside class="chat-sidebar">
+<h3 style="font-size:14px;margin-bottom:6px">Riwayat & Cari Chat</h3>
+<input id="searchInput" placeholder="Cari username..." maxlength="40" style="margin-bottom:8px">
+<button id="searchBtn" style="width:100%;margin-bottom:10px;padding:9px;font-size:13px">Cari pengguna</button>
+<div id="searchResults" class="userbox" style="margin-bottom:8px"></div>
+<div style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700">Pesan Tersimpan</div>
+<div id="chatHistoryList" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px">
 <p class="muted" style="font-size:12px">Belum ada riwayat chat.</p>
 </div>
-<hr style="border-color:var(--line);margin:6px 0 14px">
-<h3>Cari pengguna</h3>
-<input id="searchInput" placeholder="Ketik username..." maxlength="40">
-<button id="searchBtn" style="width:100%">Cari pengguna</button>
-<div id="searchResults" class="userbox" style="margin-top:10px"></div>
 </aside>
-<section class="panel" style="display:flex;flex-direction:column">
-<div class="chathead"><h3 id="chatTitle">Chat pribadi</h3><div id="chatSubtitle" class="muted">Pilih dari riwayat atau cari pengguna.</div></div>
-<div id="messages" class="messages" aria-live="polite"><p class="muted" style="text-align:center;margin-top:40px">Pesan akan tampil di sini.</p></div>
+
+<section class="chat-main">
+<div class="chathead">
+<img id="chatHeaderAvatar" class="avatar-small" src="" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'38\' height=\'38\'><rect width=\'100%\' height=\'100%\' fill=\'%23202c33\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300a884\' font-size=\'14\'>👤</text></svg>'">
+<div class="chathead-info">
+<h3 id="chatTitle">Pilih percakapan</h3>
+<div id="chatSubtitle" class="muted" style="font-size:11px">Klik dari riwayat atau cari pengguna di samping.</div>
+</div>
+</div>
+
+<div id="messages" class="messages" aria-live="polite">
+<p class="muted" style="text-align:center;margin:auto">Pesan aman dan terhubung secara real-time.</p>
+</div>
+
 <form id="sendForm" class="sendrow">
-<input id="messageInput" maxlength="2000" placeholder="Tulis pesan..." autocomplete="off" disabled>
-<button id="sendBtn" type="submit" disabled>Kirim</button>
+<input id="messageInput" maxlength="2000" placeholder="Ketik pesan..." autocomplete="off" disabled>
+<button id="sendBtn" type="submit" disabled title="Kirim">➤</button>
 </form>
 </section>
 </div>
@@ -259,7 +287,7 @@ let loadingMessages = false;
 
 function status(id, text, isError = false) {
   $(id).textContent = text;
-  $(id).style.color = isError ? "#ff7b96" : "var(--accent)";
+  $(id).style.color = isError ? "#ff7b96" : "var(--accent-glow)";
 }
 
 function showAuth() {
@@ -285,7 +313,6 @@ async function loadProfile() {
   $("profileUsername").value = data.username || "";
   $("shareProfileToggle").checked = data.share_profile !== false;
   
-  // Ambil avatar dari localStorage perangkat
   const savedAvatar = localStorage.getItem("nexora-avatar-" + currentUser.id) || "";
   $("profileAvatarUrl").value = savedAvatar;
   if(savedAvatar) {
@@ -432,17 +459,18 @@ $("searchBtn").addEventListener("click", async () => {
       const header = document.createElement("div");
       header.style.display = "flex";
       header.style.alignItems = "center";
-      header.style.gap = "10px";
+      header.style.gap = "8px";
       
       const partnerAvatar = localStorage.getItem("nexora-avatar-" + profile.id) || "";
       const av = document.createElement("img");
       av.className = "avatar-small";
       av.src = partnerAvatar;
-      av.onerror = () => { av.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="%23132244"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300f0ff" font-size="15">👤</text></svg>'; };
+      av.onerror = () => { av.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38"><rect width="100%" height="100%" fill="%23202c33"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300a884" font-size="14">👤</text></svg>'; };
       
       const info = document.createElement("div");
       const name = document.createElement("div");
       name.style.fontWeight = "600";
+      name.style.fontSize = "13px";
       name.textContent = profile.display_name || "Pengguna NEXORA";
       const username = document.createElement("small");
       username.textContent = "@" + profile.username;
@@ -459,7 +487,7 @@ $("searchBtn").addEventListener("click", async () => {
 
       const copyButton = document.createElement("button");
       copyButton.className = "secondary";
-      copyButton.textContent = "Salin username";
+      copyButton.textContent = "Salin";
       copyButton.addEventListener("click", async () => {
         const ok = await copyText("@" + profile.username);
         status("appStatus", ok ? "Username @" + profile.username + " disalin." : "Gagal menyalin.", !ok);
@@ -479,6 +507,8 @@ async function openChat(profile) {
   activeChat = profile;
   $("chatTitle").textContent = profile.display_name || "Pengguna NEXORA";
   $("chatSubtitle").textContent = "@" + profile.username;
+  const partnerAvatar = localStorage.getItem("nexora-avatar-" + profile.id) || "";
+  $("chatHeaderAvatar").src = partnerAvatar;
   $("messageInput").disabled = false;
   $("sendBtn").disabled = false;
   showPage("chatPage");
@@ -523,17 +553,17 @@ async function loadChatHistory() {
       const av = document.createElement("img");
       av.className = "avatar-small";
       av.src = partnerAvatar;
-      av.onerror = () => { av.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="%23132244"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300f0ff" font-size="15">👤</text></svg>'; };
+      av.onerror = () => { av.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38"><rect width="100%" height="100%" fill="%23202c33"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300a884" font-size="14">👤</text></svg>'; };
       
       const details = document.createElement("div");
       details.style.overflow = "hidden";
       const name = document.createElement("div");
       name.style.fontWeight = "bold";
-      name.style.fontSize = "13px";
+      name.style.fontSize = "12.5px";
       name.textContent = p.display_name || "Pengguna";
       const uname = document.createElement("div");
       uname.className = "muted";
-      uname.style.fontSize = "11px";
+      uname.style.fontSize = "10.5px";
       uname.textContent = "@" + p.username;
       details.append(name, uname);
 
@@ -548,7 +578,7 @@ async function loadChatHistory() {
 
 function formatTime(value) {
   return new Date(value).toLocaleString("id-ID", {
-    hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short"
+    hour: "2-digit", minute: "2-digit"
   });
 }
 
@@ -559,18 +589,34 @@ function renderMessages(rows) {
     const empty = document.createElement("p");
     empty.className = "muted";
     empty.style.textAlign = "center";
-    empty.style.marginTop = "40px";
-    empty.textContent = "Belum ada pesan. Mulai percakapan!";
+    empty.style.margin = "auto";
+    empty.textContent = "Kirim pesan pertama Anda hari ini.";
     container.appendChild(empty);
     return;
   }
   for (const row of rows) {
+    const isMine = row.sender_id === currentUser.id;
     const bubble = document.createElement("div");
-    bubble.className = "bubble" + (row.sender_id === currentUser.id ? " mine" : "");
-    bubble.appendChild(document.createTextNode(row.body));
+    bubble.className = "bubble" + (isMine ? " mine" : "");
+    
+    const textNode = document.createTextNode(row.body);
+    bubble.appendChild(textNode);
+
+    const footer = document.createElement("div");
+    footer.className = "bubble-footer";
+    
     const time = document.createElement("time");
     time.textContent = formatTime(row.created_at);
-    bubble.appendChild(time);
+    footer.appendChild(time);
+
+    if (isMine) {
+      const ticks = document.createElement("span");
+      ticks.className = "ticks";
+      ticks.textContent = "✓✓";
+      footer.appendChild(ticks);
+    }
+
+    bubble.appendChild(footer);
     container.appendChild(bubble);
   }
   container.scrollTop = container.scrollHeight;
@@ -611,7 +657,6 @@ $("sendForm").addEventListener("submit", async event => {
     $("messageInput").value = "";
     await loadMessages();
     loadChatHistory();
-    status("appStatus", "Pesan terkirim.");
   } catch (error) {
     status("appStatus", "Pesan gagal dikirim: " + error.message, true);
   } finally {
@@ -699,7 +744,6 @@ $("saveProfileBtn").addEventListener("click", async () => {
     if (error) throw error;
     
     currentProfile = data;
-    // Simpan foto profil ke localStorage perangkat
     if(avatar_url) {
       localStorage.setItem("nexora-avatar-" + currentUser.id, avatar_url);
       $("profileAvatarPreview").src = avatar_url;
