@@ -18,29 +18,29 @@
   --muted: #8696a0;
   --bubble-out: #005c4b;
   --bubble-in: #202c33;
+  --tick-read: #53bdeb;
+  --tick-unread: #8696a0;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg-main);color:var(--text);font-family:system-ui,-apple-system,sans-serif;height:100vh;overflow:hidden}
 button,input{font:inherit}button{cursor:pointer}
 
-/* App Shell Layout */
-#appShell { display: none; height: 100vh; width: 100vw; grid-template-columns: 72px 1fr; background: var(--bg-main); }
-#appShell.active { display: grid; }
+/* App Shell (Layar Utama & Bottom Nav) */
+#appShell { display: none; height: 100vh; width: 100vw; flex-direction: column; background: var(--bg-main); }
+#appShell.active { display: flex; }
 
-/* Left Rail Navigation */
-.app-rail { background: var(--bg-sidebar); border-right: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; padding: 16px 0; gap: 16px; z-index: 10; }
-.rail-brand { font-size: 20px; font-weight: 900; color: var(--accent-glow); margin-bottom: 10px; letter-spacing: 1px; }
-.rail-btn { width: 48px; height: 48px; border-radius: 12px; background: transparent; border: none; color: var(--muted); display: flex; align-items: center; justify-content: center; font-size: 20px; transition: 0.2s; position: relative; }
-.rail-btn:hover, .rail-btn.active { background: rgba(0,168,132,0.15); color: var(--accent); }
-.rail-btn.active::before { content: ""; position: absolute; left: 0; width: 4px; height: 24px; background: var(--accent); border-radius: 0 4px 4px 0; }
-.rail-footer { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+/* Bottom Navigation Bar (Navigasi Bawah) */
+.bottom-nav { height: 62px; background: var(--bg-sidebar); border-top: 1px solid var(--line); display: flex; justify-content: space-around; align-items: center; z-index: 100; flex-shrink: 0; }
+.nav-btn { background: transparent; border: none; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; padding: 6px 16px; border-radius: 8px; transition: 0.2s; }
+.nav-btn .icon { font-size: 20px; }
+.nav-btn:hover, .nav-btn.active { color: var(--accent); background: rgba(0,168,132,0.12); }
 
-/* Main Content Area */
-.app-content { height: 100vh; overflow: hidden; position: relative; background: var(--bg-main); }
-.page { height: 100%; width: 100%; display: none; flex-direction: column; padding: 24px; overflow-y: auto; }
+/* Area Konten */
+.app-content { flex: 1; overflow: hidden; position: relative; background: var(--bg-main); }
+.page { height: 100%; width: 100%; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
 .page.active { display: flex; }
 
-/* Auth Center Screen */
+/* Auth Screen */
 #authScreen { display: none; height: 100vh; width: 100vw; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 30%, #11222c, var(--bg-main) 70%); }
 #authScreen.active { display: flex; }
 .auth-card { background: var(--bg-sidebar); border: 1px solid var(--line); border-radius: 20px; padding: 32px; width: 100%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
@@ -48,7 +48,7 @@ button,input{font:inherit}button{cursor:pointer}
 /* Loading Screen */
 #loadingScreen { display: flex; height: 100vh; width: 100vw; align-items: center; justify-content: center; background: var(--bg-main); color: var(--accent-glow); font-size: 16px; letter-spacing: 2px; }
 
-/* Global UI Elements */
+/* Input & Button Styles */
 input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--line); background: #222d34; color: white; outline: none; margin: 6px 0 14px; transition: 0.2s; }
 input:focus { border-color: var(--accent); box-shadow: 0 0 8px rgba(0,168,132,0.3); }
 button.primary { border: 0; border-radius: 10px; padding: 12px 18px; background: var(--accent); color: white; font-weight: 700; transition: 0.2s; }
@@ -59,51 +59,62 @@ button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 .muted { color: var(--muted); font-size: 13px; }
 .status { min-height: 22px; margin: 8px 0; color: var(--accent-glow); font-size: 13px; overflow-wrap: anywhere; }
 
-/* Hero & Grid Layouts */
-.hero { background: linear-gradient(135deg, #11222c, #182c3d); border: 1px solid var(--line); border-radius: 18px; padding: 32px; margin-bottom: 20px; }
-.hero h2 { font-size: 28px; margin: 10px 0; }
-.game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
-.game-card { background: var(--bg-sidebar); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
-.game-art { height: 90px; border-radius: 10px; background: #182229; display: flex; align-items: center; justify-content: center; font-size: 38px; margin-bottom: 12px; }
+/* Hero & Grid */
+.hero { background: linear-gradient(135deg, #11222c, #182c3d); border: 1px solid var(--line); border-radius: 18px; padding: 28px; margin-bottom: 20px; }
+.hero h2 { font-size: 26px; margin: 8px 0; }
+.game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 16px; }
+.game-card { background: var(--bg-sidebar); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.game-art { height: 85px; border-radius: 10px; background: #182229; display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 10px; }
 
-/* WhatsApp Style Chat Workspace */
+/* WhatsApp Chat Workspace */
 .chat-workspace { display: grid; grid-template-columns: 340px 1fr; height: 100%; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--bg-sidebar); }
-.chat-sidebar-pane { border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 16px; background: var(--bg-sidebar); height: 100%; overflow: hidden; }
+.chat-sidebar-pane { border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 14px; background: var(--bg-sidebar); height: 100%; overflow: hidden; }
 .chat-main-pane { display: flex; flex-direction: column; background: var(--bg-chat); height: 100%; position: relative; overflow: hidden; }
-.chathead { background: var(--bg-sidebar); padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
-.messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-.bubble { max-width: 70%; padding: 10px 14px; border-radius: 12px; background: var(--bubble-in); color: var(--text); align-self: flex-start; font-size: 13.5px; line-height: 1.45; word-break: break-word; position: pointer; }
+
+.chathead { background: var(--bg-sidebar); padding: 12px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+.messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.bubble { max-width: 75%; padding: 10px 14px; border-radius: 12px; background: var(--bubble-in); color: var(--text); align-self: flex-start; font-size: 13.5px; line-height: 1.45; word-break: break-word; }
 .bubble.mine { align-self: flex-end; background: var(--bubble-out); border-top-right-radius: 2px; }
 .bubble-footer { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 4px; }
 .bubble time { font-size: 10px; color: rgba(255,255,255,0.6); }
-.ticks { font-size: 11px; color: #53bdeb; font-weight: bold; }
+
+/* Centang Biru / Grey Ticks */
+.ticks { font-size: 12px; font-weight: bold; letter-spacing: -2px; }
+.ticks.read { color: var(--tick-read); }
+.ticks.unread { color: var(--tick-unread); }
+
 .sendrow { background: var(--bg-sidebar); padding: 12px 16px; border-top: 1px solid var(--line); display: flex; gap: 10px; align-items: center; }
 .sendrow input { margin: 0; border-radius: 22px; background: #2a3942; border: none; padding: 12px 18px; }
 .sendrow button { border-radius: 50%; width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; background: var(--accent); flex-shrink: 0; }
 
-/* Avatars */
-.avatar-preview { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); background: #202c33; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+/* Avatars & Items */
+.avatar-preview { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); background: #202c33; display: flex; align-items: center; justify-content: center; font-size: 30px; }
 .avatar-small { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent); background: #202c33; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.chat-history-item { display: flex; align-items: center; gap: 12px; padding: 10px; background: #182229; border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
-.chat-history-item:hover { background: #222d34; }
-.user-result { background: #182229; border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-top: 8px; }
 
-@media(max-width: 860px) {
-  #appShell { grid-template-columns: 1fr; grid-template-rows: 1fr 64px; }
-  .app-rail { flex-direction: row; justify-content: space-around; padding: 0; border-right: none; border-top: 1px solid var(--line); order: 2; }
-  .rail-brand, .rail-footer { display: none; }
-  .app-content { height: calc(100vh - 64px); order: 1; }
+/* Item Daftar Pesan/Teman */
+.chat-history-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #182229; border-radius: 12px; margin-bottom: 6px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+.chat-history-item:hover, .chat-history-item.active { background: #222d34; border-color: var(--accent); }
+.chat-item-info { flex: 1; overflow: hidden; }
+.chat-item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+.chat-item-name { font-weight: 700; font-size: 13.5px; }
+.chat-item-time { font-size: 10px; color: var(--muted); }
+.chat-item-lastmsg { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+@media(max-width: 768px) {
+  .page { padding: 12px; }
   .chat-workspace { grid-template-columns: 1fr; }
-  .chat-sidebar-pane { display: none; } /* Mobile toggle bisa dikembangkan nanti */
+  .chat-sidebar-pane { display: flex; }
+  .chat-main-pane { display: none; }
+  .chat-workspace.mobile-open .chat-sidebar-pane { display: none; }
+  .chat-workspace.mobile-open .chat-main-pane { display: flex; }
 }
 </style>
 </head>
 <body>
 
-<!-- Loading Screen Awal -->
-<div id="loadingScreen">✦ MEMUAT RUANG NEXORA...</div>
+<div id="loadingScreen">✦ MEMUAT NEXORA...</div>
 
-<!-- Layar Login / Auth -->
+<!-- Layar Auth/Login -->
 <div id="authScreen">
   <div class="auth-card">
     <h2 style="color:var(--accent-glow);margin-bottom:4px">NEXORA 2027</h2>
@@ -122,65 +133,62 @@ button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
   </div>
 </div>
 
-<!-- App Shell Utama (Sidebar Kiri + Konten Kanan) -->
+<!-- Layar Utama App -->
 <div id="appShell">
-  <!-- Navigasi Samping Kiri -->
-  <aside class="app-rail">
-    <div class="rail-brand">N</div>
-    <button class="rail-btn active" data-page="homePage" title="Beranda">⌂</button>
-    <button class="rail-btn" data-page="chatPage" title="Pesan / Chat">💬</button>
-    <button class="rail-btn" data-page="gamesPage" title="Game">🎮</button>
-    <button class="rail-btn" data-page="profilePage" title="Profil">◉</button>
-    <div class="rail-footer">
-      <button id="logoutRailBtn" class="rail-btn" title="Keluar">🚪</button>
-    </div>
-  </aside>
-
-  <!-- Area Konten Dinamis -->
   <main class="app-content">
     
-    <!-- Beranda -->
+    <!-- Page 1: Beranda -->
     <section id="homePage" class="page active">
       <div class="hero">
-        <div style="color:var(--accent);font-weight:bold;font-size:12px;letter-spacing:2px">NEXORA NETWORK</div>
-        <h2>Selamat datang di ruang digital masa depan.</h2>
-        <p class="muted">Jelajahi komunitas, hubungi teman secara instan lewat chat terenkripsi real-time.</p>
-        <div class="actions" style="margin-top:16px">
-          <button class="primary" onclick="switchPage('chatPage')">Buka Ruang Pesan</button>
+        <div style="color:var(--accent);font-weight:bold;font-size:12px;letter-spacing:2px">NEXORA NETWORK 2027</div>
+        <h2>Selamat datang di ruang obrolan masa depan.</h2>
+        <p class="muted">Kirim pesan instan dengan indikator status dibaca centang biru & koneksi aman.</p>
+        <div class="actions" style="margin-top:14px">
+          <button class="primary" onclick="switchPage('chatPage')">Buka Chat</button>
           <button class="secondary" onclick="switchPage('gamesPage')">Jelajahi Game</button>
         </div>
       </div>
-      <h3>✦ Rekomendasi Unggulan</h3>
+      <h3>✦ Rekomendasi Game</h3>
       <div class="game-grid">
         <div class="game-card"><div class="game-art">⚔️</div><h3>Battle Arena</h3><p class="muted">Strategi komunitas modern.</p></div>
         <div class="game-card"><div class="game-art">🚀</div><h3>Galaxy Quest</h3><p class="muted">Eksplorasi antariksa tanpa batas.</p></div>
       </div>
     </section>
 
-    <!-- Halaman Pesan ala WhatsApp -->
-    <section id="chatPage" class="page">
-      <div class="chat-workspace">
+    <!-- Page 2: Chat Workspace (Split View) -->
+    <section id="chatPage" class="page" style="padding:0">
+      <div id="chatWorkspace" class="chat-workspace">
+        <!-- Kolom Kiri: Daftar Pesan / Teman Chat -->
         <div class="chat-sidebar-pane">
-          <h3 style="font-size:15px;margin-bottom:10px">Pesan & Kontak</h3>
-          <input id="searchInput" placeholder="Cari username..." maxlength="40" style="margin-bottom:8px">
-          <button id="searchBtn" class="primary" style="width:100%;margin-bottom:12px;padding:9px;font-size:13px">Cari Pengguna</button>
-          <div id="searchResults" style="margin-bottom:8px"></div>
-          <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px">Riwayat Chat</div>
-          <div id="chatHistoryList" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px">
-            <p class="muted" style="font-size:12px">Belum ada riwayat.</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <h3 style="font-size:16px;margin:0">Pesan</h3>
+            <button id="searchToggleBtn" class="secondary" style="padding:6px 12px;font-size:12px">+ Cari Teman</button>
+          </div>
+          
+          <div id="searchBoxContainer" style="display:none;margin-bottom:10px">
+            <input id="searchInput" placeholder="Cari username teman..." maxlength="40" style="margin-bottom:6px">
+            <button id="searchBtn" class="primary" style="width:100%;padding:8px;font-size:12px">Cari</button>
+            <div id="searchResults" style="margin-top:6px"></div>
+          </div>
+
+          <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px">Daftar Percakapan</div>
+          <div id="chatHistoryList" style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
+            <p class="muted" style="font-size:12px;padding:10px">Belum ada obrolan.</p>
           </div>
         </div>
 
+        <!-- Kolom Kanan: Ruang Chat Aktif -->
         <div class="chat-main-pane">
           <div class="chathead">
+            <button id="mobileBackBtn" class="secondary" style="display:none;padding:6px 10px;margin-right:6px">←</button>
             <img id="chatHeaderAvatar" class="avatar-small" src="" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'100%\' height=\'100%\' fill=\'%23202c33\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300a884\' font-size=\'14\'>👤</text></svg>'">
-            <div>
-              <h3 id="chatTitle" style="margin:0;font-size:15px">Pilih Percakapan</h3>
-              <div id="chatSubtitle" class="muted" style="font-size:11px">Klik riwayat atau cari pengguna di samping.</div>
+            <div style="overflow:hidden">
+              <h3 id="chatTitle" style="margin:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Pilih Percakapan</h3>
+              <div id="chatSubtitle" class="muted" style="font-size:11px">Pilih teman dari daftar di sebelah kiri untuk mengobrol.</div>
             </div>
           </div>
           <div id="messages" class="messages">
-            <p class="muted" style="text-align:center;margin:auto">Mulai percakapan aman secara real-time.</p>
+            <p class="muted" style="text-align:center;margin:auto">Pilih teman di daftar percakapan untuk memulai chat.</p>
           </div>
           <form id="sendForm" class="sendrow">
             <input id="messageInput" maxlength="2000" placeholder="Ketik pesan..." autocomplete="off" disabled>
@@ -190,25 +198,23 @@ button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
       </div>
     </section>
 
-    <!-- Halaman Game -->
+    <!-- Page 3: Game -->
     <section id="gamesPage" class="page">
-      <h2>Katalog Game NEXORA</h2>
-      <p class="muted">Rekomendasi game seru untuk komunitas.</p>
+      <h2>Katalog Game</h2>
+      <p class="muted">Fitur hiburan untuk komunitas NEXORA.</p>
       <div class="game-grid">
         <div class="game-card"><div class="game-art">⚔️</div><h3>Battle Arena</h3><p class="muted">Kategori Strategi</p></div>
         <div class="game-card"><div class="game-art">🚀</div><h3>Galaxy Quest</h3><p class="muted">Kategori Petualangan</p></div>
-        <div class="game-card"><div class="game-art">🏎️</div><h3>Velocity Rush</h3><p class="muted">Kategori Balap</p></div>
-        <div class="game-card"><div class="game-art">🧩</div><h3>Mind Garden</h3><p class="muted">Kategori Santai</p></div>
       </div>
     </section>
 
-    <!-- Halaman Profil -->
+    <!-- Page 4: Profil -->
     <section id="profilePage" class="page">
-      <div style="max-width:600px">
-        <h2>Pengaturan Profil</h2>
-        <p class="muted">Kelola akun dan avatar pribadi Anda.</p>
+      <div style="max-width:550px;margin:auto;width:100%">
+        <h2>Profil Saya</h2>
+        <p class="muted">Kelola foto dan identitas akun NEXORA Anda.</p>
         <div style="display:flex;align-items:center;gap:16px;margin:16px 0">
-          <img id="profileAvatarPreview" class="avatar-preview" src="" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'88\' height=\'88\'><rect width=\'100%\' height=\'100%\' fill=\'%23202c33\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300a884\' font-size=\'32\'>👤</text></svg>'">
+          <img id="profileAvatarPreview" class="avatar-preview" src="" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'84\' height=\'84\'><rect width=\'100%\' height=\'100%\' fill=\'%23202c33\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300a884\' font-size=\'30\'>👤</text></svg>'">
           <div style="flex:1">
             <label style="margin:0 0 4px">URL Foto Profil / Avatar</label>
             <input id="profileAvatarUrl" placeholder="https://contoh.com/foto.jpg" style="margin:0">
@@ -218,16 +224,35 @@ button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
         <input id="profileDisplayName" maxlength="60">
         <label>Username</label>
         <input id="profileUsername" disabled>
-        <label class="muted" style="display:flex;align-items:center;margin:10px 0 16px"><input id="shareProfileToggle" type="checkbox" style="width:auto;margin-right:10px">Bagikan profil ke pencarian umum</label>
         <div class="actions">
-          <button id="saveProfileBtn" class="primary">Simpan Perubahan</button>
-          <button id="copyUsernameBtn" class="secondary">Salin Username</button>
+          <button id="saveProfileBtn" class="primary" style="flex:1">Simpan Perubahan</button>
+          <button id="logoutBtn" class="secondary">Keluar Akun</button>
         </div>
         <div id="profileStatus" class="status"></div>
       </div>
     </section>
 
   </main>
+
+  <!-- Navigasi Bawah (Bottom Navigation Bar) -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="homePage">
+      <span class="icon">⌂</span>
+      <span>Beranda</span>
+    </button>
+    <button class="nav-btn" data-page="chatPage">
+      <span class="icon">💬</span>
+      <span>Pesan</span>
+    </button>
+    <button class="nav-btn" data-page="gamesPage">
+      <span class="icon">🎮</span>
+      <span>Game</span>
+    </button>
+    <button class="nav-btn" data-page="profilePage">
+      <span class="icon">◉</span>
+      <span>Profil</span>
+    </button>
+  </nav>
 </div>
 
 <script type="module">
@@ -242,7 +267,6 @@ let currentUser = null;
 let currentProfile = null;
 let activeChat = null;
 let messageChannel = null;
-let loadingMessages = false;
 
 function status(id, text, isError = false) {
   $(id).textContent = text;
@@ -263,12 +287,12 @@ function showApp() {
 
 window.switchPage = function(pageId) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".rail-btn[data-page]").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
   
   const targetPage = $(pageId);
   if(targetPage) targetPage.classList.add("active");
   
-  const targetBtn = document.querySelector(`.rail-btn[data-page="${pageId}"]`);
+  const targetBtn = document.querySelector(`.nav-btn[data-page="${pageId}"]`);
   if(targetBtn) targetBtn.classList.add("active");
 
   if(pageId === "profilePage" && currentProfile) {
@@ -277,30 +301,26 @@ window.switchPage = function(pageId) {
     const saved = localStorage.getItem("nexora-avatar-" + currentUser.id) || "";
     $("profileAvatarUrl").value = saved;
     $("profileAvatarPreview").src = saved;
-    $("shareProfileToggle").checked = currentProfile.share_profile !== false;
   }
   if(pageId === "chatPage") {
     loadChatHistory();
   }
 }
 
-document.querySelectorAll(".rail-btn[data-page]").forEach(btn => {
+document.querySelectorAll(".nav-btn").forEach(btn => {
   btn.addEventListener("click", () => switchPage(btn.dataset.page));
+});
+
+$("searchToggleBtn").addEventListener("click", () => {
+  const box = $("searchBoxContainer");
+  box.style.display = box.style.display === "none" ? "block" : "none";
 });
 
 async function loadProfile() {
   const { data, error } = await supabase.from("profiles")
-    .select("id, username, display_name, share_profile")
-    .eq("id", currentUser.id).single();
+    .select("id, username, display_name").eq("id", currentUser.id).single();
   if (error) throw error;
   currentProfile = data;
-  $("profileDisplayName").value = data.display_name || "";
-  $("profileUsername").value = data.username || "";
-  $("shareProfileToggle").checked = data.share_profile !== false;
-  
-  const saved = localStorage.getItem("nexora-avatar-" + currentUser.id) || "";
-  $("profileAvatarUrl").value = saved;
-  if(saved) $("profileAvatarPreview").src = saved;
 }
 
 async function enterApp(user) {
@@ -313,7 +333,6 @@ async function enterApp(user) {
     loadChatHistory();
   } catch (err) {
     showAuth();
-    status("authStatus", "Gagal memuat profil: " + err.message, true);
   }
 }
 
@@ -321,38 +340,24 @@ $("signupBtn").addEventListener("click", async () => {
   const email = $("email").value.trim();
   const password = $("password").value;
   const displayName = $("displayName").value.trim() || "Pengguna NEXORA";
-  if (!email || password.length < 8) {
-    status("authStatus", "Isi email valid dan password min 8 karakter.", true);
-    return;
-  }
-  $("signupBtn").disabled = true;
-  status("authStatus", "Mendaftarkan akun...");
+  if (!email || password.length < 8) { status("authStatus", "Isi email & pass min 8 char.", true); return; }
   try {
     const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { display_name: displayName } } });
     if (error) throw error;
-    if (data.session && data.user) await enterApp(data.user);
-    else status("authStatus", "Akun dibuat. Periksa email jika konfirmasi aktif.");
-  } catch (err) {
-    status("authStatus", "Gagal: " + err.message, true);
-  } finally { $("signupBtn").disabled = false; }
+    if (data.session) await enterApp(data.user);
+  } catch (err) { status("authStatus", err.message, true); }
 });
 
 $("loginBtn").addEventListener("click", async () => {
-  const email = $("email").value.trim();
-  const password = $("password").value;
-  if (!email || !password) { status("authStatus", "Isi email & password.", true); return; }
-  $("loginBtn").disabled = true;
-  status("authStatus", "Masuk...");
+  const email = $("email").value.trim(); const password = $("password").value;
   try {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     await enterApp(data.user);
-  } catch (err) {
-    status("authStatus", "Gagal masuk: " + err.message, true);
-  } finally { $("loginBtn").disabled = false; }
+  } catch (err) { status("authStatus", err.message, true); }
 });
 
-$("logoutRailBtn").addEventListener("click", async () => {
+$("logoutBtn").addEventListener("click", async () => {
   if(messageChannel) supabase.removeChannel(messageChannel);
   await supabase.auth.signOut();
   currentUser = null; currentProfile = null; activeChat = null;
@@ -360,23 +365,22 @@ $("logoutRailBtn").addEventListener("click", async () => {
 });
 
 $("searchBtn").addEventListener("click", async () => {
-  if(!currentUser) return;
   const q = $("searchInput").value.trim().replace(/^@/, "");
   const res = $("searchResults"); res.replaceChildren();
-  if(q.length < 3) { alert("Masukkan minimal 3 karakter."); return; }
-  const { data, error } = await supabase.from("profiles").select("id, username, display_name, share_profile").ilike("username", q).eq("share_profile", true).neq("id", currentUser.id).limit(10);
-  if(error || !data?.length) { res.innerHTML = '<div class="muted" style="font-size:12px;padding:4px">Tidak ditemukan.</div>'; return; }
+  if(q.length < 3) return;
+  const { data } = await supabase.from("profiles").select("id, username, display_name").ilike("username", q).neq("id", currentUser.id).limit(5);
+  if(!data?.length) { res.innerHTML = '<div class="muted" style="font-size:11px">Pengguna tidak ditemukan.</div>'; return; }
   
-  for(const p of data) {
+  data.forEach(p => {
     const item = document.createElement("div");
-    item.className = "user-result";
-    item.innerHTML = `<div style="font-weight:600;font-size:13px">${p.display_name}</div><div class="muted" style="font-size:11px">@${p.username}</div>`;
+    item.style.cssText = "background:#222d34;padding:8px;border-radius:8px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center";
+    item.innerHTML = `<div><div style="font-weight:600;font-size:12px">${p.display_name}</div><div class="muted" style="font-size:10px">@${p.username}</div></div>`;
     const btn = document.createElement("button");
-    btn.className = "primary"; btn.textContent = "Chat"; btn.style.cssText = "width:100%;margin-top:6px;padding:6px;font-size:11px";
-    btn.onclick = () => openChat(p);
+    btn.className = "primary"; btn.textContent = "Chat"; btn.style.cssText = "padding:4px 8px;font-size:11px";
+    btn.onclick = () => { openChat(p); $("searchBoxContainer").style.display = "none"; };
     item.appendChild(btn);
     res.appendChild(item);
-  }
+  });
 });
 
 async function openChat(p) {
@@ -387,24 +391,73 @@ async function openChat(p) {
   $("chatHeaderAvatar").src = avatar;
   $("messageInput").disabled = false;
   $("sendBtn").disabled = false;
+  
+  if (window.innerWidth <= 768) {
+    $("chatWorkspace").classList.add("mobile-open");
+    $("mobileBackBtn").style.display = "inline-block";
+  }
+
+  // Tandai pesan dari teman sebagai 'Sudah Dibaca' (Centang Biru)
+  await supabase.from("messages")
+    .update({ is_read: true })
+    .eq("sender_id", p.id)
+    .eq("receiver_id", currentUser.id);
+
   await loadMessages();
+  loadChatHistory();
 }
 
+$("mobileBackBtn").addEventListener("click", () => {
+  $("chatWorkspace").classList.remove("mobile-open");
+});
+
+// Memuat hanya teman yang PERNAH di-chat
 async function loadChatHistory() {
   if(!currentUser) return;
-  const { data } = await supabase.from("messages").select("sender_id, receiver_id").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
-  if(!data) return;
-  const ids = new Set();
-  data.forEach(m => { if(m.sender_id !== currentUser.id) ids.add(m.sender_id); if(m.receiver_id !== currentUser.id) ids.add(m.receiver_id); });
-  if(ids.size === 0) return;
-  
-  const { data: profiles } = await supabase.from("profiles").select("id, username, display_name").in("id", Array.from(ids));
+  const { data, error } = await supabase.from("messages")
+    .select("sender_id, receiver_id, body, created_at, is_read")
+    .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+    .order("created_at", { ascending: false });
+    
+  if(error || !data) return;
+
+  const partnerMap = new Map();
+  data.forEach(m => {
+    const partnerId = m.sender_id === currentUser.id ? m.receiver_id : m.sender_id;
+    if(!partnerMap.has(partnerId)) {
+      partnerMap.set(partnerId, m);
+    }
+  });
+
+  if(partnerMap.size === 0) {
+    $("chatHistoryList").innerHTML = '<p class="muted" style="font-size:12px;padding:10px">Belum ada percakapan. Klik "+ Cari Teman" untuk memulai.</p>';
+    return;
+  }
+
+  const { data: profiles } = await supabase.from("profiles")
+    .select("id, username, display_name")
+    .in("id", Array.from(partnerMap.keys()));
+
   const list = $("chatHistoryList"); list.replaceChildren();
   profiles?.forEach(p => {
+    const lastMsg = partnerMap.get(p.id);
     const div = document.createElement("div");
-    div.className = "chat-history-item";
+    div.className = "chat-history-item" + (activeChat?.id === p.id ? " active" : "");
     const avatar = localStorage.getItem("nexora-avatar-" + p.id) || "";
-    div.innerHTML = `<img class="avatar-small" src="${avatar}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'100%\' height=\'100%\' fill=\'%23202c33\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300a884\' font-size=\'14\'>👤</text></svg>\'"><div style="overflow:hidden"><div style="font-weight:bold;font-size:12.5px">${p.display_name}</div><div class="muted" style="font-size:10.5px">@${p.username}</div></div>`;
+    
+    const isMine = lastMsg.sender_id === currentUser.id;
+    const tickHtml = isMine ? `<span class="ticks ${lastMsg.is_read ? 'read' : 'unread'}">✓✓</span> ` : '';
+
+    div.innerHTML = `
+      <img class="avatar-small" src="${avatar}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'100%\' height=\'100%\' fill=\'%23202c33\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%2300a884\' font-size=\'14\'>👤</text></svg>'">
+      <div class="chat-item-info">
+        <div class="chat-item-top">
+          <span class="chat-item-name">${p.display_name}</span>
+          <span class="chat-item-time">${new Date(lastMsg.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>
+        </div>
+        <div class="chat-item-lastmsg">${tickHtml}${lastMsg.body}</div>
+      </div>
+    `;
     div.onclick = () => openChat(p);
     list.appendChild(div);
   });
@@ -417,7 +470,12 @@ function renderMessages(rows) {
     const isMine = r.sender_id === currentUser.id;
     const bubble = document.createElement("div");
     bubble.className = "bubble" + (isMine ? " mine" : "");
-    bubble.innerHTML = `${r.body}<div class="bubble-footer"><time>${new Date(r.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</time>${isMine ? '<span class="ticks">✓✓</span>' : ''}</div>`;
+    
+    // Centang Biru (read) atau Centang Abu-abu (unread)
+    const tickClass = r.is_read ? "read" : "unread";
+    const tickHtml = isMine ? `<span class="ticks ${tickClass}">✓✓</span>` : '';
+
+    bubble.innerHTML = `${r.body}<div class="bubble-footer"><time>${new Date(r.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</time>${tickHtml}</div>`;
     container.appendChild(bubble);
   });
   container.scrollTop = container.scrollHeight;
@@ -425,7 +483,10 @@ function renderMessages(rows) {
 
 async function loadMessages() {
   if(!activeChat || !currentUser) return;
-  const { data } = await supabase.from("messages").select("*").or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChat.id}),and(sender_id.eq.${activeChat.id},receiver_id.eq.${currentUser.id})`).order("created_at", { ascending: true });
+  const { data } = await supabase.from("messages")
+    .select("*")
+    .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChat.id}),and(sender_id.eq.${activeChat.id},receiver_id.eq.${currentUser.id})`)
+    .order("created_at", { ascending: true });
   renderMessages(data || []);
 }
 
@@ -434,18 +495,20 @@ $("sendForm").addEventListener("submit", async e => {
   const body = $("messageInput").value.trim();
   if(!currentUser || !activeChat || !body) return;
   $("sendBtn").disabled = true;
-  await supabase.from("messages").insert({ sender_id: currentUser.id, receiver_id: activeChat.id, body });
+  await supabase.from("messages").insert({ sender_id: currentUser.id, receiver_id: activeChat.id, body, is_read: false });
   $("messageInput").value = "";
   await loadMessages();
   loadChatHistory();
+  $("sendBtn").disabled = false;
 });
 
 function setupRealtime() {
   if(messageChannel) supabase.removeChannel(messageChannel);
-  messageChannel = supabase.channel("realtime-chat-" + currentUser.id)
-    .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, payload => {
-      const m = payload.new;
-      if(activeChat && ((m.sender_id === currentUser.id && m.receiver_id === activeChat.id) || (m.sender_id === activeChat.id && m.receiver_id === currentUser.id))) {
+  messageChannel = supabase.channel("realtime-messages-" + currentUser.id)
+    .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, async payload => {
+      if(activeChat) {
+        // Jika sedang membuka room chat, perbarui pesan & tandai dibaca
+        await supabase.from("messages").update({ is_read: true }).eq("sender_id", activeChat.id).eq("receiver_id", currentUser.id);
         loadMessages();
       }
       loadChatHistory();
@@ -455,28 +518,19 @@ function setupRealtime() {
 $("saveProfileBtn").addEventListener("click", async () => {
   const display_name = $("profileDisplayName").value.trim();
   const avatar_url = $("profileAvatarUrl").value.trim();
-  const share_profile = $("shareProfileToggle").checked;
   if(!currentUser || !display_name) return;
-  $("saveProfileBtn").disabled = true;
-  const { data, error } = await supabase.from("profiles").update({ display_name, share_profile }).eq("id", currentUser.id).select().single();
+  const { data, error } = await supabase.from("profiles").update({ display_name }).eq("id", currentUser.id).select().single();
   if(!error) {
     currentProfile = data;
     if(avatar_url) localStorage.setItem("nexora-avatar-" + currentUser.id, avatar_url);
-    else localStorage.removeItem("nexora-avatar-" + currentUser.id);
-    status("profileStatus", "Profil berhasil disimpan!");
-  } else { status("profileStatus", error.message, true); }
-  $("saveProfileBtn").disabled = false;
+    status("profileStatus", "Profil disimpan!");
+  }
 });
 
-$("copyUsernameBtn").addEventListener("click", async () => {
-  if(currentProfile) { await navigator.clipboard.writeText("@" + currentProfile.username); status("profileStatus", "Username disalin!"); }
-});
-
-// Auto Check Session
 async function init() {
   const { data } = await supabase.auth.getSession();
-  if(data.session?.user) { await enterApp(data.session.user); }
-  else { showAuth(); }
+  if(data.session?.user) await enterApp(data.session.user);
+  else showAuth();
 }
 init();
 </script>
