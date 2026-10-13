@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -302,7 +301,12 @@ async function enterApp(user) {
     showPage("homePage");
     status("appStatus", "Kamu sudah login dan siap menggunakan NEXORA.");
     setupRealtime();
-enableNexoraNotification();
+
+try {
+  await enableNexoraNotification();
+} catch (error) {
+  console.log("Push notification dilewati:", error.message);
+  }
   } catch (error) {
     showAuth();
     status("authStatus", "Login berhasil, tetapi profil gagal dimuat: " + error.message +
@@ -643,24 +647,14 @@ $("shareProfileBtn").addEventListener("click", async () => {
     if (error.name !== "AbortError") status("profileStatus", "Gagal membagikan profil: " + error.message, true);
   }
 });
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = "=".repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-  const raw = atob(base64);
-  return Uint8Array.from([...raw].map(char => char.charCodeAt(0)));
-}
-
 $("enablePushBtn").addEventListener("click", async () => {
   if (!currentUser) return;
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
     status("appStatus", "Browser ini belum mendukung Web Push.", true);
     return;
   }
-  if (VAPID_PUBLIC_KEY.startsWith("GANTI_")) {
-    status("appStatus", "Notifikasi belum siap: isi VAPID_PUBLIC_KEY di index.html setelah membuat kunci VAPID.", true);
-    return;
-  }
+ if (!window.NEXORA_VAPID_PUBLIC_KEY || window.NEXORA_VAPID_PUBLIC_KEY.startsWith("GANTI_")) {
+}
   $("enablePushBtn").disabled = true;
   try {
     const permission = await Notification.requestPermission();
