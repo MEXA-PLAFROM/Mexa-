@@ -1,857 +1,923 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#10152b">
-<title>NEKORA Pendidikan</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="NEKORA Pendidikan — platform belajar, mengajar, dan mengembangkan pendidikan dalam satu tempat.">
+<title>NEKORA Pendidikan — Pendidikan Tanpa Batas</title>
+
 <style>
-:root{--bg:#0b1020;--panel:#141b30;--line:#293451;--text:#f4f6ff;--muted:#a8b2cc;--accent:#9b8cff;--good:#65ddb0;--bad:#ff9cae}
+:root{
+  --primary:#6845f5;
+  --primary2:#8b5cf6;
+  --blue:#4c7dff;
+  --dark:#111b48;
+  --text:#19234b;
+  --muted:#697493;
+  --bg:#f8f9ff;
+  --line:#e6e8f5;
+  --white:#fff;
+  --shadow:0 12px 36px rgba(51,55,130,.09);
+}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at top,#24204b 0,transparent 40%),var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
-header{max-width:1100px;margin:auto;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-header h1{margin:0;letter-spacing:3px}
-header small{color:var(--muted)}
-main{max-width:1100px;margin:auto;padding:0 16px 100px}
-.card{background:#141b30ee;border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0;min-width:0}
-h2,h3{margin:0 0 12px}
-h2{font-size:clamp(22px,4vw,32px)}
-p,.muted{color:var(--muted);line-height:1.55}
-label{display:block;color:#d6dcf1;font-size:13px;margin:10px 0 5px}
-input,select,textarea{width:100%;padding:12px;border-radius:11px;border:1px solid #34415f;background:#0b1122;color:var(--text);font:inherit;margin-bottom:8px}
-textarea{min-height:90px;resize:vertical}
-button{border:0;border-radius:11px;padding:11px 14px;background:var(--accent);color:#130f2c;font-weight:800;cursor:pointer}
-button:disabled{opacity:.5;cursor:wait}
-button.secondary{background:#252e49;color:var(--text);border:1px solid #3b496b}
-button.danger{background:#52293b;color:#ffe3eb}
-.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
-.row>*{flex:1;min-width:120px}
-.hidden{display:none!important}
-.status{padding:10px 0;color:var(--accent);white-space:pre-wrap;overflow-wrap:anywhere}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.pill{display:inline-block;background:#292449;color:#d9d0ff;border:1px solid #4b407d;padding:4px 9px;border-radius:99px;font-size:11px}
-.item{padding:13px;border:1px solid var(--line);border-radius:13px;margin:9px 0;background:#10172a}
-.item h3{margin-bottom:5px}
-.item small{color:var(--muted)}
-.profile{display:flex;gap:14px;align-items:center}
-.avatar{width:70px;height:70px;border-radius:50%;object-fit:cover;background:#333b58;display:grid;place-items:center;font-size:24px;font-weight:900;flex-shrink:0}
-.nav{display:flex;gap:7px;overflow:auto;position:sticky;top:0;background:#0b1020ee;padding:10px 0;z-index:3}
-.nav button{white-space:nowrap}
-.question{padding:12px;border:1px solid var(--line);border-radius:12px;margin:10px 0}
-.question input{margin-top:7px}
-.filelink{overflow-wrap:anywhere}
-.right{margin-left:auto}
-@media(max-width:680px){
-.grid{grid-template-columns:1fr}
-header{padding:16px}
-main{padding:0 11px 95px}
-.card{padding:14px}
-.nav{bottom:0;top:auto;position:fixed;left:0;right:0;padding:8px;background:#10152bf5;border-top:1px solid var(--line);justify-content:flex-start}
-.nav button{padding:10px;font-size:12px}
-.profile .avatar{width:58px;height:58px}
+html{scroll-behavior:smooth;scroll-padding-top:85px}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:#fff;color:var(--text);
+  line-height:1.6;
+}
+button,input{font:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer}
+.container{width:min(1180px,92%);margin:auto}
+section{scroll-margin-top:85px}
+.muted{color:var(--muted)}
+.eyebrow{
+  color:var(--primary);font-size:12px;font-weight:850;
+  letter-spacing:1.3px;text-transform:uppercase;
+}
+.section-title{
+  font-size:clamp(27px,4vw,40px);line-height:1.2;
+  letter-spacing:-1.2px;margin:8px 0 14px;
+}
+.section-desc{color:var(--muted);max-width:590px;margin:0}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  border:1px solid transparent;border-radius:999px;
+  padding:12px 21px;font-weight:750;font-size:14px;
+  transition:.22s;cursor:pointer;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 9px 24px #6845f52a}
+.btn-primary{background:linear-gradient(115deg,#6845f5,#8757ff);color:#fff}
+.btn-outline{border-color:#cfc6ff;background:#fff;color:var(--primary)}
+.btn-light{background:#fff;color:var(--primary)}
+.btn-dark{background:var(--dark);color:#fff}
+.icon{
+  display:grid;place-items:center;width:46px;height:46px;
+  border-radius:15px;flex-shrink:0;
+  background:linear-gradient(145deg,#f0eaff,#e4eaff);
+  color:var(--primary);font-size:23px;
+}
+header{
+  position:sticky;top:0;z-index:50;background:#ffffffed;
+  backdrop-filter:blur(16px);border-bottom:1px solid #ececf5;
+}
+.navbar{
+  min-height:76px;display:flex;align-items:center;
+  justify-content:space-between;gap:22px;
+}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-logo{
+  width:43px;height:43px;border-radius:14px;
+  display:grid;place-items:center;
+  color:white;font-size:25px;
+  background:linear-gradient(145deg,#9577ff,#5635e8);
+  box-shadow:0 7px 18px #6845f533;
+}
+.brand-name{font-size:22px;line-height:1.15;font-weight:950;letter-spacing:-.8px}
+.brand-tag{font-size:10px;color:var(--muted)}
+.nav-links{display:flex;align-items:center;gap:25px;font-size:13px;font-weight:650}
+.nav-links a{transition:.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--primary)}
+.nav-actions{display:flex;align-items:center;gap:9px}
+.nav-actions .btn{padding:10px 17px;font-size:13px}
+.menu-toggle{
+  display:none;border:1px solid var(--line);background:white;
+  border-radius:12px;padding:9px 13px;font-size:22px;color:var(--dark);
+}
+.hero{
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse at 80% 25%,#e5dcff 0,transparent 36%),
+    radial-gradient(ellipse at 4% 90%,#edf0ff 0,transparent 35%),
+    linear-gradient(120deg,#fff 20%,#fbfaff 100%);
+}
+.hero-grid{
+  min-height:500px;padding:58px 0 48px;
+  display:grid;grid-template-columns:1fr 1.04fr;
+  align-items:center;gap:34px;
+}
+.hero h1{
+  font-size:clamp(38px,5.2vw,65px);
+  letter-spacing:-2.8px;line-height:1.04;
+  margin:17px 0 19px;font-weight:950;
+}
+.gradient-text{
+  background:linear-gradient(100deg,#6337ed,#a34bfa,#5275ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-copy{font-size:15px;color:#65708d;max-width:520px}
+.hero-buttons{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0}
+.hero-points{display:flex;flex-wrap:wrap;gap:19px;margin-top:25px}
+.hero-point{display:flex;align-items:center;gap:7px;font-size:11px;color:#56617f;font-weight:700}
+.hero-point span{color:var(--primary);font-size:17px}
+.hero-visual{
+  min-height:380px;position:relative;border-radius:34px;
+  overflow:hidden;background:
+  radial-gradient(ellipse at 50% 25%,#e7dcff 0,transparent 58%),
+  linear-gradient(145deg,#f0eaff,#dce7ff);
+  display:grid;place-items:center;
+}
+.hero-visual:before,.hero-visual:after{
+  content:"";position:absolute;border-radius:50%;
+  background:#fff8;filter:blur(2px);
+}
+.hero-visual:before{width:240px;height:240px;top:-80px;right:-45px}
+.hero-visual:after{width:180px;height:180px;bottom:-75px;left:-40px}
+.classroom-art{
+  position:relative;z-index:1;width:100%;height:100%;
+  min-height:380px;display:flex;align-items:center;justify-content:center;
+}
+.classroom-art svg{width:100%;max-width:540px;height:auto;display:block}
+.float-card{
+  position:absolute;z-index:3;background:#ffffffed;
+  border:1px solid #fff;border-radius:16px;padding:12px 15px;
+  box-shadow:var(--shadow);font-size:12px;
+}
+.float-card strong{display:block;font-size:19px;color:var(--dark)}
+.float-one{top:28px;right:20px}
+.float-two{bottom:24px;left:18px;display:flex;align-items:center;gap:10px}
+.float-symbol{
+  width:39px;height:39px;border-radius:12px;
+  display:grid;place-items:center;background:#eee8ff;font-size:21px;
+}
+.trust-strip{border-top:1px solid #eeeafa;border-bottom:1px solid #eeeafa;background:#fff}
+.trust-inner{
+  min-height:78px;display:flex;align-items:center;
+  justify-content:space-between;gap:20px;flex-wrap:wrap;
+}
+.trust-item{font-size:12px;color:#596481;font-weight:700}
+.trust-item b{color:var(--dark)}
+.section{padding:82px 0}
+.section-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:25px;margin-bottom:32px;
+}
+.services{background:#fff}
+.service-layout{display:grid;grid-template-columns:.76fr 1.5fr;gap:38px;align-items:start}
+.service-intro .btn{margin-top:23px}
+.service-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.service-card{
+  display:flex;flex-direction:column;align-items:flex-start;
+  min-height:160px;padding:17px;border:1px solid var(--line);
+  border-radius:18px;background:linear-gradient(150deg,#fff,#fafaff);
+  transition:.25s;cursor:pointer;text-align:left;color:var(--text);
+  box-shadow:0 3px 12px #25316b05;
+}
+.service-card:hover{
+  transform:translateY(-5px);border-color:#c9bcff;
+  box-shadow:var(--shadow);
+}
+.service-card .icon{width:43px;height:43px;border-radius:13px;margin-bottom:13px}
+.service-card strong{font-size:13px;line-height:1.35}
+.service-card small{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+.card-arrow{margin-top:auto;align-self:flex-end;color:var(--primary);font-size:18px}
+.learning{background:linear-gradient(120deg,#f6f4ff,#f5f8ff)}
+.learning-grid{
+  display:grid;grid-template-columns:1fr 1.05fr .75fr;
+  gap:27px;align-items:center;
+}
+.learning-art{
+  min-height:300px;border-radius:25px;overflow:hidden;
+  display:grid;place-items:center;background:linear-gradient(140deg,#dcd4ff,#d9e8ff);
+  position:relative;
+}
+.learning-art svg{width:100%;max-width:380px;height:auto}
+.learning-copy h2{font-size:clamp(26px,3vw,35px);line-height:1.2;letter-spacing:-1px;margin:10px 0}
+.check-list{list-style:none;padding:0;margin:22px 0}
+.check-list li{display:flex;align-items:flex-start;gap:10px;margin:12px 0;font-size:13px;color:#4f5c7c}
+.check{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  flex-shrink:0;background:#e8e0ff;color:var(--primary);font-weight:900;
+}
+.stat-box{
+  border:1px solid #e6e3f8;background:#ffffffc9;border-radius:20px;padding:18px;
+}
+.stat-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #eceafa}
+.stat-row:last-child{border:0}
+.stat-row .icon{width:41px;height:41px}
+.stat-row strong{font-size:21px;display:block;line-height:1.2}
+.stat-row small{font-size:11px;color:var(--muted)}
+.why-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:center}
+.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.feature{
+  display:flex;gap:14px;padding:20px;border:1px solid var(--line);
+  border-radius:18px;background:white;
+}
+.feature h3{font-size:14px;margin:0 0 5px}
+.feature p{font-size:12px;color:var(--muted);margin:0}
+.testimonial-section{background:var(--dark);color:#fff}
+.testimonial-section .muted{color:#c0c9e8}
+.testimonial-layout{display:grid;grid-template-columns:.7fr 1.3fr;gap:35px;align-items:center}
+.testimonial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.testimonial{
+  border:1px solid #34416c;background:#172451;border-radius:18px;padding:19px;
+}
+.person{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.person-avatar{
+  width:39px;height:39px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(145deg,#d7c9ff,#a6bfff);font-size:19px;
+}
+.person strong{display:block;font-size:12px}
+.person small{display:block;color:#bdc6e5;font-size:10px}
+.testimonial blockquote{margin:0;font-size:12px;line-height:1.7;color:#d4daf0}
+.stars{color:#b79aff;letter-spacing:2px;margin-top:14px}
+.news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.news-card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}
+.news-art{
+  min-height:130px;display:grid;place-items:center;font-size:47px;
+  background:linear-gradient(135deg,#e8e1ff,#dceaff);
+}
+.news-body{padding:19px}
+.news-body small{font-size:10px;color:var(--primary);font-weight:800}
+.news-body h3{font-size:15px;line-height:1.4;margin:8px 0}
+.news-body p{font-size:12px;color:var(--muted);margin:0 0 13px}
+.news-link{font-size:12px;font-weight:800;color:var(--primary)}
+.cta{padding:35px 0;background:linear-gradient(110deg,#6845f5,#8861ff,#6577ff);color:#fff}
+.cta-inner{display:flex;align-items:center;justify-content:space-between;gap:25px}
+.cta h2{font-size:clamp(23px,3vw,32px);margin:0 0 5px;line-height:1.2}
+.cta p{margin:0;color:#eeeaff;font-size:13px}
+.cta-actions{display:flex;gap:10px;flex-wrap:wrap}
+footer{background:#101a43;color:#fff;padding:39px 0 18px}
+.footer-top{display:grid;grid-template-columns:1.3fr repeat(3,1fr);gap:30px;padding-bottom:30px}
+.footer-brand p{font-size:12px;color:#b9c3e0;max-width:260px}
+.footer-col h3{font-size:13px;margin:0 0 13px}
+.footer-col a{display:block;font-size:12px;color:#b9c3e0;margin:9px 0}
+.footer-col a:hover{color:#fff}
+.footer-bottom{
+  padding-top:17px;border-top:1px solid #34416c;display:flex;
+  justify-content:space-between;gap:12px;flex-wrap:wrap;
+  color:#b9c3e0;font-size:11px;
+}
+.modal-backdrop{
+  position:fixed;inset:0;background:#111733a8;backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:18px;z-index:100;
+}
+.modal-backdrop.show{display:flex}
+.modal{
+  width:min(450px,100%);background:white;border-radius:24px;
+  padding:27px;box-shadow:0 30px 100px #0b123955;position:relative;
+}
+.modal h2{margin:0 0 6px;font-size:26px}
+.modal p{font-size:13px;color:var(--muted);margin:0 0 20px}
+.modal-close{
+  position:absolute;right:17px;top:15px;border:0;
+  background:#f0eff8;border-radius:50%;width:36px;height:36px;font-size:20px;
+}
+.form-label{display:block;font-size:12px;font-weight:750;margin:12px 0 6px}
+.form-control{
+  width:100%;padding:12px 14px;border:1px solid #dfe2f0;
+  border-radius:12px;background:#fafbff;color:var(--text);outline:none;
+}
+.form-control:focus{border-color:var(--primary);box-shadow:0 0 0 3px #6845f51a}
+.modal .btn{width:100%;margin-top:17px}
+.modal-note{margin-top:15px!important;text-align:center}
+.modal-note button{border:0;background:none;color:var(--primary);font-weight:800}
+#toast{
+  position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);
+  opacity:0;pointer-events:none;z-index:150;
+  background:#172044;color:white;border-radius:13px;padding:13px 18px;
+  box-shadow:var(--shadow);font-size:13px;transition:.25s;
+  max-width:90%;text-align:center;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.back-top{
+  position:fixed;right:17px;bottom:17px;width:43px;height:43px;
+  display:none;place-items:center;border:0;border-radius:50%;
+  background:var(--primary);color:#fff;font-size:20px;z-index:40;
+  box-shadow:0 8px 24px #6845f54a;
+}
+.back-top.show{display:grid}
+@media(max-width:1050px){
+  .nav-links{gap:14px}
+  .service-layout{grid-template-columns:1fr;gap:25px}
+  .service-intro{max-width:650px}
+  .learning-grid{grid-template-columns:1fr 1fr}
+  .learning-art{grid-row:span 2}
+  .stat-box{grid-column:2}
+  .why-grid{gap:25px}
+}
+@media(max-width:760px){
+  .navbar{min-height:68px}
+  .brand-name{font-size:20px}
+  .menu-toggle{display:block}
+  .nav-links{
+    display:none;position:absolute;top:68px;left:0;right:0;
+    padding:17px 5% 22px;background:#fff;border-bottom:1px solid var(--line);
+    box-shadow:var(--shadow);flex-direction:column;align-items:stretch;gap:0;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 0;border-bottom:1px solid #f0eff8}
+  .nav-actions{margin-left:auto}
+  .nav-actions .btn{padding:9px 12px;font-size:12px}
+  .hero-grid{grid-template-columns:1fr;padding:42px 0 30px;gap:20px}
+  .hero h1{font-size:clamp(39px,10vw,56px);letter-spacing:-1.8px}
+  .hero-visual,.classroom-art{min-height:300px}
+  .hero-visual{border-radius:25px}
+  .hero-points{gap:12px}
+  .trust-inner{justify-content:flex-start;padding:17px 0}
+  .trust-item{width:calc(50% - 12px)}
+  .section{padding:57px 0}
+  .section-head{display:block}
+  .section-head .btn{margin-top:17px}
+  .service-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .service-card{min-height:155px;padding:14px}
+  .learning-grid{grid-template-columns:1fr;gap:20px}
+  .learning-art{grid-row:auto;min-height:240px}
+  .stat-box{grid-column:auto}
+  .why-grid{grid-template-columns:1fr;gap:25px}
+  .feature-grid{grid-template-columns:1fr}
+  .testimonial-layout{grid-template-columns:1fr;gap:23px}
+  .testimonial-grid{grid-template-columns:1fr}
+  .news-grid{grid-template-columns:1fr}
+  .news-art{min-height:115px}
+  .cta-inner{align-items:flex-start;flex-direction:column}
+  .cta-actions{width:100%}
+  .cta-actions .btn{flex:1}
+  .footer-top{grid-template-columns:repeat(2,minmax(0,1fr));gap:25px}
+  .footer-brand{grid-column:1/-1}
+}
+@media(max-width:390px){
+  .nav-actions{gap:5px}
+  .nav-actions .btn{padding:8px 10px}
+  .brand-logo{width:37px;height:37px}
+  .brand-name{font-size:18px}
+  .service-card{padding:12px}
+  .hero-buttons .btn{padding:11px 15px}
+  .float-one{right:10px;top:10px}
+  .float-two{left:10px;bottom:10px}
 }
 </style>
 </head>
+
 <body>
 <header>
-  <div>
-    <h1>NEKORA</h1>
-    <small>RUANG BELAJAR PRIVAT · TUGAS · NILAI</small>
+  <div class="container navbar">
+    <a class="brand" href="#beranda" aria-label="NEKORA Beranda">
+      <div class="brand-logo">🎓</div>
+      <div>
+        <div class="brand-name">NEKORA</div>
+        <div class="brand-tag">Pendidikan Tanpa Batas</div>
+      </div>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+      <a class="active" href="#beranda">Beranda</a>
+      <a href="#layanan">Fitur</a>
+      <a href="#layanan">Layanan</a>
+      <a href="#tentang">Tentang</a>
+      <a href="#bantuan">Bantuan</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="btn btn-outline" data-auth="login">Masuk</button>
+      <button class="btn btn-primary" data-auth="signup">Daftar</button>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Buka menu">☰</button>
   </div>
-  <button id="logout" class="secondary hidden">Keluar</button>
 </header>
+
 <main>
-<section id="auth" class="card">
-  <h2>Masuk atau daftar</h2>
-  <p>Daftar akun siswa atau ajukan akun guru/staf. Jabatan khusus baru aktif setelah diverifikasi oleh pengelola sekolah.</p>
-  <label>Nama lengkap</label>
-  <input id="name" maxlength="100" placeholder="Nama lengkap">
-  <label>Email</label>
-  <input id="email" type="email" autocomplete="email" placeholder="nama@email.com">
-  <label>Password (minimal 8 karakter)</label>
-  <input id="password" type="password" minlength="8" autocomplete="current-password">
-  <label>Jenis akun yang diajukan</label>
-  <select id="requested">
-    <option value="student">Siswa</option>
-    <option value="teacher">Guru mata pelajaran</option>
-    <option value="homeroom">Wali kelas</option>
-    <option value="moderator">Moderator</option>
-    <option value="principal">Kepala sekolah</option>
-  </select>
-  <div class="row">
-    <button id="signup">Daftar</button>
-    <button id="login" class="secondary">Masuk</button>
-  </div>
-  <div id="authStatus" class="status"></div>
-</section>
-
-<section id="app" class="hidden">
-<nav class="nav">
-  <button data-tab="dashboard">Beranda</button>
-  <button data-tab="school">Sekolah & kelas</button>
-  <button data-tab="tasks">Tugas</button>
-  <button data-tab="grades">Daftar nilai</button>
-  <button data-tab="profile">Profil</button>
-</nav>
-<div id="globalStatus" class="status"></div>
-
-<section id="dashboard" class="tab">
-  <div class="card">
-    <div class="profile">
-      <img id="avatar" class="avatar" alt="Foto profil" src="" onerror="this.style.display='none'">
-      <div>
-        <h2 id="welcome">Profil NEKORA</h2>
-        <div id="roleline" class="muted"></div>
-        <span id="idcode" class="pill"></span>
+<section class="hero" id="beranda">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">✦ Platform Pendidikan Digital Terpadu</div>
+      <h1>Masa Depan<br>Pendidikan Dimulai<br><span class="gradient-text">dari Sini</span></h1>
+      <p class="hero-copy">
+        NEKORA hadir sebagai solusi pembelajaran modern untuk mendukung guru,
+        siswa, dan sekolah dalam menciptakan pengalaman belajar yang lebih
+        mudah, efektif, dan menyenangkan.
+      </p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary" data-auth="signup">Mulai Sekarang <span>→</span></button>
+        <a class="btn btn-outline" href="#layanan">Jelajahi Fitur <span>▷</span></a>
+      </div>
+      <div class="hero-points">
+        <div class="hero-point"><span>◈</span> Akses Fleksibel</div>
+        <div class="hero-point"><span>♢</span> Aman & Terpercaya</div>
+        <div class="hero-point"><span>✣</span> Mudah Digunakan</div>
       </div>
     </div>
-    <p id="verificationNote"></p>
-  </div>
-  <div class="grid">
-    <div class="card">
-      <h3>Ruangan saya</h3>
-      <div id="myClasses" class="muted">Belum ada kelas.</div>
-    </div>
-    <div class="card">
-      <h3>Tugas terbaru</h3>
-      <div id="recentTasks" class="muted">Belum ada tugas.</div>
-    </div>
-  </div>
-</section>
 
-<section id="school" class="tab hidden">
-  <div class="card">
-    <h2>Sekolah</h2>
-    <label>Nama sekolah</label>
-    <input id="schoolName" placeholder="Nama sekolah">
-    <label>Jenjang</label>
-    <select id="schoolLevel">
-      <option>SD</option><option>SMP</option><option>SMA</option><option>SMK</option><option>Lainnya</option>
-    </select>
-    <button id="createSchool">Buat sekolah (khusus kepala sekolah terverifikasi)</button>
-    <div class="muted">Akun pertama kepala sekolah harus diverifikasi dahulu di SQL Supabase. Setelah sekolah dibuat, tambahkan anggota melalui pengelola sekolah.</div>
-    <div id="schoolsList"></div>
-  </div>
-
-  <div class="card">
-    <h3>Buat kelas</h3>
-    <label>Sekolah</label>
-    <select id="classSchool"></select>
-    <div class="row">
-      <div>
-        <label>Tingkat kelas</label>
-        <select id="grade"></select>
+    <div class="hero-visual">
+      <div class="float-card float-one">
+        <span style="color:#7650f5">✦ Pengalaman Belajar</span>
+        <strong>Lebih bermakna</strong>
+        <small class="muted">Untuk semua</small>
       </div>
-      <div>
-        <label>Rombel</label>
-        <select id="section">
-          <option>A</option><option>B</option><option>C</option><option>D</option>
-          <option>E</option><option>F</option><option>G</option><option>H</option>
-        </select>
+
+      <div class="classroom-art">
+        <svg viewBox="0 0 560 410" role="img" aria-label="Ilustrasi guru membimbing siswa belajar">
+          <defs>
+            <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#c5b4ff"/><stop offset="1" stop-color="#a8d5ff"/>
+            </linearGradient>
+            <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#303d9d"/><stop offset="1" stop-color="#6c54ec"/>
+            </linearGradient>
+            <linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#fff"/><stop offset="1" stop-color="#dce8ff"/>
+            </linearGradient>
+          </defs>
+          <rect x="30" y="32" width="500" height="280" rx="22" fill="url(#wall)" opacity=".55"/>
+          <rect x="56" y="53" width="448" height="205" rx="12" fill="#fff" opacity=".62"/>
+          <rect x="74" y="69" width="184" height="124" rx="10" fill="url(#screen)"/>
+          <rect x="89" y="84" width="70" height="7" rx="4" fill="#bdb5ff"/>
+          <rect x="89" y="100" width="130" height="5" rx="3" fill="#fff" opacity=".8"/>
+          <rect x="89" y="112" width="112" height="5" rx="3" fill="#fff" opacity=".5"/>
+          <rect x="89" y="137" width="48" height="40" rx="7" fill="#7bceff"/>
+          <rect x="145" y="137" width="48" height="40" rx="7" fill="#c2a8ff"/>
+          <rect x="203" y="137" width="39" height="40" rx="7" fill="#73e2c1"/>
+          <rect x="276" y="70" width="205" height="124" rx="10" fill="#fff" opacity=".85"/>
+          <path d="M300 162 L330 135 L356 148 L388 103 L420 124 L453 90" fill="none" stroke="#7855f6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M300 170 H458" stroke="#c5c9ed" stroke-width="3"/>
+          <circle cx="330" cy="135" r="5" fill="#7855f6"/>
+          <circle cx="388" cy="103" r="5" fill="#7855f6"/>
+          <circle cx="453" cy="90" r="5" fill="#7855f6"/>
+          <rect x="45" y="281" width="470" height="18" rx="9" fill="#b0a4ed"/>
+          <path d="M77 299 L65 360 H495 L482 299" fill="#9c91dc"/>
+          <path d="M90 305 L84 360 M470 305 L476 360" stroke="#7467bd" stroke-width="9" stroke-linecap="round"/>
+          <!-- Guru -->
+          <path d="M324 99 Q317 44 369 40 Q416 43 414 100 L399 125 H339Z" fill="#5132a5"/>
+          <ellipse cx="368" cy="94" rx="35" ry="43" fill="#e9bba3"/>
+          <path d="M334 92 Q326 51 365 49 Q405 49 403 92 L391 72 L352 72Z" fill="#3d287c"/>
+          <path d="M334 90 Q316 110 330 142 L343 126 L346 88" fill="#5634b5"/>
+          <path d="M399 88 Q421 106 403 143 L389 125 L390 82" fill="#5634b5"/>
+          <circle cx="356" cy="95" r="3" fill="#382750"/>
+          <circle cx="380" cy="95" r="3" fill="#382750"/>
+          <path d="M359 111 Q369 118 380 110" stroke="#a85867" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M329 140 Q367 119 406 143 L433 220 L306 220Z" fill="url(#shirt)"/>
+          <path d="M347 133 L367 157 L387 133 L379 173 L357 173Z" fill="#6e4bd9"/>
+          <path d="M333 150 L292 201 L321 218 L348 179" fill="#e7efff"/>
+          <path d="M400 151 L429 185 L408 205 L389 177" fill="#e7efff"/>
+          <!-- Siswa kiri -->
+          <path d="M92 166 Q91 122 127 122 Q163 122 162 166 L150 188 H105Z" fill="#292b48"/>
+          <ellipse cx="128" cy="167" rx="28" ry="33" fill="#dba889"/>
+          <path d="M100 161 Q97 126 129 127 Q159 129 156 161 L146 145 L111 145Z" fill="#20233e"/>
+          <circle cx="118" cy="167" r="2.7" fill="#382750"/>
+          <circle cx="138" cy="167" r="2.7" fill="#382750"/>
+          <path d="M119 181 Q128 188 138 180" fill="none" stroke="#a65e65" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M87 201 Q127 181 169 204 L191 284 H67Z" fill="url(#shirt)"/>
+          <path d="M116 198 L129 219 L142 198 L137 245 L121 245Z" fill="#263c72"/>
+          <path d="M88 215 L60 257 L83 270 L111 232" fill="#dce8ff"/>
+          <path d="M164 213 L194 244 L178 260 L151 233" fill="#dce8ff"/>
+          <!-- Siswa kanan -->
+          <path d="M213 166 Q210 126 247 124 Q283 126 281 166 L270 188 H227Z" fill="#2e2c50"/>
+          <ellipse cx="246" cy="168" rx="28" ry="33" fill="#c98f6f"/>
+          <path d="M218 163 Q216 127 247 128 Q278 128 274 161 L265 146 L228 146Z" fill="#24253e"/>
+          <circle cx="236" cy="168" r="2.7" fill="#30213c"/>
+          <circle cx="256" cy="168" r="2.7" fill="#30213c"/>
+          <path d="M237 181 Q246 187 256 180" fill="none" stroke="#8e4e55" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M205 203 Q246 184 287 204 L311 284 H184Z" fill="url(#shirt)"/>
+          <path d="M233 198 L246 219 L260 198 L255 245 L239 245Z" fill="#283f77"/>
+          <!-- Meja -->
+          <path d="M47 269 Q167 249 310 271 L300 298 Q174 282 56 302Z" fill="#8c7be2"/>
+          <path d="M67 298 L60 366 M286 298 L296 366" stroke="#7466c5" stroke-width="9" stroke-linecap="round"/>
+          <path d="M115 258 L239 258 L261 281 L130 281Z" fill="#fff"/>
+          <path d="M139 264 H224" stroke="#c7ccef" stroke-width="3"/>
+          <path d="M150 270 H212" stroke="#c7ccef" stroke-width="3"/>
+          <!-- Laptop -->
+          <path d="M302 237 L387 223 L404 274 L316 284Z" fill="#252a53"/>
+          <path d="M308 238 L382 226 L396 267 L321 278Z" fill="url(#screen)"/>
+          <path d="M302 282 L402 270 L417 282 L313 296Z" fill="#6c69a8"/>
+          <path d="M330 250 L364 244" stroke="#b8b8ff" stroke-width="3" stroke-linecap="round"/>
+          <path d="M333 258 L374 251" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+          <circle cx="362" cy="267" r="3" fill="#9f92ff"/>
+          <!-- Books and decor -->
+          <path d="M412 290 H486 V300 H412Z" fill="#6b4ce0"/>
+          <path d="M421 278 H493 V289 H421Z" fill="#9b87fa"/>
+          <path d="M431 266 H493 V277 H431Z" fill="#fff"/>
+          <circle cx="490" cy="46" r="13" fill="#fff" opacity=".7"/>
+          <path d="M490 35 V57 M479 46 H501" stroke="#8a73ef" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="float-card float-two">
+        <div class="float-symbol">📚</div>
+        <div><strong style="font-size:14px">Belajar bersama</strong><small class="muted">Berkembang bersama</small></div>
       </div>
     </div>
-    <label>Wali kelas (opsional, UUID akun)</label>
-    <input id="homeroom" placeholder="ID akun guru, jika sudah ada">
-    <button id="createClass">Buat kelas</button>
-    <div id="classesList"></div>
-  </div>
-
-  <div class="card">
-    <h3>Gabung kelas dengan kode</h3>
-    <label>Kode kelas dari guru</label>
-    <input id="joinCode" placeholder="Contoh: A1B2C3D4" maxlength="12">
-    <button id="joinClass">Minta bergabung</button>
-    <p class="muted">Permintaan siswa menunggu persetujuan guru. Kode kelas bukan pengganti persetujuan.</p>
   </div>
 </section>
 
-<section id="tasks" class="tab hidden">
-  <div class="card" id="createTaskCard">
-    <h2>Buat dan bagikan tugas</h2>
-    <label>Kelas</label>
-    <select id="taskClass"></select>
-    <label>Mata pelajaran</label>
-    <input id="subject" placeholder="Matematika, IPA, Bahasa Indonesia...">
-    <label>Judul tugas</label>
-    <input id="taskTitle" placeholder="Latihan Bab 1">
-    <label>Instruksi</label>
-    <textarea id="instructions" placeholder="Petunjuk pengerjaan"></textarea>
-    <label>File soal (PDF, DOCX, JPG, PNG, TXT; maks 20 MB)</label>
-    <input id="taskFile" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt">
-    <label>Soal terstruktur (JSON) untuk dijawab langsung</label>
-    <textarea id="questions" placeholder='Contoh: [{"question":"2 + 2 = ?","type":"text","points":10}]'></textarea>
-    <label>Kunci jawaban (JSON, urutan sama dengan soal; tidak ditampilkan ke siswa)</label>
-    <textarea id="keys" placeholder='Contoh: [{"answer":"4"}]'></textarea>
-    <label>Batas pengumpulan (opsional)</label>
-    <input id="due" type="datetime-local">
-    <button id="publishTask">Terbitkan tugas</button>
-    <p class="muted">Soal pilihan ganda juga dapat ditulis sebagai JSON dengan options, sedangkan kunci jawaban disimpan di tabel privat terpisah.</p>
+<div class="trust-strip">
+  <div class="container trust-inner">
+    <div class="trust-item">✦ <b>Belajar fleksibel</b><br><span class="muted">Kapan saja</span></div>
+    <div class="trust-item">♢ <b>Untuk guru dan murid</b><br><span class="muted">Satu platform</span></div>
+    <div class="trust-item">✣ <b>Terintegrasi</b><br><span class="muted">Layanan pendidikan</span></div>
+    <div class="trust-item">♡ <b>Terus berkembang</b><br><span class="muted">Untuk semua jenjang</span></div>
   </div>
-  <div class="card">
-    <h2>Tugas kelas</h2>
-    <div id="taskList">Pilih kelas yang kamu ikuti atau ajar.</div>
+</div>
+
+<section class="section services" id="layanan">
+  <div class="container service-layout">
+    <div class="service-intro">
+      <div class="eyebrow">Layanan Unggulan</div>
+      <h2 class="section-title">Semua yang Kamu Butuhkan dalam Satu Platform</h2>
+      <p class="section-desc">
+        NEKORA menyediakan berbagai layanan pendidikan untuk guru, siswa,
+        dan sekolah. Semua terintegrasi dalam satu platform yang mudah diakses.
+      </p>
+      <button class="btn btn-primary" id="showAllServices" style="margin-top:23px">
+        Lihat Semua Layanan →
+      </button>
+    </div>
+
+    <div class="service-grid" id="serviceGrid">
+      <button class="service-card" data-service="Ruang Belajar" data-desc="Akses materi, kelas, latihan, dan tugas pembelajaran untuk siswa.">
+        <span class="icon">📖</span><strong>Ruang Belajar</strong>
+        <small>Materi, tugas, latihan dan nilai untuk murid.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card" data-service="Ruang Mengajar" data-desc="Guru dapat mengelola kelas, membuat tugas, membagikan materi, dan memeriksa jawaban.">
+        <span class="icon">🧑‍🏫</span><strong>Ruang Mengajar</strong>
+        <small>Kelola kelas, tugas, materi dan penilaian.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card" data-service="Sekolah & Kelas" data-desc="Kelola informasi sekolah, anggota, rombongan belajar, dan kode kelas.">
+        <span class="icon">🏫</span><strong>Sekolah & Kelas</strong>
+        <small>Kelola sekolah, anggota, dan kode kelas.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card" data-service="Tugas & Ujian" data-desc="Pusat pengumpulan tugas, latihan soal, ujian, dan evaluasi pembelajaran.">
+        <span class="icon">📝</span><strong>Tugas & Ujian</strong>
+        <small>Latihan soal dan evaluasi belajar.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card" data-service="Perpustakaan Digital" data-desc="Ruang untuk mengembangkan koleksi buku, modul, dan referensi digital.">
+        <span class="icon">📚</span><strong>Perpustakaan</strong>
+        <small>Buku, modul, dan referensi digital.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card" data-service="Komunitas" data-desc="Ruang kolaborasi untuk berdiskusi, bertukar ide, dan berbagi pengetahuan.">
+        <span class="icon">👥</span><strong>Komunitas</strong>
+        <small>Diskusi dan kolaborasi pendidikan.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card" data-service="Agenda Pendidikan" data-desc="Kalender kegiatan, jadwal belajar, acara, dan pengumuman pendidikan.">
+        <span class="icon">🗓️</span><strong>Agenda</strong>
+        <small>Jadwal, pengumuman, dan kegiatan.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card" data-service="Nilai & Prestasi" data-desc="Pantau hasil evaluasi, perkembangan belajar, dan pencapaian siswa.">
+        <span class="icon">📈</span><strong>Nilai & Prestasi</strong>
+        <small>Pantau perkembangan belajar.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card extra-service" data-service="Berita Pendidikan" data-desc="Informasi, artikel, dan pembaruan seputar dunia pendidikan.">
+        <span class="icon">📰</span><strong>Berita Pendidikan</strong>
+        <small>Informasi dan wawasan terbaru.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card extra-service" data-service="Pusat Bantuan" data-desc="Panduan menggunakan NEKORA dan bantuan saat mengalami kendala.">
+        <span class="icon">💬</span><strong>Pusat Bantuan</strong>
+        <small>Panduan dan bantuan pengguna.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card extra-service" data-service="Profil Pengguna" data-desc="Pengaturan informasi akun dan identitas pengguna NEKORA.">
+        <span class="icon">👤</span><strong>Profil Pengguna</strong>
+        <small>Kelola identitas dan akunmu.</small><span class="card-arrow">↗</span>
+      </button>
+      <button class="service-card extra-service" data-service="Pusat Pengelolaan" data-desc="Layanan administrasi dan pengelolaan akses sekolah.">
+        <span class="icon">⚙️</span><strong>Pusat Pengelolaan</strong>
+        <small>Administrasi sekolah dan akses.</small><span class="card-arrow">↗</span>
+      </button>
+    </div>
   </div>
 </section>
 
-<section id="grades" class="tab hidden">
-  <div class="card">
-    <h2>Daftar nilai</h2>
-    <p class="muted">Siswa hanya melihat nilai sendiri. Guru melihat pengumpulan dan nilai tugas pada kelas yang diajarnya.</p>
-    <div id="gradeList">Belum ada nilai.</div>
+<section class="section learning" id="ruang-belajar">
+  <div class="container learning-grid">
+    <div class="learning-art">
+      <svg viewBox="0 0 400 300" role="img" aria-label="Ilustrasi pembelajaran digital">
+        <defs>
+          <linearGradient id="laptopGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#7452ef"/><stop offset="1" stop-color="#343c9a"/>
+          </linearGradient>
+        </defs>
+        <circle cx="205" cy="140" r="120" fill="#fff" opacity=".36"/>
+        <rect x="42" y="38" width="316" height="196" rx="17" fill="#fff" opacity=".85"/>
+        <rect x="55" y="51" width="290" height="168" rx="10" fill="url(#laptopGrad)"/>
+        <rect x="72" y="69" width="92" height="132" rx="9" fill="#fff" opacity=".14"/>
+        <circle cx="118" cy="98" r="20" fill="#d3c6ff"/>
+        <path d="M86 143 Q118 115 150 143 L157 183 H79Z" fill="#c8caff"/>
+        <rect x="180" y="73" width="139" height="10" rx="5" fill="#fff" opacity=".85"/>
+        <rect x="180" y="94" width="110" height="6" rx="3" fill="#fff" opacity=".5"/>
+        <rect x="180" y="116" width="57" height="55" rx="8" fill="#9f8cff"/>
+        <rect x="245" y="116" width="74" height="55" rx="8" fill="#78caff"/>
+        <rect x="180" y="182" width="139" height="7" rx="4" fill="#fff" opacity=".55"/>
+        <path d="M28 235 H371 L344 256 H54Z" fill="#c5b9fa"/>
+        <path d="M53 256 H345" stroke="#9a8be5" stroke-width="5" stroke-linecap="round"/>
+        <rect x="152" y="243" width="98" height="8" rx="4" fill="#8e7cde"/>
+        <rect x="15" y="94" width="67" height="79" rx="13" fill="#fff"/>
+        <rect x="24" y="104" width="49" height="12" rx="5" fill="#e7ddff"/>
+        <rect x="24" y="125" width="37" height="6" rx="3" fill="#b8a6ff"/>
+        <rect x="24" y="139" width="42" height="6" rx="3" fill="#b8a6ff"/>
+        <circle cx="339" cy="38" r="23" fill="#fff"/>
+        <text x="339" y="47" text-anchor="middle" font-size="24" fill="#7650f5">✦</text>
+      </svg>
+    </div>
+    <div class="learning-copy">
+      <div class="eyebrow">Untuk Siswa & Guru</div>
+      <h2>Ruang Belajar dan Mengajar yang Lebih Lengkap</h2>
+      <p class="muted">
+        Dari materi pembelajaran, tugas, hingga penilaian, semua dirancang
+        untuk mendukung proses belajar yang teratur dan mudah digunakan.
+      </p>
+      <ul class="check-list">
+        <li><span class="check">✓</span> Akses materi pembelajaran</li>
+        <li><span class="check">✓</span> Pengumpulan tugas online</li>
+        <li><span class="check">✓</span> Penilaian dan umpan balik</li>
+        <li><span class="check">✓</span> Komunikasi guru dan siswa</li>
+      </ul>
+      <button class="btn btn-primary" data-auth="login">Masuk ke Ruang Belajar →</button>
+    </div>
+    <div class="stat-box">
+      <div class="stat-row"><span class="icon">👥</span><div><strong>Terpadu</strong><small>Untuk komunitas pendidikan</small></div></div>
+      <div class="stat-row"><span class="icon">📚</span><div><strong>Terorganisir</strong><small>Materi dan tugas</small></div></div>
+      <div class="stat-row"><span class="icon">🏫</span><div><strong>Kolaboratif</strong><small>Guru, murid dan sekolah</small></div></div>
+      <div class="stat-row"><span class="icon">🔒</span><div><strong>Berbasis akun</strong><small>Akses sesuai peran</small></div></div>
+    </div>
   </div>
 </section>
 
-<section id="profile" class="tab hidden">
-  <div class="card">
-    <h2>Profil rapi</h2>
-    <label>Nama lengkap</label>
-    <input id="profileName" maxlength="100">
-    <label>URL foto profil (opsional)</label>
-    <input id="photoUrl" type="url" placeholder="https://...">
-    <button id="saveProfile">Simpan profil</button>
-    <div id="profileDetails" class="item"></div>
-    <p class="muted">Nomor identitas resmi tidak diminta. ID NEKORA dibuat otomatis dan tidak dapat diganti dari profil.</p>
+<section class="section" id="tentang">
+  <div class="container why-grid">
+    <div>
+      <div class="eyebrow">Mengapa NEKORA?</div>
+      <h2 class="section-title">Pendidikan Lebih Mudah, Terhubung, dan Terarah</h2>
+      <p class="section-desc">
+        NEKORA dikembangkan sebagai pusat layanan pendidikan yang menyatukan
+        pengalaman belajar, pengajaran, dan pengelolaan sekolah.
+      </p>
+      <a href="#layanan" class="btn btn-outline" style="margin-top:23px">Jelajahi Layanan →</a>
+    </div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">⚡</span><div><h3>Teknologi Modern</h3><p>Pengalaman digital yang praktis dan terus dikembangkan.</p></div></div>
+      <div class="feature"><span class="icon">🛡️</span><div><h3>Keamanan Data</h3><p>Akses akun dirancang sesuai izin pengguna.</p></div></div>
+      <div class="feature"><span class="icon">🎧</span><div><h3>Dukungan Pengguna</h3><p>Pusat panduan untuk membantu pengguna.</p></div></div>
+      <div class="feature"><span class="icon">📱</span><div><h3>Responsif</h3><p>Nyaman dibuka dari ponsel maupun komputer.</p></div></div>
+    </div>
   </div>
 </section>
+
+<section class="section testimonial-section" id="testimoni">
+  <div class="container testimonial-layout">
+    <div>
+      <div class="eyebrow" style="color:#c1b2ff">Komunitas NEKORA</div>
+      <h2 class="section-title">Pendidikan Tumbuh Bersama</h2>
+      <p class="muted">Satu ruang untuk mendukung kolaborasi guru, siswa, dan sekolah.</p>
+    </div>
+    <div class="testimonial-grid">
+      <article class="testimonial">
+        <div class="person"><div class="person-avatar">👩🏻‍🎓</div><div><strong>Ruang Siswa</strong><small>Pengalaman belajar</small></div></div>
+        <blockquote>“Ruang belajar yang teratur membantu siswa mengakses materi dan tugas dengan lebih mudah.”</blockquote>
+        <div class="stars">★★★★★</div>
+      </article>
+      <article class="testimonial">
+        <div class="person"><div class="person-avatar">👨🏻‍🏫</div><div><strong>Ruang Guru</strong><small>Pengalaman mengajar</small></div></div>
+        <blockquote>“Pengelolaan kelas, tugas, dan penilaian bisa dikembangkan dalam satu tempat.”</blockquote>
+        <div class="stars">★★★★★</div>
+      </article>
+      <article class="testimonial">
+        <div class="person"><div class="person-avatar">🏫</div><div><strong>Ruang Sekolah</strong><small>Pengelolaan pendidikan</small></div></div>
+        <blockquote>“Layanan yang terhubung membantu membangun ekosistem pendidikan yang lebih terarah.”</blockquote>
+        <div class="stars">★★★★★</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="berita">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Informasi & Wawasan</div>
+        <h2 class="section-title">Jelajahi Dunia Pendidikan</h2>
+        <p class="section-desc">Temukan berbagai topik dan layanan yang dapat dikembangkan di NEKORA.</p>
+      </div>
+      <a href="#bantuan" class="btn btn-outline">Jelajahi Informasi →</a>
+    </div>
+    <div class="news-grid">
+      <article class="news-card">
+        <div class="news-art">📘</div>
+        <div class="news-body"><small>PEMBELAJARAN</small><h3>Belajar Lebih Teratur dengan Materi Digital</h3><p>Materi yang tersusun rapi membantu siswa menemukan sumber belajar.</p><a class="news-link" href="#ruang-belajar">Jelajahi →</a></div>
+      </article>
+      <article class="news-card">
+        <div class="news-art">🧑‍🏫</div>
+        <div class="news-body"><small>UNTUK GURU</small><h3>Mendukung Pengelolaan Kelas Digital</h3><p>Kenali konsep pengelolaan kelas, tugas, dan evaluasi secara terpadu.</p><a class="news-link" href="#layanan">Jelajahi →</a></div>
+      </article>
+      <article class="news-card">
+        <div class="news-art">💡</div>
+        <div class="news-body"><small>INOVASI</small><h3>Membangun Kolaborasi Pendidikan</h3><p>Ruang untuk berbagi pengetahuan dan berkembang bersama.</p><a class="news-link" href="#tentang">Jelajahi →</a></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="bantuan">
+  <div class="container cta-inner">
+    <div>
+      <h2>Siap Memulai Perjalanan Pendidikan?</h2>
+      <p>Jelajahi NEKORA dan temukan layanan yang sesuai kebutuhanmu.</p>
+    </div>
+    <div class="cta-actions">
+      <button class="btn btn-light" data-auth="signup">Daftar Sekarang →</button>
+      <button class="btn" style="border-color:#ffffff80;color:#fff;background:#ffffff14" data-auth="login">Sudah Punya Akun</button>
+    </div>
+  </div>
 </section>
 </main>
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-
-const SUPABASE_URL='https://ibtjoqellbexcsspncqc.supabase.co';
-const SUPABASE_ANON_KEY='sb_publishable_OkE0tiMSLNfxnkNf5XnmKQ__hMk0AWv';
-const supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
-const $=id=>document.getElementById(id);
-let user=null,profile=null,classes=[],assignments=[];
-
-function msg(id,text,error=false){
-  $(id).textContent=text;
-  $(id).style.color=error?'var(--bad)':'var(--accent)';
-}
-
-function esc(s){
-  return String(s??'').replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
-}
-
-function tab(id){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('hidden',x.id!==id));
-  document.querySelectorAll('[data-tab]').forEach(b=>b.style.opacity=b.dataset.tab===id?'1':'.72');
-  if(id==='tasks')loadTasks();
-  if(id==='grades')loadGrades();
-}
-
-document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
-
-async function refreshProfile(){
-  const {data,error}=await supabase.from('edu_profiles').select('*').eq('id',user.id).single();
-  if(error)throw error;
-  profile=data;
-  renderProfile();
-}
-
-function renderProfile(){
-  $('welcome').textContent=profile.display_name||'Pengguna NEKORA';
-  $('roleline').textContent=(profile.requested_role||'student').toUpperCase()+(profile.verified?' · TERVERIFIKASI':' · MENUNGGU VERIFIKASI');
-  $('idcode').textContent=profile.id_code||'ID sedang disiapkan';
-  $('verificationNote').textContent=profile.verified?'Status akun sudah diverifikasi. Akses tetap mengikuti keanggotaan kelas.':'Akun aktif, tetapi jabatan guru/staf belum terverifikasi. Akses khusus belum aktif.';
-  $('profileName').value=profile.display_name||'';
-  $('photoUrl').value=profile.photo_url||'';
-  $('profileDetails').textContent=`ID: ${profile.id_code||'-'} | Jenis akun: ${profile.account_type} | Peran diajukan: ${profile.requested_role} | Verifikasi: ${profile.verified?'Ya':'Belum'}`;
-  if(profile.photo_url){
-    $('avatar').style.display='block';
-    $('avatar').src=profile.photo_url;
-  }else{
-    $('avatar').style.display='none';
-  }
-}
-
-async function enterApp(u){
-  user=u;
-  $('auth').classList.add('hidden');
-  $('app').classList.remove('hidden');
-  $('logout').classList.remove('hidden');
-  msg('globalStatus','Memuat profil NEKORA...');
-
-  const withTimeout=(promise,ms=15000)=>Promise.race([
-    promise,
-    new Promise((_,reject)=>setTimeout(()=>reject(new Error('Permintaan terlalu lama. Periksa koneksi dan konfigurasi Supabase.')),ms))
-  ]);
-
-  try{
-    await withTimeout(refreshProfile());
-    msg('globalStatus','Profil berhasil dimuat.');
-    await withTimeout(loadSchoolsAndClasses());
-    await withTimeout(loadTasks());
-  }catch(e){
-    msg('globalStatus','Gagal memuat akun: '+(e?.message||e),true);
-    msg('authStatus','Sesi login ada, tetapi data akun gagal dimuat: '+(e?.message||e),true);
-  }
-}
-
-$('signup').onclick=async()=>{
-  const name=$('name').value.trim();
-  const email=$('email').value.trim();
-  const password=$('password').value;
-  const requested_role=$('requested').value;
-
-  if(!name||!email||password.length<8){
-    msg('authStatus','Isi nama, email, dan password minimal 8 karakter.',true);
-    return;
-  }
-
-  const btn=$('signup');
-  btn.disabled=true;
-
-  try{
-    msg('authStatus','Mendaftarkan akun...');
-    const {data,error}=await supabase.auth.signUp({
-      email,
-      password,
-      options:{data:{display_name:name,requested_role}}
-    });
-
-    if(error)throw error;
-
-    if(data.session&&data.user){
-      await enterApp(data.user);
-    }else{
-      msg('authStatus','Akun dibuat. Buka email untuk konfirmasi, lalu login. Jika konfirmasi email aktif, sesi baru tersedia setelah konfirmasi.');
-    }
-  }catch(e){
-    msg('authStatus','Pendaftaran gagal: '+e.message,true);
-  }finally{
-    btn.disabled=false;
-  }
-};
-
-$('login').onclick=async()=>{
-  const email=$('email').value.trim();
-  const password=$('password').value;
-
-  if(!email||!password){
-    msg('authStatus','Isi email dan password terlebih dahulu.',true);
-    return;
-  }
-
-  const btn=$('login');
-  btn.disabled=true;
-
-  const timer=setTimeout(()=>{
-    msg('authStatus','Server belum merespons. Periksa koneksi atau URL/anon key Supabase lalu coba lagi.',true);
-  },15000);
-
-  try{
-    msg('authStatus','Sedang masuk...');
-
-    const result=await Promise.race([
-      supabase.auth.signInWithPassword({email,password}),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error('Login melewati batas waktu 20 detik. Periksa koneksi dan konfigurasi Supabase.')),20000))
-    ]);
-
-    if(result.error)throw result.error;
-    if(!result.data?.user)throw new Error('Supabase tidak mengembalikan data pengguna.');
-
-    clearTimeout(timer);
-    msg('authStatus','Login berhasil. Memuat profil...');
-    await enterApp(result.data.user);
-  }catch(e){
-    msg('authStatus','Login gagal: '+(e?.message||e),true);
-  }finally{
-    clearTimeout(timer);
-    btn.disabled=false;
-  }
-};
-
-$('logout').onclick=async()=>{
-  try{
-    const {error}=await supabase.auth.signOut();
-    if(error)throw error;
-    user=null;
-    profile=null;
-    classes=[];
-    assignments=[];
-    $('app').classList.add('hidden');
-    $('auth').classList.remove('hidden');
-    $('logout').classList.add('hidden');
-    msg('authStatus','Kamu sudah keluar.');
-  }catch(e){
-    msg('globalStatus','Gagal keluar: '+e.message,true);
-  }
-};
-
-async function loadSchoolsAndClasses(){
-  const {data:mem,error}=await supabase.from('edu_school_members')
-    .select('school_id,role,approved,edu_schools(id,name,level)')
-    .eq('user_id',user.id);
-
-  if(error)throw error;
-
-  const schools=(mem||[])
-    .filter(m=>m.approved&&m.edu_schools)
-    .map(m=>m.edu_schools);
-
-  $('schoolsList').innerHTML=schools.length
-    ?schools.map(s=>`<div class="item">${esc(s.name)} <small>· ${esc(s.level)}</small></div>`).join('')
-    :'<p class="muted">Belum ada sekolah terhubung.</p>';
-
-  $('classSchool').innerHTML=schools.map(s=>
-    `<option value="${s.id}">${esc(s.name)}</option>`
-  ).join('');
-
-  const {data:cm,error:ce}=await supabase.from('edu_class_members')
-    .select('class_id,role,subject,approved,edu_classes(id,school_id,grade,section,join_code,edu_schools(name))')
-    .eq('user_id',user.id);
-
-  if(ce)throw ce;
-
-  classes=(cm||[])
-    .filter(m=>m.approved&&m.edu_classes)
-    .map(m=>({...m.edu_classes,my_role:m.role,subject:m.subject}));
-
-  $('myClasses').innerHTML=classes.length
-    ?classes.map(c=>`<div class="item"><b>${esc(c.grade+c.section)}</b> · ${esc(c.edu_schools?.name||'Sekolah')}<br><small>${esc(c.my_role)}${c.subject?' · '+esc(c.subject):''}</small></div>`).join('')
-    :'Belum ada kelas disetujui.';
-
-  $('taskClass').innerHTML=classes.map(c=>
-    `<option value="${c.id}">${esc(c.grade+c.section)} — ${esc(c.edu_schools?.name||'Sekolah')}</option>`
-  ).join('');
-
-  const gradeSel=$('grade');
-  gradeSel.innerHTML='';
-
-  for(let i=1;i<=12;i++){
-    const o=document.createElement('option');
-    o.value=i;
-    o.textContent=i;
-    gradeSel.append(o);
-  }
-
-  $('classesList').innerHTML='';
-  const ownSchoolClasses=[];
-
-  for(const s of schools){
-    const {data,error:classError}=await supabase.from('edu_classes')
-      .select('id,grade,section,join_code')
-      .eq('school_id',s.id)
-      .order('grade')
-      .order('section');
-
-    if(classError)throw classError;
-
-    for(const c of data||[]){
-      ownSchoolClasses.push({...c,school:s.name});
-    }
-  }
-
-  $('classesList').innerHTML=ownSchoolClasses.map(c=>
-    `<div class="item"><b>${esc(c.grade+c.section)}</b> · ${esc(c.school)}<br>Kode: <strong>${esc(c.join_code)}</strong></div>`
-  ).join('');
-
-  const classIds=classes.map(c=>c.id);
-
-  if(classIds.length){
-    const {data:pending,error:pendingError}=await supabase.from('edu_class_members')
-      .select('id,user_id,class_id,edu_profiles(display_name,id_code),edu_classes(grade,section)')
-      .eq('approved',false)
-      .in('class_id',classIds);
-
-    if(pendingError)throw pendingError;
-
-    if(pending?.length){
-      $('classesList').insertAdjacentHTML('beforeend',
-        '<h3>Permintaan siswa</h3>'+
-        pending.map(m=>`<div class="item">${esc(m.edu_profiles?.display_name||'Siswa')} · ${esc(m.edu_profiles?.id_code||'')} — kelas ${esc(String(m.edu_classes?.grade||'')+String(m.edu_classes?.section||''))}<br><button data-approve-member="${m.id}">Setujui siswa</button></div>`).join('')
-      );
-
-      document.querySelectorAll('[data-approve-member]').forEach(b=>{
-        b.onclick=async()=>{
-          const {error:ae}=await supabase.from('edu_class_members')
-            .update({approved:true})
-            .eq('id',b.dataset.approveMember);
-
-          if(ae){
-            msg('globalStatus','Gagal menyetujui: '+ae.message,true);
-          }else{
-            msg('globalStatus','Siswa disetujui masuk kelas.');
-            await loadSchoolsAndClasses();
-          }
-        };
-      });
-    }
-  }
-}
-
-$('createSchool').onclick=async()=>{
-  try{
-    const name=$('schoolName').value.trim();
-    const level=$('schoolLevel').value;
-    if(!name)throw Error('Isi nama sekolah.');
-
-    const {data,error}=await supabase.from('edu_schools')
-      .insert({name,level,created_by:user.id})
-      .select()
-      .single();
-
-    if(error)throw error;
-
-    msg('globalStatus','Sekolah dibuat. Akun pembuat otomatis menjadi kepala sekolah.');
-    await loadSchoolsAndClasses();
-  }catch(e){
-    msg('globalStatus','Gagal membuat sekolah: '+e.message+' Pastikan akun kepala sekolah sudah diverifikasi.',true);
-  }
-};
-
-$('createClass').onclick=async()=>{
-  try{
-    const school_id=$('classSchool').value;
-    const grade=Number($('grade').value);
-    const section=$('section').value;
-    const homeroom_teacher=$('homeroom').value.trim()||null;
-
-    if(!school_id)throw Error('Pilih sekolah yang sudah disetujui.');
-
-    const {data,error}=await supabase.from('edu_classes')
-      .insert({school_id,grade,section,created_by:user.id,homeroom_teacher})
-      .select()
-      .single();
-
-    if(error)throw error;
-
-    msg('globalStatus',`Kelas dibuat. Kode bergabung: ${data.join_code}`);
-    await loadSchoolsAndClasses();
-  }catch(e){
-    msg('globalStatus','Gagal membuat kelas: '+e.message,true);
-  }
-};
-
-$('joinClass').onclick=async()=>{
-  try{
-    const code=$('joinCode').value.trim().toUpperCase();
-    if(!code)throw Error('Masukkan kode kelas.');
-
-    const {data:c,error}=await supabase.rpc('edu_request_join',{p_code:code});
-    if(error)throw error;
-
-    msg('globalStatus','Permintaan bergabung terkirim. Guru perlu menyetujuinya.');
-  }catch(e){
-    msg('globalStatus','Gagal meminta bergabung: '+e.message,true);
-  }
-};
-
-$('publishTask').onclick=async()=>{
-  try{
-    const class_id=$('taskClass').value;
-    const subject=$('subject').value.trim();
-    const title=$('taskTitle').value.trim();
-    const instructions=$('instructions').value.trim();
-
-    if(!class_id||!subject||!title){
-      throw Error('Pilih kelas dan isi mata pelajaran serta judul tugas.');
-    }
-
-    let questions=[];
-    let keys=[];
-
-    try{
-      questions=$('questions').value.trim()?JSON.parse($('questions').value):[];
-      keys=$('keys').value.trim()?JSON.parse($('keys').value):[];
-    }catch{
-      throw Error('Format soal/kunci harus JSON yang valid.');
-    }
-
-    if(!Array.isArray(questions)||!Array.isArray(keys)){
-      throw Error('Soal dan kunci jawaban harus berupa array JSON.');
-    }
-
-    if(questions.length!==keys.length&&keys.length){
-      throw Error('Jumlah kunci jawaban harus sama dengan jumlah soal.');
-    }
-
-    let attachment_path=null;
-    const file=$('taskFile').files[0];
-
-    if(file){
-      if(file.size>20*1024*1024)throw Error('Ukuran file maksimal 20 MB.');
-
-      const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
-      attachment_path=`${user.id}/${crypto.randomUUID()}-${safe}`;
-
-      const {error:up}=await supabase.storage.from('nekora-files')
-        .upload(attachment_path,file,{
-          upsert:false,
-          contentType:file.type||'application/octet-stream'
-        });
-
-      if(up)throw up;
-    }
-
-    const {data:a,error}=await supabase.from('edu_assignments').insert({
-      class_id,
-      teacher_id:user.id,
-      subject,
-      title,
-      instructions,
-      attachment_path,
-      questions,
-      due_at:$('due').value?new Date($('due').value).toISOString():null,
-      published:true
-    }).select().single();
-
-    if(error)throw error;
-
-    if(keys.length){
-      const {error:ke}=await supabase.from('edu_answer_keys')
-        .insert({assignment_id:a.id,teacher_id:user.id,answers:keys});
-      if(ke)throw ke;
-    }
-
-    msg('globalStatus','Tugas berhasil diterbitkan untuk kelas terpilih.');
-    $('taskTitle').value='';
-    $('instructions').value='';
-    $('questions').value='';
-    $('keys').value='';
-    $('taskFile').value='';
-    await loadTasks();
-  }catch(e){
-    msg('globalStatus','Gagal menerbitkan tugas: '+e.message,true);
-  }
-};
-
-async function loadTasks(){
-  if(!user)return;
-
-  try{
-    const ids=classes.map(c=>c.id);
-
-    let q=supabase.from('edu_assignments')
-      .select('id,class_id,teacher_id,subject,title,instructions,attachment_path,questions,due_at,created_at')
-      .order('created_at',{ascending:false})
-      .limit(100);
-
-    if(ids.length)q=q.in('class_id',ids);
-    else q=q.eq('teacher_id',user.id);
-
-    const {data,error}=await q;
-    if(error)throw error;
-
-    assignments=data||[];
-
-    $('recentTasks').innerHTML=assignments.slice(0,4)
-      .map(a=>`<div class="item">${esc(a.title)}<br><small>${esc(a.subject)}</small></div>`)
-      .join('')||'Belum ada tugas.';
-
-    $('taskList').innerHTML=assignments.map(a=>`
-      <article class="item">
-        <h3>${esc(a.title)}</h3>
-        <small>${esc(a.subject)} · ${new Date(a.created_at).toLocaleDateString('id-ID')}</small>
-        <p>${esc(a.instructions||'Tidak ada instruksi tambahan.')}</p>
-        ${a.attachment_path?`<button class="secondary" data-file="${esc(a.id)}">Buka file soal</button>`:''}
-        ${a.questions?.length?a.questions.map((q,i)=>`
-          <div class="question">
-            <b>${i+1}. ${esc(q.question)}</b>
-            <small>(${Number(q.points)||0} poin)</small>
-            ${q.options?.length?q.options.map(opt=>`
-              <label><input type="radio" name="ans-${a.id}-${i}" value="${esc(opt)}" style="width:auto"> ${esc(opt)}</label>
-            `).join(''):''}
-            <input data-answer="${a.id}" data-index="${i}" placeholder="Jawaban soal ${i+1}">
-          </div>
-        `).join(''):`<p class="muted">Tugas menggunakan lampiran/lembar jawaban.</p><textarea id="free-${a.id}" placeholder="Tulis jawaban di sini jika diminta guru"></textarea>`}
-        <button data-submit="${a.id}">Kumpulkan jawaban</button>
-        <div id="taskstatus-${a.id}" class="status"></div>
-      </article>
-    `).join('')||'<p class="muted">Belum ada tugas untuk kelasmu. Gabung kelas dengan kode dari guru.</p>';
-
-    document.querySelectorAll('[data-submit]').forEach(b=>{
-      b.onclick=()=>submitAssignment(b.dataset.submit);
-    });
-
-    document.querySelectorAll('[data-file]').forEach(b=>{
-      b.onclick=()=>openFile(b.dataset.file);
-    });
-  }catch(e){
-    $('taskList').textContent='Gagal memuat tugas: '+e.message;
-  }
-}
-
-async function openFile(id){
-  try{
-    const a=assignments.find(x=>x.id===id);
-    if(!a?.attachment_path)throw Error('Lampiran tidak ditemukan.');
-
-    const {data,error}=await supabase.storage.from('nekora-files')
-      .createSignedUrl(a.attachment_path,300);
-
-    if(error)throw error;
-    window.open(data.signedUrl,'_blank','noopener');
-  }catch(e){
-    msg('globalStatus','File belum bisa dibuka: '+e.message,true);
-  }
-}
-
-async function submitAssignment(id){
-  try{
-    const a=assignments.find(x=>x.id===id);
-    if(!a)throw Error('Tugas tidak ditemukan.');
-
-    let answers=[];
-
-    if(a.questions?.length){
-      answers=a.questions.map((q,i)=>{
-        const radio=document.querySelector(`input[name="ans-${id}-${i}"]:checked`);
-        const input=document.querySelector(`[data-answer="${id}"][data-index="${i}"]`);
-        return {answer:radio?radio.value:(input?.value||'').trim()};
-      });
-    }else{
-      answers=[{answer:$('free-'+id)?.value||''}];
-    }
-
-    const {data:sub,error}=await supabase.from('edu_submissions')
-      .upsert({assignment_id:id,student_id:user.id,answers},{onConflict:'assignment_id,student_id'})
-      .select()
-      .single();
-
-    if(error)throw error;
-
-    if(a.questions?.length){
-      const {data:grade,error:ge}=await supabase.rpc('edu_auto_grade',{p_submission:sub.id});
-
-      if(ge)console.warn('Penilaian otomatis tidak tersedia:',ge.message);
-
-      msg('taskstatus-'+id,
-        grade!==null&&grade!==undefined
-          ?'Jawaban terkumpul. Nilai otomatis: '+grade
-          :'Jawaban terkumpul. Menunggu koreksi guru.'
-      );
-    }else{
-      msg('taskstatus-'+id,'Jawaban terkumpul. Menunggu koreksi guru.');
-    }
-
-    await loadGrades();
-  }catch(e){
-    msg('taskstatus-'+id,'Gagal mengumpulkan: '+e.message,true);
-  }
-}
-
-async function loadGrades(){
-  if(!user)return;
-
-  try{
-    const {data:subs,error}=await supabase.from('edu_submissions')
-      .select('id,assignment_id,student_id,grade,feedback,submitted_at,edu_profiles(display_name,id_code),edu_assignments(title,subject,teacher_id,class_id)')
-      .order('submitted_at',{ascending:false})
-      .limit(200);
-
-    if(error)throw error;
-
-    const rows=subs||[];
-
-    $('gradeList').innerHTML=rows.length?rows.map(s=>`
-      <div class="item">
-        <b>${esc(s.edu_assignments?.title||'Tugas')}</b><br>
-        <small>${esc(s.edu_assignments?.subject||'')} · ${esc(s.edu_profiles?.display_name||'Siswa')} · ${esc(s.edu_profiles?.id_code||'')} · ${new Date(s.submitted_at).toLocaleDateString('id-ID')}</small>
-        <p>Nilai: <strong>${s.grade===null?'Belum dinilai':Number(s.grade).toLocaleString('id-ID')}</strong></p>
-        ${s.feedback?`<p>${esc(s.feedback)}</p>`:''}
-        ${s.student_id===user.id?'':`<button class="secondary" data-grade="${s.id}">Beri nilai</button>`}
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="#beranda">
+          <div class="brand-logo">🎓</div>
+          <div><div class="brand-name">NEKORA</div><div class="brand-tag" style="color:#b9c3e0">Pendidikan Tanpa Batas</div></div>
+        </a>
+        <p>Satu platform untuk mendukung pengalaman belajar, mengajar, dan berkembang bersama.</p>
       </div>
-    `).join(''):'Belum ada pengumpulan/nilai.';
+      <div class="footer-col"><h3>Navigasi</h3><a href="#beranda">Beranda</a><a href="#tentang">Tentang NEKORA</a><a href="#layanan">Semua Layanan</a></div>
+      <div class="footer-col"><h3>Layanan</h3><a href="#ruang-belajar">Ruang Belajar</a><a href="#layanan">Ruang Mengajar</a><a href="#layanan">Sekolah & Kelas</a><a href="#layanan">Tugas & Ujian</a></div>
+      <div class="footer-col"><h3>Bantuan</h3><a href="#bantuan">Pusat Bantuan</a><a href="#" data-info="Kebijakan Privasi">Kebijakan Privasi</a><a href="#" data-info="Syarat dan Ketentuan">Syarat & Ketentuan</a></div>
+    </div>
+    <div class="footer-bottom"><span>© <span id="year"></span> NEKORA Pendidikan. Semua hak dilindungi.</span><span>Dibangun untuk mendukung pendidikan.</span></div>
+  </div>
+</footer>
 
-    document.querySelectorAll('[data-grade]').forEach(b=>{
-      b.onclick=async()=>{
-        const val=prompt('Masukkan nilai 0–100:');
-        if(val===null)return;
+<div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Tutup">×</button>
+    <div class="brand" style="margin-bottom:23px">
+      <div class="brand-logo">🎓</div>
+      <div><div class="brand-name">NEKORA</div><div class="brand-tag">Pendidikan Tanpa Batas</div></div>
+    </div>
+    <h2 id="modalTitle">Selamat datang!</h2>
+    <p id="modalDesc">Masuk untuk melanjutkan ke NEKORA.</p>
+    <form id="authForm">
+      <label class="form-label" for="authEmail">Email</label>
+      <input class="form-control" id="authEmail" type="email" placeholder="nama@email.com" required>
+      <div id="nameField" hidden>
+        <label class="form-label" for="authName">Nama lengkap</label>
+        <input class="form-control" id="authName" type="text" maxlength="100" placeholder="Nama lengkap">
+      </div>
+      <label class="form-label" for="authPassword">Password</label>
+      <input class="form-control" id="authPassword" type="password" minlength="8" placeholder="Minimal 8 karakter" required>
+      <div id="roleField" hidden>
+        <label class="form-label" for="authRole">Jenis akun yang diajukan</label>
+        <select class="form-control" id="authRole">
+          <option value="student">Siswa</option>
+          <option value="teacher">Guru mata pelajaran</option>
+          <option value="homeroom">Wali kelas</option>
+          <option value="moderator">Moderator</option>
+          <option value="principal">Kepala sekolah</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" type="submit" id="authSubmit">Masuk</button>
+    </form>
+    <p class="modal-note" id="switchText">Belum punya akun? <button type="button" id="switchAuth">Daftar sekarang</button></p>
+    <p id="authMessage" role="status" style="margin:10px 0 0;white-space:pre-wrap"></p>
+  </div>
+</div>
 
-        const n=Number(val);
-        if(!Number.isFinite(n)||n<0||n>100){
-          msg('globalStatus','Nilai harus 0 sampai 100.',true);
-          return;
-        }
+<div id="toast" role="status"></div>
+<button class="back-top" id="backTop" aria-label="Kembali ke atas">↑</button>
 
-        const feedback=prompt('Komentar guru (opsional):')||'';
+<script>
+const $=id=>document.getElementById(id);
+let authMode="login";
+let toastTimer;
 
-        const {error:ge}=await supabase.from('edu_submissions')
-          .update({
-            grade:n,
-            feedback,
-            graded_by:user.id,
-            graded_at:new Date().toISOString()
-          })
-          .eq('id',b.dataset.grade);
-
-        if(ge){
-          msg('globalStatus','Gagal memberi nilai: '+ge.message,true);
-        }else{
-          msg('globalStatus','Nilai disimpan.');
-          loadGrades();
-        }
-      };
-    });
-  }catch(e){
-    $('gradeList').textContent='Gagal memuat nilai: '+e.message;
-  }
+function toast(message){
+  $("toast").textContent=message;
+  $("toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>$("toast").classList.remove("show"),3200);
 }
 
-$('saveProfile').onclick=async()=>{
-  try{
-    const display_name=$('profileName').value.trim();
-    const photo_url=$('photoUrl').value.trim()||null;
+function openAuth(mode){
+  authMode=mode;
+  const signup=mode==="signup";
+  $("modalTitle").textContent=signup?"Buat Akun NEKORA":"Selamat datang kembali!";
+  $("modalDesc").textContent=signup
+    ?"Daftar untuk mulai menjelajahi layanan NEKORA."
+    :"Masuk untuk melanjutkan ke ruang pendidikan NEKORA.";
+  $("nameField").hidden=!signup;
+  $("roleField").hidden=!signup;
+  $("authName").required=signup;
+  $("authPassword").autocomplete=signup?"new-password":"current-password";
+  $("authSubmit").textContent=signup?"Daftar Sekarang":"Masuk";
+  $("switchText").firstChild.textContent=signup?"Sudah punya akun? ":"Belum punya akun? ";
+  $("switchAuth").textContent=signup?"Masuk":"Daftar sekarang";
+  $("authMessage").textContent="";
+  $("authModal").classList.add("show");
+  document.body.style.overflow="hidden";
+  setTimeout(()=>$("authEmail").focus(),100);
+}
 
-    if(!display_name)throw Error('Nama wajib diisi.');
+function closeAuth(){
+  $("authModal").classList.remove("show");
+  document.body.style.overflow="";
+}
 
-    const {data,error}=await supabase.from('edu_profiles')
-      .update({display_name,photo_url})
-      .eq('id',user.id)
-      .select()
-      .single();
-
-    if(error)throw error;
-
-    profile=data;
-    renderProfile();
-    msg('globalStatus','Profil disimpan.');
-  }catch(e){
-    msg('globalStatus','Gagal menyimpan profil: '+e.message,true);
-  }
-};
-
-supabase.auth.onAuthStateChange((event,session)=>{
-  if(event==='SIGNED_OUT'){
-    user=null;
-    profile=null;
-    classes=[];
-    assignments=[];
-    $('app').classList.add('hidden');
-    $('auth').classList.remove('hidden');
-    $('logout').classList.add('hidden');
-  }
+document.querySelectorAll("[data-auth]").forEach(button=>{
+  button.addEventListener("click",()=>openAuth(button.dataset.auth));
 });
 
-(async()=>{
-  try{
-    msg('authStatus','Memeriksa sesi tersimpan...');
+$("modalClose").addEventListener("click",closeAuth);
+$("authModal").addEventListener("click",e=>{
+  if(e.target===$("authModal"))closeAuth();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape")closeAuth();
+});
+$("switchAuth").addEventListener("click",()=>{
+  openAuth(authMode==="login"?"signup":"login");
+});
 
-    const result=await Promise.race([
-      supabase.auth.getSession(),
-      new Promise((_,reject)=>setTimeout(
-        ()=>reject(new Error('Pemeriksaan sesi terlalu lama. Muat ulang halaman dan periksa koneksi Supabase.')),
-        15000
-      ))
-    ]);
-
-    if(result.error)throw result.error;
-
-    if(result.data?.session?.user){
-      await enterApp(result.data.session.user);
-    }else{
-      msg('authStatus','Silakan masuk atau daftar.');
-    }
-  }catch(e){
-    msg('authStatus','Tidak dapat memeriksa sesi: '+(e?.message||e),true);
+$("authForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const email=$("authEmail").value.trim();
+  const password=$("authPassword").value;
+  if(!email||password.length<8){
+    $("authMessage").style.color="#d52c59";
+    $("authMessage").textContent="Masukkan email yang valid dan password minimal 8 karakter.";
+    return;
   }
-})();
+
+  /*
+    INTEGRASI SUPABASE:
+    Form ini baru tampilan frontend. Belum mengirim login atau
+    pendaftaran ke Supabase. Hubungkan ke fungsi auth aplikasi NEKORA.
+  */
+  $("authMessage").style.color="#6b48e8";
+  $("authMessage").textContent=
+    "Tampilan siap. Hubungkan form ini ke Supabase agar akun dapat masuk atau terdaftar.";
+});
+
+document.querySelectorAll("[data-service]").forEach(card=>{
+  card.addEventListener("click",()=>{
+    const name=card.dataset.service;
+    const desc=card.dataset.desc;
+    $("modalTitle").textContent=name;
+    $("modalDesc").textContent=desc;
+    $("nameField").hidden=true;
+    $("roleField").hidden=true;
+    $("authSubmit").textContent="Masuk untuk melanjutkan";
+    $("switchText").hidden=true;
+    $("authMessage").style.color="#6b48e8";
+    $("authMessage").textContent="Layanan ini disiapkan pada Home. Fitur lengkap perlu dihubungkan ke modul aplikasi.";
+    $("authEmail").closest("form").querySelectorAll("label,input,select").forEach(el=>el.hidden=true);
+    $("authSubmit").hidden=true;
+    $("authModal").classList.add("show");
+    document.body.style.overflow="hidden";
+    $("modalClose").onclick=()=>{
+      closeAuth();
+      resetModal();
+    };
+  });
+});
+
+function resetModal(){
+  $("authEmail").closest("form").querySelectorAll("label,input,select").forEach(el=>el.hidden=false);
+  $("authSubmit").hidden=false;
+  $("switchText").hidden=false;
+  $("modalClose").onclick=closeAuth;
+}
+
+$("showAllServices").addEventListener("click",()=>{
+  document.querySelectorAll(".extra-service").forEach(el=>el.style.display="flex");
+  $("showAllServices").textContent="Semua Layanan Ditampilkan ✓";
+  $("showAllServices").disabled=true;
+});
+
+document.querySelectorAll("[data-info]").forEach(link=>{
+  link.addEventListener("click",e=>{
+    e.preventDefault();
+    toast(link.dataset.info+" akan tersedia di halaman informasi NEKORA.");
+  });
+});
+
+$("menuToggle").addEventListener("click",()=>{
+  const nav=$("navLinks");
+  nav.classList.toggle("open");
+  $("menuToggle").textContent=nav.classList.contains("open")?"×":"☰";
+});
+
+document.querySelectorAll("#navLinks a").forEach(link=>{
+  link.addEventListener("click",()=>{
+    $("navLinks").classList.remove("open");
+    $("menuToggle").textContent="☰";
+  });
+});
+
+window.addEventListener("scroll",()=>{
+  $("backTop").classList.toggle("show",window.scrollY>400);
+});
+$("backTop").addEventListener("click",()=>{
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+$("year").textContent=new Date().getFullYear();
+
+/* Layanan tambahan disembunyikan sampai pengguna memilih semua layanan. */
+document.querySelectorAll(".extra-service").forEach(el=>el.style.display="none");
 </script>
 </body>
 </html>
