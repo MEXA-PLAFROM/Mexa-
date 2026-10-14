@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10152b">
+<title>Ruang Belajar — NEKORA</title>
+
+<style>
+:root{
+  --bg:#0b1020;
+  --panel:#141b30;
+  --line:#293451;
+  --text:#f4f6ff;
+  --muted:#a8b2cc;
+  --accent:#9b8cff;
+  --good:#65ddb0;
+  --bad:#ff9cae;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:radial-gradient(ellipse at top,#24204b 0,transparent 42%),var(--bg);
+  color:var(--text);
+  font:15px system-ui,-apple-system,Segoe UI,sans-serif;
+}
+header{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+header h1{margin:0;letter-spacing:3px}
+header small{color:var(--muted)}
+main{max-width:1100px;margin:auto;padding:0 16px 100px}
+.card{
+  background:#141b30ee;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  margin:12px 0;
+  min-width:0;
+}
+h2{font-size:clamp(22px,4vw,32px)}
+h2,h3{margin:0 0 12px}
+p{color:var(--muted);line-height:1.6}
+label{display:block;color:#d6dcf1;font-size:13px;margin:10px 0 5px}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border-radius:11px;
+  border:1px solid #34415f;
+  background:#0b1122;
+  color:var(--text);
+  font:inherit;
+  margin-bottom:8px;
+}
+textarea{min-height:100px;resize:vertical}
+button{
+  border:0;
+  border-radius:11px;
+  padding:11px 14px;
+  background:var(--accent);
+  color:#130f2c;
+  font-weight:800;
+  cursor:pointer;
+}
+button:disabled{opacity:.5;cursor:wait}
+.secondary{
+  background:#252e49;
+  color:var(--text);
+  border:1px solid #3b496b;
+}
+.hidden{display:none!important}
+.muted{color:var(--muted);line-height:1.6}
+.status{
+  padding:10px 0;
+  color:var(--accent);
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.stat{
+  background:#10172a;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+}
+.stat strong{display:block;font-size:26px}
+.stat small{color:var(--muted)}
+.item{
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  margin:10px 0;
+  background:#10172a;
+  overflow-wrap:anywhere;
+}
+.item h3{margin-bottom:6px}
+.item small{color:var(--muted)}
+.pill{
+  display:inline-block;
+  background:#292449;
+  color:#d9d0ff;
+  border:1px solid #4b407d;
+  padding:4px 9px;
+  border-radius:99px;
+  font-size:11px;
+}
+.nav{
+  display:flex;
+  gap:7px;
+  overflow:auto;
+  position:sticky;
+  top:0;
+  background:#0b1020ee;
+  padding:10px 0;
+  z-index:3;
+}
+.nav button{white-space:nowrap}
+.nav button.active{background:var(--accent)}
+.question{
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  margin:12px 0;
+}
+.option{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  margin:9px 0;
+  color:var(--text);
+}
+.option input{width:auto;margin:3px 0 0}
+.filelink{overflow-wrap:anywhere}
+.good{color:var(--good)}
+.bad{color:var(--bad)}
+.empty{
+  padding:18px;
+  border:1px dashed #3b496b;
+  border-radius:12px;
+  color:var(--muted);
+  text-align:center;
+}
+@media(max-width:680px){
+  header{padding:16px}
+  main{padding:0 11px 100px}
+  .card{padding:14px}
+  .grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stat{padding:10px}
+  .stat strong{font-size:21px}
+  .nav{
+    position:fixed;
+    top:auto;
+    bottom:0;
+    left:0;
+    right:0;
+    padding:8px;
+    background:#10152bf5;
+    border-top:1px solid var(--line);
+  }
+  .nav button{padding:10px;font-size:12px}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div>
+    <h1>NEKORA</h1>
+    <small>RUANG BELAJAR SISWA</small>
+  </div>
+  <button id="logout" class="secondary hidden">Keluar</button>
+</header>
+
+<main>
+  <section id="auth" class="card">
+    <h2>Masuk Ruang Belajar</h2>
+    <p>Gunakan akun NEKORA yang sudah kamu daftarkan.</p>
+
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username"
+        placeholder="nama@email.com" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password"
+        autocomplete="current-password" required>
+
+      <button id="loginButton" type="submit">Masuk</button>
+    </form>
+    <div id="authStatus" class="status"></div>
+  </section>
+
+  <section id="app" class="hidden">
+    <nav class="nav">
+      <button class="active" data-tab="dashboard">Beranda</button>
+      <button data-tab="classes">Kelas saya</button>
+      <button data-tab="tasks">Tugas</button>
+      <button data-tab="grades">Nilai</button>
+    </nav>
+
+    <div id="globalStatus" class="status"></div>
+
+    <section id="dashboard" class="tab">
+      <div class="card">
+        <span class="pill">RUANG BELAJAR</span>
+        <h2 id="welcome">Halo, siswa!</h2>
+        <p id="profileInfo">Selamat datang kembali di NEKORA.</p>
+        <p>Belajar dengan teratur, selesaikan tugas, dan pantau hasil belajarmu di sini.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <strong id="classCount">0</strong>
+          <small>Kelas aktif</small>
+        </div>
+        <div class="stat">
+          <strong id="taskCount">0</strong>
+          <small>Tugas tersedia</small>
+        </div>
+        <div class="stat">
+          <strong id="gradeCount">0</strong>
+          <small>Tugas dinilai</small>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Tugas terbaru</h2>
+        <div id="recentTasks" class="muted">Memuat tugas...</div>
+      </div>
+
+      <div class="card">
+        <h2>Kelas saya</h2>
+        <div id="dashboardClasses" class="muted">Memuat kelas...</div>
+      </div>
+    </section>
+
+    <section id="classes" class="tab hidden">
+      <div class="card">
+        <h2>Kelas saya</h2>
+        <p>Kelas akan tampil setelah permintaan bergabung disetujui guru.</p>
+        <div id="classList">Memuat kelas...</div>
+      </div>
+
+      <div class="card">
+        <h2>Gabung kelas</h2>
+        <p>Masukkan kode kelas yang diberikan guru.</p>
+        <form id="joinForm">
+          <label for="joinCode">Kode kelas</label>
+          <input id="joinCode" maxlength="20"
+            placeholder="Masukkan kode kelas" required>
+          <button id="joinButton" type="submit">Minta bergabung</button>
+        </form>
+        <div id="joinStatus" class="status"></div>
+      </div>
+    </section>
+
+    <section id="tasks" class="tab hidden">
+      <div class="card">
+        <h2>Daftar tugas</h2>
+        <p>Kerjakan tugas, lalu tekan tombol kumpulkan jawaban.</p>
+        <div id="taskList">Memuat tugas...</div>
+      </div>
+    </section>
+
+    <section id="grades" class="tab hidden">
+      <div class="card">
+        <h2>Nilai dan umpan balik</h2>
+        <p>Nilai yang ditampilkan adalah nilai milik akunmu sendiri.</p>
+        <div id="gradeList">Memuat nilai...</div>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script type="module">
+import { createClient } from
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL =
+  'https://ibtjoqellbexcsspncqc.supabase.co';
+
+const SUPABASE_ANON_KEY =
+  'sb_publishable_OkE0tiMSLNfxnkNf5XnmKQ__hMk0AWv';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const $ = id => document.getElementById(id);
+
+let user = null;
+let profile = null;
+let classes = [];
+let assignments = [];
+let submissions = [];
+
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+function status(id, message, isError = false) {
+  $(id).textContent = message;
+  $(id).style.color = isError ? 'var(--bad)' : 'var(--accent)';
+}
+
+function formatDate(value) {
+  if (!value) return 'Tidak ditentukan';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Tidak ditentukan';
+  return date.toLocaleString('id-ID', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  });
+}
+
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(section => {
+    section.classList.toggle('hidden', section.id !== id);
+  });
+
+  document.querySelectorAll('[data-tab]').forEach(button => {
+    button.classList.toggle('active', button.dataset.tab === id);
+  });
+}
+
+document.querySelectorAll('[data-tab]').forEach(button => {
+  button.addEventListener('click', () => showTab(button.dataset.tab));
+});
+
+function className(c) {
+  return `${c.grade ?? ''}${c.section ?? ''}` || 'Kelas';
+}
+
+function renderClasses() {
+  const html = classes.length
+    ? classes.map(c => `
+        <article class="item">
+          <h3>Kelas ${esc(className(c))}</h3>
+          <p>${esc(c.edu_schools?.name || 'Sekolah NEKORA')}</p>
+          <span class="pill">${esc(c.my_role || 'Siswa')}</span>
+          ${c.subject ? `<p>Mata pelajaran: ${esc(c.subject)}</p>` : ''}
+        </article>
+      `).join('')
+    : '<div class="empty">Belum ada kelas yang disetujui. Kamu bisa meminta bergabung menggunakan kode dari guru.</div>';
+
+  $('classList').innerHTML = html;
+  $('dashboardClasses').innerHTML = html;
+  $('classCount').textContent = classes.length;
+}
+
+async function loadProfile() {
+  const { data, error } = await supabase
+    .from('edu_profiles')
+    .select('id,display_name,id_code,requested_role,account_type,verified')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!data) {
+    throw new Error(
+      'Profil NEKORA belum ditemukan untuk akun ini. Periksa proses pembuatan profil di Supabase.'
+    );
+  }
+
+  profile = data;
+  $('welcome').textContent =
+    `Halo, ${profile.display_name || 'Siswa'}!`;
+
+  $('profileInfo').textContent =
+    `ID NEKORA: ${profile.id_code || 'Belum tersedia'} · ` +
+    `Status akun: ${profile.verified ? 'Terverifikasi' : 'Belum terverifikasi'}`;
+}
+
+async function loadClasses() {
+  const { data, error } = await supabase
+    .from('edu_class_members')
+    .select(`
+      class_id,
+      user_id,
+      role,
+      subject,
+      approved,
+      edu_classes (
+        id,
+        grade,
+        section,
+        school_id,
+        edu_schools (name)
+      )
+    `)
+    .eq('user_id', user.id)
+    .eq('approved', true);
+
+  if (error) throw error;
+
+  classes = (data || [])
+    .filter(m => m.edu_classes)
+    .map(m => ({
+      ...m.edu_classes,
+      my_role: m.role,
+      subject: m.subject
+    }));
+
+  renderClasses();
+}
+
+async function loadAssignments() {
+  const classIds = classes.map(c => c.id);
+
+  if (!classIds.length) {
+    assignments = [];
+    renderAssignments();
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from('edu_assignments')
+    .select(`
+      id,
+      class_id,
+      teacher_id,
+      subject,
+      title,
+      instructions,
+      attachment_path,
+      questions,
+      due_at,
+      created_at,
+      published
+    `)
+    .in('class_id', classIds)
+    .eq('published', true)
+    .order('created_at', { ascending: false })
+    .limit(100);
+
+  if (error) throw error;
+
+  assignments = data || [];
+  renderAssignments();
+}
+
+async function loadSubmissions() {
+  const { data, error } = await supabase
+    .from('edu_submissions')
+    .select(`
+      id,
+      assignment_id,
+      student_id,
+      answers,
+      grade,
+      feedback,
+      submitted_at,
+      edu_assignments (title,subject,due_at)
+    `)
+    .eq('student_id', user.id)
+    .order('submitted_at', { ascending: false })
+    .limit(200);
+
+  if (error) throw error;
+
+  submissions = data || [];
+  renderGrades();
+}
+
+function submissionFor(assignmentId) {
+  return submissions.find(s => s.assignment_id === assignmentId);
+}
+
+function renderAssignments() {
+  $('taskCount').textContent = assignments.length;
+
+  $('recentTasks').innerHTML = assignments.length
+    ? assignments.slice(0, 4).map(a => {
+        const submitted = submissionFor(a.id);
+        return `
+          <div class="item">
+            <h3>${esc(a.title)}</h3>
+            <small>${esc(a.subject || 'Mata pelajaran')}</small>
+            <p>Batas: ${esc(formatDate(a.due_at))}</p>
+            <span class="pill">${submitted ? 'Sudah dikumpulkan' : 'Belum dikumpulkan'}</span>
+          </div>
+        `;
+      }).join('')
+    : '<div class="empty">Belum ada tugas baru untuk kelasmu.</div>';
+
+  $('taskList').innerHTML = assignments.length
+    ? assignments.map(renderAssignment).join('')
+    : '<div class="empty">Belum ada tugas. Pastikan kamu sudah bergabung dengan kelas yang benar.</div>';
+
+  document.querySelectorAll('[data-submit]').forEach(button => {
+    button.addEventListener('click', () => submitAssignment(button.dataset.submit));
+  });
+
+  document.querySelectorAll('[data-file]').forEach(button => {
+    button.addEventListener('click', () => openFile(button.dataset.file));
+  });
+}
+
+function renderAssignment(a) {
+  const submitted = submissionFor(a.id);
+  const questions = Array.isArray(a.questions) ? a.questions : [];
+
+  let answerHtml = '';
+
+  if (questions.length) {
+    answerHtml = questions.map((q, i) => {
+      const existingAnswer = submitted?.answers?.[i]?.answer ?? '';
+      const type = String(q.type || 'text').toLowerCase();
+
+      if (Array.isArray(q.options) && q.options.length) {
+        return `
+          <div class="question">
+            <b>${i + 1}. ${esc(q.question || 'Soal')}</b>
+            <p>${Number(q.points) || 0} poin</p>
+            ${q.options.map(option => `
+              <label class="option">
+                <input
+                  type="radio"
+                  name="answer-${a.id}-${i}"
+                  value="${esc(option)}"
+                  ${String(existingAnswer) === String(option) ? 'checked' : ''}
+                  ${submitted ? 'disabled' : ''}
+                >
+                <span>${esc(option)}</span>
+              </label>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="question">
+          <b>${i + 1}. ${esc(q.question || 'Soal')}</b>
+          <p>${Number(q.points) || 0} poin</p>
+          <textarea
+            data-answer="${a.id}"
+            data-index="${i}"
+            placeholder="Tulis jawabanmu..."
+            ${submitted ? 'disabled' : ''}
+          >${esc(existingAnswer)}</textarea>
+        </div>
+      `;
+    }).join('');
+  } else {
+    answerHtml = `
+      <label for="free-${a.id}">Jawaban tugas</label>
+      <textarea
+        id="free-${a.id}"
+        placeholder="Tulis jawabanmu di sini..."
+        ${submitted ? 'disabled' : ''}
+      >${esc(submitted?.answers?.[0]?.answer || '')}</textarea>
+      <p class="muted">Jika guru memberikan file soal, kamu juga bisa membukanya di bawah.</p>
+    `;
+  }
+
+  return `
+    <article class="item">
+      <h3>${esc(a.title)}</h3>
+      <span class="pill">${esc(a.subject || 'Umum')}</span>
+      <p>${esc(a.instructions || 'Tidak ada instruksi tambahan.')}</p>
+      <p><small>Dibuat: ${esc(formatDate(a.created_at))}</small></p>
+      <p><small>Batas pengumpulan: ${esc(formatDate(a.due_at))}</small></p>
+
+      ${a.attachment_path ? `
+        <p><button class="secondary" data-file="${esc(a.id)}">Buka lampiran soal</button></p>
+      ` : ''}
+
+      ${answerHtml}
+
+      ${submitted ? `
+        <p class="good">Jawaban sudah dikumpulkan.</p>
+        <p>Nilai: <b>${submitted.grade == null ? 'Menunggu penilaian' : esc(submitted.grade)}</b></p>
+        ${submitted.feedback ? `<p>Catatan guru: ${esc(submitted.feedback)}</p>` : ''}
+      ` : `
+        <button data-submit="${esc(a.id)}">Kumpulkan jawaban</button>
+      `}
+
+      <div id="taskstatus-${esc(a.id)}" class="status"></div>
+    </article>
+  `;
+}
+
+async function openFile(assignmentId) {
+  try {
+    const assignment = assignments.find(a => a.id === assignmentId);
+    if (!assignment?.attachment_path) {
+      throw new Error('Lampiran tidak ditemukan.');
+    }
+
+    const { data, error } = await supabase
+      .storage
+      .from('nekora-files')
+      .createSignedUrl(assignment.attachment_path, 300);
+
+    if (error) throw error;
+
+    window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
+  } catch (error) {
+    status('globalStatus', 'Gagal membuka lampiran: ' + error.message, true);
+  }
+}
+
+async function submitAssignment(assignmentId) {
+  const button = document.querySelector(
+    `[data-submit="${CSS.escape(assignmentId)}"]`
+  );
+
+  if (button) button.disabled = true;
+
+  try {
+    const assignment = assignments.find(a => a.id === assignmentId);
+    if (!assignment) throw new Error('Tugas tidak ditemukan.');
+
+    if (submissionFor(assignmentId)) {
+      throw new Error('Tugas ini sudah dikumpulkan.');
+    }
+
+    const questions = Array.isArray(assignment.questions)
+      ? assignment.questions
+      : [];
+
+    let answers;
+
+    if (questions.length) {
+      answers = questions.map((q, i) => {
+        const selected = document.querySelector(
+          `input[name="answer-${CSS.escape(assignmentId)}-${i}"]:checked`
+        );
+
+        const textInput = document.querySelector(
+          `[data-answer="${CSS.escape(assignmentId)}"][data-index="${i}"]`
+        );
+
+        const answer = selected
+          ? selected.value
+          : (textInput?.value || '').trim();
+
+        return { answer };
+      });
+
+      const unanswered = answers.some(a => !String(a.answer ?? '').trim());
+
+      if (unanswered) {
+        throw new Error('Jawab semua soal terlebih dahulu.');
+      }
+    } else {
+      const text = ($('free-' + assignmentId)?.value || '').trim();
+
+      if (!text) throw new Error('Tuliskan jawaban terlebih dahulu.');
+
+      answers = [{ answer: text }];
+    }
+
+    const { data, error } = await supabase
+      .from('edu_submissions')
+      .upsert({
+        assignment_id: assignmentId,
+        student_id: user.id,
+        answers
+      }, {
+        onConflict: 'assignment_id,student_id'
+      })
+      .select('id,assignment_id,student_id,grade,feedback,submitted_at,answers')
+      .single();
+
+    if (error) throw error;
+
+    submissions = [
+      data,
+      ...submissions.filter(s => s.assignment_id !== assignmentId)
+    ];
+
+    status('taskstatus-' + assignmentId, 'Jawaban berhasil dikumpulkan.');
+
+    renderAssignments();
+    renderGrades();
+
+    const saved = document.querySelector(
+      `[data-submit="${CSS.escape(assignmentId)}"]`
+    );
+
+    if (saved) saved.disabled = true;
+
+  } catch (error) {
+    status('taskstatus-' + assignmentId, 'Gagal mengumpulkan: ' + error.message, true);
+    if (button) button.disabled = false;
+  }
+}
+
+function renderGrades() {
+  const graded = submissions.filter(s => s.grade !== null && s.grade !== undefined);
+  $('gradeCount').textContent = graded.length;
+
+  $('gradeList').innerHTML = submissions.length
+    ? submissions.map(s => `
+        <article class="item">
+          <h3>${esc(s.edu_assignments?.title || 'Tugas')}</h3>
+          <small>${esc(s.edu_assignments?.subject || 'Mata pelajaran')}</small>
+          <p>Waktu pengumpulan: ${esc(formatDate(s.submitted_at))}</p>
+          <p>Nilai:
+            <strong>${s.grade == null ? 'Menunggu penilaian' : esc(s.grade)}</strong>
+          </p>
+          ${s.feedback ? `<p>Umpan balik guru: ${esc(s.feedback)}</p>` : ''}
+        </article>
+      `).join('')
+    : '<div class="empty">Belum ada jawaban yang dikumpulkan.</div>';
+}
+
+async function loadAll() {
+  status('globalStatus', 'Memuat data Ruang Belajar...');
+
+  try {
+    await loadProfile();
+    await loadClasses();
+    await loadSubmissions();
+    await loadAssignments();
+
+    status('globalStatus', 'Ruang Belajar berhasil dimuat.');
+  } catch (error) {
+    status('globalStatus', 'Gagal memuat data: ' + error.message, true);
+  }
+}
+
+$('loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const button = $('loginButton');
+  button.disabled = true;
+
+  try {
+    status('authStatus', 'Sedang masuk...');
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: $('email').value.trim(),
+      password: $('password').value
+    });
+
+    if (error) throw error;
+    if (!data.user) throw new Error('Data pengguna tidak ditemukan.');
+
+    user = data.user;
+    $('auth').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    $('logout').classList.remove('hidden');
+
+    await loadAll();
+  } catch (error) {
+    status('authStatus', 'Login gagal: ' + error.message, true);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$('joinForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const button = $('joinButton');
+  button.disabled = true;
+
+  try {
+    const code = $('joinCode').value.trim().toUpperCase();
+    if (!code) throw new Error('Masukkan kode kelas.');
+
+    const { error } = await supabase.rpc('edu_request_join', {
+      p_code: code
+    });
+
+    if (error) throw error;
+
+    status('joinStatus', 'Permintaan bergabung berhasil dikirim. Tunggu persetujuan guru.');
+    $('joinCode').value = '';
+  } catch (error) {
+    status('joinStatus', 'Gagal bergabung: ' + error.message, true);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$('logout').addEventListener('click', async () => {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    status('globalStatus', 'Gagal keluar: ' + error.message, true);
+    return;
+  }
+
+  user = null;
+  profile = null;
+  classes = [];
+  assignments = [];
+  submissions = [];
+
+  $('app').classList.add('hidden');
+  $('auth').classList.remove('hidden');
+  $('logout').classList.add('hidden');
+  $('password').value = '';
+
+  status('authStatus', 'Kamu sudah keluar dari NEKORA.');
+});
+
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_OUT') {
+    user = null;
+    profile = null;
+    classes = [];
+    assignments = [];
+    submissions = [];
+
+    $('app').classList.add('hidden');
+    $('auth').classList.remove('hidden');
+    $('logout').classList.add('hidden');
+  }
+});
+
+(async function init() {
+  try {
+    status('authStatus', 'Memeriksa sesi login...');
+
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw error;
+
+    if (data.session?.user) {
+      user = data.session.user;
+      $('auth').classList.add('hidden');
+      $('app').classList.remove('hidden');
+      $('logout').classList.remove('hidden');
+      await loadAll();
+    } else {
+      status('authStatus', 'Silakan masuk dengan akun NEKORA.');
+    }
+  } catch (error) {
+    status('authStatus', 'Gagal memeriksa sesi: ' + error.message, true);
+  }
+})();
+</script>
+</body>
+</html>
