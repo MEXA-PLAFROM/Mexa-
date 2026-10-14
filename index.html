@@ -780,144 +780,304 @@ footer{background:#101a43;color:#fff;padding:39px 0 18px}
 <button class="back-top" id="backTop" aria-label="Kembali ke atas">↑</button>
 
 <script>
-const $=id=>document.getElementById(id);
-let authMode="login";
-let toastTimer;
+const $ = id => document.getElementById(id);
 
-function toast(message){
-  $("toast").textContent=message;
+const SUPABASE_URL = "https://ibtjoqellbexcsspncqc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OkE0tiMSLNfxnkNf5XnmKQ__hMk0AWv";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let authMode = "login";
+let toastTimer;
+let selectedService = "";
+
+function toast(message) {
+  $("toast").textContent = message;
   $("toast").classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>$("toast").classList.remove("show"),3200);
+  toastTimer = setTimeout(
+    () => $("toast").classList.remove("show"),
+    3500
+  );
 }
 
-function openAuth(mode){
-  authMode=mode;
-  const signup=mode==="signup";
-  $("modalTitle").textContent=signup?"Buat Akun NEKORA":"Selamat datang kembali!";
-  $("modalDesc").textContent=signup
-    ?"Daftar untuk mulai menjelajahi layanan NEKORA."
-    :"Masuk untuk melanjutkan ke ruang pendidikan NEKORA.";
-  $("nameField").hidden=!signup;
-  $("roleField").hidden=!signup;
-  $("authName").required=signup;
-  $("authPassword").autocomplete=signup?"new-password":"current-password";
-  $("authSubmit").textContent=signup?"Daftar Sekarang":"Masuk";
-  $("switchText").firstChild.textContent=signup?"Sudah punya akun? ":"Belum punya akun? ";
-  $("switchAuth").textContent=signup?"Masuk":"Daftar sekarang";
-  $("authMessage").textContent="";
+function showMessage(message, success = false) {
+  $("authMessage").style.color = success ? "#16834a" : "#d52c59";
+  $("authMessage").textContent = message;
+}
+
+function openAuth(mode) {
+  authMode = mode;
+  selectedService = "";
+
+  const signup = mode === "signup";
+
+  $("modalTitle").textContent = signup
+    ? "Buat Akun NEKORA"
+    : "Selamat datang kembali!";
+
+  $("modalDesc").textContent = signup
+    ? "Daftar untuk mulai menjelajahi layanan NEKORA."
+    : "Masuk untuk melanjutkan ke ruang pendidikan NEKORA.";
+
+  $("nameField").hidden = !signup;
+  $("roleField").hidden = !signup;
+  $("authName").required = signup;
+
+  $("authPassword").autocomplete = signup
+    ? "new-password"
+    : "current-password";
+
+  $("authSubmit").textContent = signup
+    ? "Daftar Sekarang"
+    : "Masuk";
+
+  $("authSubmit").hidden = false;
+  $("switchText").hidden = false;
+
+  $("switchText").firstChild.textContent = signup
+    ? "Sudah punya akun? "
+    : "Belum punya akun? ";
+
+  $("switchAuth").textContent = signup
+    ? "Masuk"
+    : "Daftar sekarang";
+
+  $("authForm").querySelectorAll("label,input,select").forEach(el => {
+    el.hidden = false;
+  });
+
+  $("authMessage").textContent = "";
   $("authModal").classList.add("show");
-  document.body.style.overflow="hidden";
-  setTimeout(()=>$("authEmail").focus(),100);
+  document.body.style.overflow = "hidden";
+
+  setTimeout(() => $("authEmail").focus(), 100);
 }
 
-function closeAuth(){
+function closeAuth() {
   $("authModal").classList.remove("show");
-  document.body.style.overflow="";
+  document.body.style.overflow = "";
+  selectedService = "";
 }
 
-document.querySelectorAll("[data-auth]").forEach(button=>{
-  button.addEventListener("click",()=>openAuth(button.dataset.auth));
+document.querySelectorAll("[data-auth]").forEach(button => {
+  button.addEventListener("click", () => openAuth(button.dataset.auth));
 });
 
-$("modalClose").addEventListener("click",closeAuth);
-$("authModal").addEventListener("click",e=>{
-  if(e.target===$("authModal"))closeAuth();
-});
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape")closeAuth();
-});
-$("switchAuth").addEventListener("click",()=>{
-  openAuth(authMode==="login"?"signup":"login");
+$("modalClose").addEventListener("click", closeAuth);
+
+$("authModal").addEventListener("click", event => {
+  if (event.target === $("authModal")) closeAuth();
 });
 
-$("authForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  const email=$("authEmail").value.trim();
-  const password=$("authPassword").value;
-  if(!email||password.length<8){
-    $("authMessage").style.color="#d52c59";
-    $("authMessage").textContent="Masukkan email yang valid dan password minimal 8 karakter.";
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeAuth();
+});
+
+$("switchAuth").addEventListener("click", () => {
+  openAuth(authMode === "login" ? "signup" : "login");
+});
+
+$("authForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+  const name = $("authName").value.trim();
+  const role = $("authRole").value;
+  const signup = authMode === "signup";
+  const submitButton = $("authSubmit");
+
+  if (!email || password.length < 8) {
+    showMessage("Masukkan email yang valid dan password minimal 8 karakter.");
     return;
   }
 
-  /*
-    INTEGRASI SUPABASE:
-    Form ini baru tampilan frontend. Belum mengirim login atau
-    pendaftaran ke Supabase. Hubungkan ke fungsi auth aplikasi NEKORA.
-  */
-  $("authMessage").style.color="#6b48e8";
-  $("authMessage").textContent=
-    "Tampilan siap. Hubungkan form ini ke Supabase agar akun dapat masuk atau terdaftar.";
+  if (signup && !name) {
+    showMessage("Nama lengkap wajib diisi.");
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = signup ? "Mendaftarkan akun..." : "Memeriksa akun...";
+  $("authMessage").textContent = "";
+
+  try {
+    if (signup) {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+            requested_role: role
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        showMessage(
+          "Pendaftaran berhasil. Akun kamu sudah masuk.",
+          true
+        );
+        toast("Selamat datang di NEKORA!");
+
+        setTimeout(() => {
+          closeAuth();
+          window.location.href = "dashboard.html";
+        }, 1200);
+      } else {
+        showMessage(
+          "Pendaftaran diterima. Periksa email untuk verifikasi sebelum masuk.",
+          true
+        );
+      }
+    } else {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
+
+      if (!data.session) {
+        throw new Error("Sesi masuk belum terbentuk. Silakan coba lagi.");
+      }
+
+      showMessage("Login berhasil. Membuka NEKORA...", true);
+      toast("Login berhasil!");
+
+      setTimeout(() => {
+        closeAuth();
+        window.location.href = "dashboard.html";
+      }, 700);
+    }
+  } catch (error) {
+    console.error("NEKORA Auth:", error);
+
+    let message = error.message || "Terjadi kesalahan saat menghubungi Supabase.";
+
+    if (/invalid login credentials/i.test(message)) {
+      message = "Email atau password salah.";
+    } else if (/email not confirmed/i.test(message)) {
+      message = "Email belum diverifikasi. Periksa kotak masuk email kamu.";
+    } else if (/user already registered/i.test(message)) {
+      message = "Email ini sudah terdaftar. Silakan masuk.";
+    } else if (/password should be at least/i.test(message)) {
+      message = "Password belum memenuhi ketentuan Supabase.";
+    } else if (/failed to fetch/i.test(message)) {
+      message = "Supabase tidak dapat dihubungi. Periksa koneksi dan konfigurasi proyek.";
+    }
+
+    showMessage(message);
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = authMode === "signup"
+      ? "Daftar Sekarang"
+      : "Masuk";
+  }
 });
 
-document.querySelectorAll("[data-service]").forEach(card=>{
-  card.addEventListener("click",()=>{
-    const name=card.dataset.service;
-    const desc=card.dataset.desc;
-    $("modalTitle").textContent=name;
-    $("modalDesc").textContent=desc;
-    $("nameField").hidden=true;
-    $("roleField").hidden=true;
-    $("authSubmit").textContent="Masuk untuk melanjutkan";
-    $("switchText").hidden=true;
-    $("authMessage").style.color="#6b48e8";
-    $("authMessage").textContent="Layanan ini disiapkan pada Home. Fitur lengkap perlu dihubungkan ke modul aplikasi.";
-    $("authEmail").closest("form").querySelectorAll("label,input,select").forEach(el=>el.hidden=true);
-    $("authSubmit").hidden=true;
-    $("authModal").classList.add("show");
-    document.body.style.overflow="hidden";
-    $("modalClose").onclick=()=>{
-      closeAuth();
-      resetModal();
+document.querySelectorAll("[data-service]").forEach(card => {
+  card.addEventListener("click", async () => {
+    const { data: { session }, error } = await supabase.auth.getSession();
+
+    if (error) {
+      toast("Gagal memeriksa sesi. Coba lagi.");
+      return;
+    }
+
+    if (!session) {
+      openAuth("login");
+      $("modalTitle").textContent = card.dataset.service;
+      $("modalDesc").textContent =
+        card.dataset.desc + " Masuk ke akun NEKORA untuk melanjutkan.";
+      selectedService = card.dataset.service;
+      return;
+    }
+
+    toast("Kamu sudah masuk. Menyiapkan " + card.dataset.service + "...");
+
+    const destinations = {
+      "Ruang Belajar": "dashboard.html",
+      "Ruang Mengajar": "dashboard.html",
+      "Sekolah & Kelas": "dashboard.html",
+      "Tugas & Ujian": "dashboard.html",
+      "Perpustakaan Digital": "dashboard.html",
+      "Komunitas": "dashboard.html",
+      "Agenda Pendidikan": "dashboard.html",
+      "Nilai & Prestasi": "dashboard.html",
+      "Berita Pendidikan": "dashboard.html",
+      "Pusat Bantuan": "dashboard.html",
+      "Profil Pengguna": "dashboard.html",
+      "Pusat Pengelolaan": "dashboard.html"
     };
+
+    window.location.href = destinations[card.dataset.service] || "dashboard.html";
   });
 });
 
-function resetModal(){
-  $("authEmail").closest("form").querySelectorAll("label,input,select").forEach(el=>el.hidden=false);
-  $("authSubmit").hidden=false;
-  $("switchText").hidden=false;
-  $("modalClose").onclick=closeAuth;
-}
+$("showAllServices").addEventListener("click", () => {
+  document.querySelectorAll(".extra-service").forEach(el => {
+    el.style.display = "flex";
+  });
 
-$("showAllServices").addEventListener("click",()=>{
-  document.querySelectorAll(".extra-service").forEach(el=>el.style.display="flex");
-  $("showAllServices").textContent="Semua Layanan Ditampilkan ✓";
-  $("showAllServices").disabled=true;
+  $("showAllServices").textContent = "Semua Layanan Ditampilkan ✓";
+  $("showAllServices").disabled = true;
 });
 
-document.querySelectorAll("[data-info]").forEach(link=>{
-  link.addEventListener("click",e=>{
-    e.preventDefault();
-    toast(link.dataset.info+" akan tersedia di halaman informasi NEKORA.");
+document.querySelectorAll("[data-info]").forEach(link => {
+  link.addEventListener("click", event => {
+    event.preventDefault();
+    toast(link.dataset.info + " akan tersedia di halaman informasi NEKORA.");
   });
 });
 
-$("menuToggle").addEventListener("click",()=>{
-  const nav=$("navLinks");
+$("menuToggle").addEventListener("click", () => {
+  const nav = $("navLinks");
   nav.classList.toggle("open");
-  $("menuToggle").textContent=nav.classList.contains("open")?"×":"☰";
+  $("menuToggle").textContent = nav.classList.contains("open") ? "×" : "☰";
 });
 
-document.querySelectorAll("#navLinks a").forEach(link=>{
-  link.addEventListener("click",()=>{
+document.querySelectorAll("#navLinks a").forEach(link => {
+  link.addEventListener("click", () => {
     $("navLinks").classList.remove("open");
-    $("menuToggle").textContent="☰";
+    $("menuToggle").textContent = "☰";
   });
 });
 
-window.addEventListener("scroll",()=>{
-  $("backTop").classList.toggle("show",window.scrollY>400);
-});
-$("backTop").addEventListener("click",()=>{
-  window.scrollTo({top:0,behavior:"smooth"});
+window.addEventListener("scroll", () => {
+  $("backTop").classList.toggle("show", window.scrollY > 400);
 });
 
-$("year").textContent=new Date().getFullYear();
+$("backTop").addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 
-/* Layanan tambahan disembunyikan sampai pengguna memilih semua layanan. */
-document.querySelectorAll(".extra-service").forEach(el=>el.style.display="none");
+$("year").textContent = new Date().getFullYear();
+
+document.querySelectorAll(".extra-service").forEach(el => {
+  el.style.display = "none";
+});
+
+(async () => {
+  const { data: { session }, error } = await supabase.auth.getSession();
+
+  if (error) {
+    console.error("Gagal memeriksa sesi:", error);
+    return;
+  }
+
+  if (session) {
+    console.log("Pengguna sudah login:", session.user.email);
+  }
+})();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
